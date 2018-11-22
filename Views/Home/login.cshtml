@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>登录</title>
+    <script src="~/js/vue.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/js/md5.js"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style type="text/css">
+        .active {
+            color: red;
+            text-decoration: none !important;
+        }
+
+        a {
+            text-decoration: none !important;
+        }
+
+            a:hover {
+                cursor: pointer !important;
+            }
+
+        body {
+            background-image: url('../../images/e88c588ec636c86e4d955373a464616d.png');
+        }
+    </style>
+</head>
+<body style="height:100%">
+    <div style="height:100%" id="app">
+        <div class="panel panel-info" style="width:400px; margin: 0 auto 0 auto;margin-top:18%; border:1px solid #ccc;">
+            <div class="panel-heading">
+                <a v-on:click="if_login=true;if_reg=false;" :style="{'color':if_login?'red':'black'}">登录</a>
+                <a v-on:click="if_login=false;if_reg=true;" :style="{'color':if_reg?'red':'black'}">注册</a>
+            </div>
+
+            <div class="panel-body ">
+                <div style="text-align:center;" v-show="if_reg">
+                    @*<table>
+                            <tr><td>用户名</td><td><input type="text" v-model="regmodel.username" /></td></tr>
+                            <tr><td>密码</td><td><input type="password" v-model="regmodel.password" /></td></tr>
+                            <tr><td>确认密码</td><td><input type="password" v-model="regmodel.confirm" /></td></tr>
+                        </table>*@
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <span class="col-sm-3 control-label">用户名</span>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" v-model="regmodel.username" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <span class="col-sm-3 control-label">密码</span>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" v-model="regmodel.password" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <span class="col-sm-3 control-label">确认密码</span>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" v-model="regmodel.confirm" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <input class="btn btn-block  btn-info" type="button" v-on:click="reg" value="注册" />
+                </div>
+
+                <div style="text-align:center;" v-show="if_login">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <span class="col-sm-3 control-label">用户名</span>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" v-model="loginmodel.username" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <span class="col-sm-3 control-label">密码</span>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" v-model="loginmodel.password" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <span class="col-sm-3 control-label">
+                                验证码
+                            </span>
+                            <div class="col-sm-5">
+                                <input type="password" class="form-control" v-model="loginmodel.code" />
+                            </div>
+                            <div class="col-sm-4">
+                                <img src="../api/User/VerificationCode?seed=123" onclick="this.src+='1'" alt="验证码" title="点击换一个" />
+                            </div>
+
+                        </div>
+                    </div>
+                    <input class="btn btn-block btn-info" type="button" v-on:click="login" value="登录" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        if (window.parent.Refresh) {
+            window.parent.Refresh();
+        }
+
+        var vue = new Vue({
+            el: '#app',
+            data: {
+                if_reg: false,
+                if_login: true,
+                regmodel: { username: '', password: '', confirm: '' },
+                loginmodel: { username: '', password: '' }
+            },
+            methods: {
+                reg: function () {
+                    if (this.regmodel.username.length < 5 || this.regmodel.password.length < 5) {
+                        alert('用户名和密码长度不足');
+                        return;
+                    }
+                    if (this.regmodel.password != this.regmodel.confirm) {
+                        alert('两次输入密码不一致');
+                        return;
+                    }
+                    $.post('../api/User/Reg', { 'username': this.regmodel.username, 'password': hex_md5(this.regmodel.password) }, res => {
+                        if (res.success) {
+                            alert('注册成功');
+                        } else {
+                            alert(res.message);
+                        }
+                    });
+
+                },
+                login: function () {
+                    if (this.loginmodel.username == '' || this.loginmodel.password == '') {
+                        return;
+                    }
+                    $.post('../api/User/Login', {
+                        'username': this.loginmodel.username, 'password': hex_md5(this.loginmodel.password),
+                        'code': this.loginmodel.code
+                    }, res => {
+                        if (res.success) {
+                            window.location.href = "../../../";
+                            console.log(res);
+                        } else {
+                            alert(res.message);
+                        }
+                    });
+                }
+            },
+            created: function () {
+                //this.getdata();
+            }
+        })
+    </script>
+</body>
+
+</html>
