@@ -88,7 +88,7 @@
                             <li class="parent_menu_item" onclick="onParentMenuClick(@item.Id)">@item.Name</li>
                             foreach (MenuItem i in (from c in (MenuItem[])ViewBag.Menus where c.ParentId == item.Id select c))
                             {
-                                <li menu_parent_id="@i.ParentId" onclick="onMenuClick(this,'@i.Url')" class="child_menu_item">@i.Name</li>
+                                <li menu_parent_id="@i.ParentId" style="display:none;" onclick="onMenuClick(this,'@i.Url')" class="child_menu_item">@i.Name</li>
                             }
                         }
                     }

@@ -1,1 +1,153 @@
-﻿
+﻿<!DOCTYPE html>
+<html style="height: 100%;" lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>index</title>
+    <script src="~/js/vue.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/layer/layer.js"></script>
+    <style type="text/css">
+        table.dlg tr td {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+
+        a {
+            cursor: pointer;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <div style="margin-top:10px;">
+                关键字:
+                <input type="text" v-model="keyword" />
+                <input type="button" class="btn btn-primary" value="查询" v-on:click="search" />
+                <input type="button" class="btn btn-primary" value="添加" v-on:click="showAdd" />
+            </div>
+
+            <table v-cloak style="margin-top:10px;" class="table table-condensed table-bordered table-striped table-hover">
+                <tr>
+                    <th>ID</th>
+                    <th>角色名称</th>
+                    <th>操作</th>
+                </tr>
+                <tr v-for="(item,i) in list_data" :key="item.Id">
+                    <td>{{item.id}}</td>
+                    <td>{{item.roleName}}</td>
+                    <td>
+                        <a v-on:click="showEidt(item)">编辑</a>
+                        &nbsp;<a v-on:click="showConfigDlg(item.id)">设置角色权限</a>
+                        &nbsp;<a v-on:click="deleteMenu(item.id)">删除</a>
+                    </td>
+                </tr>
+            </table>
+
+
+        </div>
+        <div id="dlg" style="display:none;">
+            <table class="dlg" style="width:280px;margin:10px auto 0 auto;">
+                <tr>
+                    <td>名称:</td>
+                    <td><input type="text" v-model="dlg_data.roleName" /></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript">
+
+        var vue = new Vue({
+            el: '#app',
+            data: {
+                list_data: [],
+                dlg_data: {},
+                keyword: ''
+            },
+            methods: {
+                getdata: function () {
+                    $.post('../api/Role/GetRoleList', { 'keyword': this.keyword }, function (res) {
+                        if (res.success) {
+                            vue.list_data = res.data;
+                        } else {
+                            layer.msg(res.message);
+                        }
+                    });
+                },
+                showAdd: function () {
+                    this.dlg_data = {};
+                    this.showDlg('add');
+                },
+                deleteMenu: function (id) {
+                    $.post('../api/Role/DeleteRole', { 'id': id }, function (res) {
+                        if (res.success) {
+                            vue.getdata();
+                        } else {
+                            layer.msg(res.message);
+                        }
+                    });
+                },
+                showDlg: function (mode) {
+                    layer.open({
+                        type: 1,
+                        title: mode == 'add' ? '添加' : '编辑',
+                        content: $('#dlg'),
+                        area: ['400px', '150px'],
+                        btn: ['确定', '取消'],
+                        yes: function (idx, kyo) {
+                            var url = mode == 'add' ? '../api/Role/AddRole' : '../api/Role/EditRole';
+                            $.post(url, vue.dlg_data, function (res) {
+                                if (res.success) {
+                                    layer.msg(res.message);
+                                    layer.close(idx);
+                                    dlg_data = {};
+                                    vue.getdata();
+                                } else {
+                                    layer.msg(res.message);
+                                }
+                            });
+                        },
+                        btn2: function (idx, k) {
+                            layer.close(idx);
+                        }
+                    });
+
+                },
+                showEidt: function (item) {
+                    this.dlg_data = $.extend({}, item);
+                    this.showDlg('edit');
+                },
+                search: function () {
+                    this.getdata();
+                },
+                showConfigDlg: function () {
+
+
+                }
+            },
+            created: function () {
+                this.getdata();
+            }
+        });
+
+        function isInteger(obj) {
+
+            return parseInt(obj) == obj;
+        }
+    </script>
+</body>
+
+</html>
