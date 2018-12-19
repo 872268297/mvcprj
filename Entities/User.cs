@@ -15,5 +15,6 @@ namespace Entities {
         [MaxLength (32)]
         public string Password { get; set; }
 
+       
     }
 }

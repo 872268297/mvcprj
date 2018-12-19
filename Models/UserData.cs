@@ -13,6 +13,8 @@ namespace mvc.Models
     {
         public int UserId { get; set; }
         public string UserName { get; set; }
+        public int Level { get; set; }//等级
+        public int Exp { get; set; }//经验
         public List<Role> Roles { get; set; }
         public DateTime LoginTime { get; set; }
         public List<Permission> Permissions { get; set; }

@@ -43,19 +43,13 @@
                     <th>ID</th>
                     <th>父ID</th>
                     <th>名称</th>
-                    <th>需要权限ID</th>
-                    <th>URL</th>
-                    <th>排序</th>
                     <th>操作</th>
                 </tr>
-                <tr v-for="(item,i) in menudata" :key="item.id">
+                <tr v-for="(item,i) in permissionData" :key="item.id">
                     <td>{{item.id}}</td>
-                    <td>{{item.parentId}}</td>
-                    <td>{{item.name}}</td>
-                    <td>{{item.requirePermissionId}}</td>
-                    <td>{{item.url}}</td>
-                    <td>{{item.index}}</td>
-                    <td><a v-on:click="showEidt(item)">编辑</a>&nbsp;<a v-on:click="deleteMenu(item.id)">删除</a></td>
+                    <td>{{item.parentPermissionId}}</td>
+                    <td>{{item.permissionName}}</td>
+                    <td><a v-on:click="showEidt(item)">编辑</a>&nbsp;<a v-on:click="deletePermission(item.id)">删除</a></td>
                 </tr>
             </table>
 
@@ -65,23 +59,11 @@
             <table class="dlg" style="width:280px;margin:10px auto 0 auto;">
                 <tr>
                     <td>父ID:</td>
-                    <td><input id="dlg_parentId" type="text" v-model="dlg_data.parentId" /></td>
+                    <td><input id="dlg_parentId" type="text" v-model="dlg_data.parentPermissionId" /></td>
                 </tr>
                 <tr>
                     <td>名称:</td>
-                    <td><input type="text" v-model="dlg_data.name" /></td>
-                </tr>
-                <tr>
-                    <td>需要权限ID:</td>
-                    <td><input id="dlg_requirePermissionId" type="text" v-model="dlg_data.requirePermissionId" /></td>
-                </tr>
-                <tr>
-                    <td>URL:</td>
-                    <td><input type="text" v-model="dlg_data.url" /></td>
-                </tr>
-                <tr>
-                    <td>排序:</td>
-                    <td><input id="dlg_index" type="text" v-model="dlg_data.index" /></td>
+                    <td><input type="text" v-model="dlg_data.permissionName" /></td>
                 </tr>
             </table>
         </div>
@@ -94,13 +76,13 @@
         var vue = new Vue({
             el: '#app',
             data: {
-                menudata: [],
+                permissionData: [],
                 dlg_data: {},
                 keyword: ''
             },
             methods: {
                 getdata: function () {
-                    $.post('../api/Role/GetMenuList', { 'keyword': this.keyword }, function (res) {
+                    $.post('../api/Role/GetPermissionList', { 'keyword': this.keyword }, function (res) {
                         if (res.success) {
                             vue.menudata = res.data;
                         } else {
@@ -112,8 +94,8 @@
                     this.dlg_data = {};
                     this.showDlg('add');
                 },
-                deleteMenu: function (id) {
-                    $.post('../api/Role/DeleteMenu', { 'id': id }, function (res) {
+                deletePermission: function (id) {
+                    $.post('../api/Role/DeletePermission', { 'id': id }, function (res) {
                         if (res.success) {
                             vue.getdata();
                         } else {
@@ -131,7 +113,7 @@
                         yes: function (idx, kyo) {
                             if (!vue.checkForm()) return;
                             console.log(idx);
-                            var url = mode == 'add' ? '../api/Role/AddMenu' : '../api/Role/EditMenu';
+                            var url = mode == 'add' ? '../api/Role/AddPermission' : '../api/Role/EditPermission';
                             $.post(url, vue.dlg_data, function (res) {
                                 if (res.success) {
                                     layer.msg(mode == 'add' ? "添加" : "修改" + "成功");
@@ -157,14 +139,6 @@
                     var result = true;
                     if (!isInteger(this.dlg_data.parentId)) {
                         layer.tips('请输入正确数字', '#dlg_parentId');
-                        result = false;
-                    }
-                    if (!isInteger(this.dlg_data.requirePermissionId)) {
-                        layer.tips('请输入正确数字', '#dlg_requirePermissionId');
-                        result = false;
-                    }
-                    if (!isInteger(this.dlg_data.index)) {
-                        layer.tips('请输入正确数字', '#dlg_index');
                         result = false;
                     }
                     return result;

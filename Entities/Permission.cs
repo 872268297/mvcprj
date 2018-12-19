@@ -12,8 +12,10 @@ namespace Entities
         [MaxLength(32)]
         public string PermissionName { get; set; }
 
-        public int ParentPermissionId { get; set; }
+        [Required]
+        [MaxLength(32)]
+        public string PermissionDisplayName { get; set; }
 
-        public int ParentId { get; set; }
+        public int ParentPermissionId { get; set; }
     }
 }

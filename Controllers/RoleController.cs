@@ -31,7 +31,7 @@ namespace mvc.Controllers
         {
             if (!CheckLogin())
             {
-                return Redirect("../Home/Login");
+                return Redirect("../Admin/Login");
             }
             return View();
         }
@@ -40,7 +40,16 @@ namespace mvc.Controllers
         {
             if (!CheckLogin())
             {
-                return Redirect("../Home/Login");
+                return Redirect("../Admin/Login");
+            }
+            return View();
+        }
+
+        public IActionResult PermissionManager()
+        {
+            if (!CheckLogin())
+            {
+                return Redirect("../Admin/Login");
             }
             return View();
         }
