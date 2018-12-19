@@ -12,7 +12,7 @@
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Update="Views\Home\Login.cshtml">
+    <Content Update="Views\Admin\login.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Role\MenuManager.cshtml">
