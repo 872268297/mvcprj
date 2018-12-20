@@ -43,11 +43,13 @@
                     <th>ID</th>
                     <th>父ID</th>
                     <th>名称</th>
+                    <th>值</th>
                     <th>操作</th>
                 </tr>
                 <tr v-for="(item,i) in permissionData" :key="item.id">
                     <td>{{item.id}}</td>
                     <td>{{item.parentPermissionId}}</td>
+                    <td>{{item.permissionDisplayName}}</td>
                     <td>{{item.permissionName}}</td>
                     <td><a v-on:click="showEidt(item)">编辑</a>&nbsp;<a v-on:click="deletePermission(item.id)">删除</a></td>
                 </tr>
@@ -63,6 +65,10 @@
                 </tr>
                 <tr>
                     <td>名称:</td>
+                    <td><input type="text" v-model="dlg_data.permissionDisplayName" /></td>
+                </tr>
+                <tr>
+                    <td>值:</td>
                     <td><input type="text" v-model="dlg_data.permissionName" /></td>
                 </tr>
             </table>
@@ -84,7 +90,7 @@
                 getdata: function () {
                     $.post('../api/Role/GetPermissionList', { 'keyword': this.keyword }, function (res) {
                         if (res.success) {
-                            vue.menudata = res.data;
+                            vue.permissionData = res.data;
                         } else {
                             layer.msg(res.message);
                         }
@@ -112,13 +118,13 @@
                         btn: ['确定', '取消'],
                         yes: function (idx, kyo) {
                             if (!vue.checkForm()) return;
-                            console.log(idx);
+                            //console.log(idx);
                             var url = mode == 'add' ? '../api/Role/AddPermission' : '../api/Role/EditPermission';
                             $.post(url, vue.dlg_data, function (res) {
                                 if (res.success) {
                                     layer.msg(mode == 'add' ? "添加" : "修改" + "成功");
                                     layer.close(idx);
-                                    dlg_data = {};
+                                    vue.dlg_data = {};
                                     vue.getdata();
                                 } else {
                                     layer.msg(res.message);
@@ -137,7 +143,7 @@
                 },
                 checkForm: function () {
                     var result = true;
-                    if (!isInteger(this.dlg_data.parentId)) {
+                    if (!isInteger(this.dlg_data.parentPermissionId)) {
                         layer.tips('请输入正确数字', '#dlg_parentId');
                         result = false;
                     }

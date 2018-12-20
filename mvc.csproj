@@ -15,6 +15,9 @@
     <Content Update="Views\Admin\login.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Role\UserManager.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Role\PermissionManager.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

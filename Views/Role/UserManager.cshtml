@@ -27,38 +27,6 @@
         [v-cloak] {
             display: none;
         }
-
-        .Child0 {
-        }
-
-        .Child1 {
-            padding-left: 15px;
-        }
-
-        .Child2 {
-            padding-left: 30px;
-        }
-
-        .Child3 {
-            padding-left: 45px;
-        }
-
-        .Child4 {
-            padding-left: 60px;
-        }
-
-        .Child5 {
-            padding-left: 65px;
-        }
-
-        /*.role_ul {
-            list-style: none;
-        }*/
-
-        /*ul {
-            list-style: none;
-            padding-left: 20px;
-        }*/
     </style>
 </head>
 
@@ -69,22 +37,25 @@
                 关键字:
                 <input type="text" v-model="keyword" />
                 <input type="button" class="btn btn-primary" value="查询" v-on:click="search" />
-                <input type="button" class="btn btn-primary" value="添加" v-on:click="showAdd" />
+                @*<input type="button" class="btn btn-primary" value="添加" v-on:click="showAdd" />*@
             </div>
 
             <table v-cloak style="margin-top:10px;" class="table table-condensed table-bordered table-striped table-hover">
                 <tr>
                     <th>ID</th>
-                    <th>角色名称</th>
+                    <th>用户名</th>
                     <th>操作</th>
                 </tr>
                 <tr v-for="(item,i) in list_data" :key="item.Id">
                     <td>{{item.id}}</td>
-                    <td>{{item.roleName}}</td>
+                    <td>{{item.userName}}</td>
                     <td>
-                        <a v-on:click="showEidt(item)">编辑</a>
-                        &nbsp;<a v-on:click="showConfigDlg(item.id)">设置角色权限</a>
-                        &nbsp;<a v-on:click="deleteMenu(item.id)">删除</a>
+                        @*<a v-on:click="showEidt(item)">编辑</a>*@
+                        @*&nbsp;*@
+                        <a v-on:click="showConfigUserPermissionDlg(item.id)">设置权限</a>
+                        &nbsp;
+                        <a v-on:click="showConfigUserRoleDlg(item.id)">设置角色</a>
+                        @*&nbsp;<a v-on:click="deleteMenu(item.id)">删除</a>*@
                     </td>
                 </tr>
             </table>
@@ -100,8 +71,12 @@
             </table>
         </div>
 
-        <div id="dlg_role_permission_set" style="display:none;">
+        <div id="dlg_user_permission_set" style="display:none;">
             <ul class="role_ul" style="padding-left:15px;" id="role_per_ul"></ul>
+        </div>
+
+        <div id="dlg_user_role_set" style="display:none;">
+            <ul class="user_role_ul" style="padding-left:15px;" id="user_role_ul"></ul>
         </div>
 
     </div>
@@ -119,7 +94,7 @@
             },
             methods: {
                 getdata: function () {
-                    $.post('../api/Role/GetRoleList', { 'keyword': this.keyword }, function (res) {
+                    $.post('../api/Role/GetUserList', { 'keyword': this.keyword }, function (res) {
                         if (res.success) {
                             vue.list_data = res.data;
                         } else {
@@ -131,39 +106,30 @@
                     this.dlg_data = {};
                     this.showDlg('add');
                 },
-                deleteMenu: function (id) {
-                    $.post('../api/Role/DeleteRole', { 'id': id }, function (res) {
-                        if (res.success) {
-                            vue.getdata();
-                        } else {
-                            layer.msg(res.message);
-                        }
-                    });
-                },
                 showDlg: function (mode) {
-                    layer.open({
-                        type: 1,
-                        title: mode == 'add' ? '添加' : '编辑',
-                        content: $('#dlg'),
-                        area: ['400px', '150px'],
-                        btn: ['确定', '取消'],
-                        yes: function (idx, kyo) {
-                            var url = mode == 'add' ? '../api/Role/AddRole' : '../api/Role/EditRole';
-                            $.post(url, vue.dlg_data, function (res) {
-                                if (res.success) {
-                                    layer.msg(res.message);
-                                    layer.close(idx);
-                                    vue.dlg_data = {};
-                                    vue.getdata();
-                                } else {
-                                    layer.msg(res.message);
-                                }
-                            });
-                        },
-                        btn2: function (idx, k) {
-                            layer.close(idx);
-                        }
-                    });
+                    //layer.open({
+                    //    type: 1,
+                    //    title: mode == 'add' ? '添加' : '编辑',
+                    //    content: $('#dlg'),
+                    //    area: ['400px', '150px'],
+                    //    btn: ['确定', '取消'],
+                    //    yes: function (idx, kyo) {
+                    //        var url = mode == 'add' ? '../api/Role/AddRole' : '../api/Role/EditRole';
+                    //        $.post(url, vue.dlg_data, function (res) {
+                    //            if (res.success) {
+                    //                layer.msg(res.message);
+                    //                layer.close(idx);
+                    //                vue.dlg_data = {};
+                    //                vue.getdata();
+                    //            } else {
+                    //                layer.msg(res.message);
+                    //            }
+                    //        });
+                    //    },
+                    //    btn2: function (idx, k) {
+                    //        layer.close(idx);
+                    //    }
+                    //});
 
                 },
                 showEidt: function (item) {
@@ -173,14 +139,13 @@
                 search: function () {
                     this.getdata();
                 },
-                initConfigDlg: function (roleid) {
+                initConfigUserPermissionDlg: function (userid) {
                     var ajaxCount = 0;
-                    var rolePermissionData = [];
+                    var userPermissionData = [];
 
                     var afterList = function () {
-                        //console.log(123);
-                        for (var i = 0; i < rolePermissionData.length; i++) {
-                            $('input[type="checkbox"][value="' + rolePermissionData[i] + '"]').prop('checked', true);
+                        for (var i = 0; i < userPermissionData.length; i++) {
+                            $('#dlg_user_permission_set input[type="checkbox"][value="' + userPermissionData[i] + '"]').prop('checked', true);
                         }
                     }
 
@@ -237,9 +202,9 @@
                         }
                     });
 
-                    $.post('../api/Role/GetRolePermission', { 'id': roleid }, function (res) {
+                    $.post('../api/Role/GetUserPermission', { 'id': userid }, function (res) {
                         if (res.success) {
-                            rolePermissionData = res.data;
+                            userPermissionData = res.data;
                             ajaxCount++;
                             if (ajaxCount == 2) {
                                 afterList();
@@ -249,22 +214,22 @@
                         }
                     })
                 },
-                showConfigDlg: function (roleid) {
-                    this.initConfigDlg(roleid);
+                showConfigUserPermissionDlg: function (userid) {
+                    this.initConfigUserPermissionDlg(userid);
                     layer.open({
                         type: 1,
-                        title: '角色权限设置',
+                        title: '用户权限设置',
                         area: ['400px', '600px'],
-                        content: $('#dlg_role_permission_set'),
+                        content: $('#dlg_user_permission_set'),
                         btn: ['保存', '关闭'],
                         yes: function (idx) {
                             var ids = [];
-                            $('input[type="checkbox"]').each(function (i, v) {
+                            $('#dlg_user_permission_set input[type="checkbox"]').each(function (i, v) {
                                 if ($(v).is(":checked")) {
                                     ids.push($(v).val());
                                 }
                             });
-                            $.post('../api/Role/EditRolePermission', { 'roleid': roleid, 'perstrs': ids.join('|') }, function (res) {
+                            $.post('../api/Role/EditUserPermission', { 'userid': userid, 'perstrs': ids.join('|') }, function (res) {
                                 if (res.success) {
                                     layer.msg('保存成功');
                                     layer.close(idx);
@@ -278,6 +243,71 @@
                         }
                     });
 
+                },
+                showConfigUserRoleDlg(id) {
+                    var ajaxCount = 0;
+                    var userRoleData = [];
+                    var after = function () {
+                        for (var i = 0; i < userRoleData.length; i++) {
+                            $('#dlg_user_role_set input[type="checkbox"][value="' + userRoleData[i] + '"]').prop('checked', true);
+                        }
+                    }
+                    $.post('../api/Role/GetRoleList', { 'keyword': '' }, function (res) {
+                        if (res.success) {
+                            var $ul = $('#user_role_ul');
+                            var str = '';
+                            var data = res.data;
+                            for (var i = 0; i < data.length; i++) {
+                                str += '<li><input type="checkbox" value="' + data[i].id + '" />' + data[i].roleName + '</li>';
+                            }
+                            $ul.empty().append($(str));
+                            $ul.treeview();
+                            ajaxCount++;
+                            if (ajaxCount == 2) {
+                                after();
+                            }
+                        } else {
+                            console.log(res.message);
+                        }
+                    });
+                    $.post('../api/Role/GetUserRole', { 'id': id }, function (res) {
+                        if (res.success) {
+                            userRoleData = res.data;
+                            console.log(res.data);
+                            ajaxCount++;
+                            if (ajaxCount == 2) {
+                                after();
+                            }
+                        } else {
+                            console.log(res.message);
+                        }
+                    });
+                    layer.open({
+                        type: 1,
+                        content: $('#dlg_user_role_set'),
+                        title: '设置用户角色',
+                        area: ['400px', '600px'],
+                        btn: ['保存', '关闭'],
+                        yes: function (idx) {
+                            var ids = [];
+                            $('#dlg_user_role_set input[type="checkbox"]').each(function (i, v) {
+                                if ($(v).is(":checked")) {
+                                    ids.push($(v).val());
+                                }
+                            });
+                            $.post('../api/Role/EditUserRole', { 'userid': id, 'roleidstrs': ids.join('|') }, function (res) {
+                                if (res.success) {
+                                    layer.msg('保存成功');
+                                    layer.close(idx);
+                                } else {
+                                    console.log(res.message);
+                                }
+                            });
+                        },
+                        btn2: function (idx) {
+                            layer.close(idx);
+                        }
+                    });
                 }
             },
             created: function () {

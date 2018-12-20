@@ -65,16 +65,7 @@ namespace mvc.Controllers
             return Json(r == "true", r, UserData.Current);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> UserList()
-        {
-            UserData user = UserData.Current;
-            if (user == null)
-            {
-                return Json(false, "Î´µÇÂ¼");
-            }
-            return Json(true, "", await _userService.GetList());
-        }
+
 
         [HttpPost]
         public IActionResult LogOut()

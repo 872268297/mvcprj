@@ -130,13 +130,13 @@
                         btn: ['确定', '取消'],
                         yes: function (idx, kyo) {
                             if (!vue.checkForm()) return;
-                            console.log(idx);
+                            //console.log(idx);
                             var url = mode == 'add' ? '../api/Role/AddMenu' : '../api/Role/EditMenu';
                             $.post(url, vue.dlg_data, function (res) {
                                 if (res.success) {
                                     layer.msg(mode == 'add' ? "添加" : "修改" + "成功");
                                     layer.close(idx);
-                                    dlg_data = {};
+                                    vue.dlg_data = {};
                                     vue.getdata();
                                 } else {
                                     layer.msg(res.message);
