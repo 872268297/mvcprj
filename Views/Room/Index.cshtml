@@ -1,12 +1,14 @@
-﻿@{
+﻿
+@using Entities;
+@{
     Layout = null;
 }
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>首页</title>
-    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <title>直播间</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="~/js/vue.min.js"></script>
@@ -38,12 +40,26 @@
             text-decoration: none;
         }
 
+            a:visited {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            a:hover {
+                text-decoration: none;
+                color: inherit;
+            }
+
         .left {
             padding-top: 65px;
-            width: 13%;
+            width: 240px;
             float: left;
-            height: 800px;
-            overflow-y: hidden;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            background-color: #2d2e36;
+            overflow-y: auto;
         }
 
         .content {
@@ -239,6 +255,81 @@
             border-radius: 15px;
             cursor: pointer;
         }
+
+        .liveClass {
+            color: #a7a7a7;
+            text-decoration: none;
+        }
+
+            .liveClass:hover {
+                text-decoration: none;
+                color: #ff5d23;
+            }
+
+
+            .liveClass:visited {
+                text-decoration: none;
+                color: #a7a7a7;
+            }
+
+            .liveClass:active {
+                text-decoration: none;
+                color: #ff5d23;
+            }
+
+        .mainClass {
+            font-size: 14px;
+            display: inline-block;
+            height: 27.7px;
+            margin-bottom: 6px;
+            box-sizing: border-box;
+        }
+
+        .subClass {
+            font-size: 12px;
+            width: 73.3px;
+            display: block;
+            float: left;
+            height: 26px;
+            box-sizing: border-box;
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+
+        .divClassGroup {
+            width: 100%;
+            word-wrap: normal;
+            box-sizing: border-box;
+            padding-left: 10px;
+            padding-right: 10px;
+            clear: both;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .a_more {
+            float: right;
+            color: #666;
+            margin-right: 6px;
+            font-size: 12px;
+        }
+
+            .a_more:hover {
+                color: #ff5d23;
+            }
+
+        .heartIcon {
+            display: block;
+            background-image: url('../../fonts/heart.png');
+            border: none;
+            width: 21px;
+            height: 21px;
+            float:left;
+        }
+
+        #_left_my_follow:hover .heartIcon {
+            background-image: url('../../fonts/heart_orange.png');
+        }
     </style>
 </head>
 <body>
@@ -262,8 +353,41 @@
             </div>
         </div>
     </nav>
-    <div class="left" id="left"></div>
-    <div class="content">
+    <div class="left" id="left">
+        @{
+            List<LiveClass> list = ViewBag.ClassList as List<LiveClass>;
+            var Roots = list.Where(t => t.ParentId == 0);
+        }
+
+        <div>
+            <div style="height:30px;padding-left: 10px;padding-right:10px;">
+                <a class="liveClass mainClass" id="_left_my_follow" style="font-weight: 400;font-size:16px;margin:0;" href="/Follow">
+                    <div class="heartIcon"></div>
+                    <span style="height:21px;display:block;float:left;margin-left:8px;">我的关注</span>
+                </a>
+            </div>
+
+            @foreach (LiveClass root in Roots)
+            {
+                <div class="divClassGroup">
+                    <div>
+                        <a class="liveClass mainClass" href="/Class/@root.Id" data-id="@root.Id">@root.Name</a>
+                        <div class="a_more" href="/Class/@root.Id">更多</div>
+                    </div>
+                    @{
+                        var subs = list.Where(t => t.ParentId == root.Id);
+                    }
+                    @foreach (var item in subs)
+                    {
+                        <a class="liveClass subClass" href="/Class/@item.Id" data-id="@item.Id">@item.Name</a>
+                    }
+                </div>
+            }
+        </div>
+
+
+    </div>
+    <div id="content" class="content">
 
         <div style="height:92px;margin-bottom:10px; width:100%;border:1px solid #e5e4e4" id="title">
             <div style="float:left;">
@@ -402,9 +526,10 @@
             var rw = parseInt(getStyle(document.getElementById('right'), 'width'));
             var rh = parseInt(getStyle(document.getElementById('right'), 'height'));
             var v = document.getElementById('video');
-            var r = ww - lw - rw - 1 + 'px';
+            var r = ww - lw - rw - 1 - 18 + 'px';
             v.style.height = rh - 99 -  67 + 'px';
             v.style.width = r;
+            document.getElementById('content').style.marginLeft = lw + 18 + 'px';
             document.getElementById('title').style.width = r;
         }
 

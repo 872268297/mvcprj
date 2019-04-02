@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using mvc.Models;
+using Services;
 
 namespace mvc.Controllers
 {
@@ -14,11 +15,13 @@ namespace mvc.Controllers
     {
         private readonly MyDbContext _dbcontext;
         private readonly IMemoryCache _memoryCache;
+        private readonly ILiveClassService _liveClassService;
 
-        public LiveClassController(MyDbContext dbcontext, IMemoryCache memoryCache)
+        public LiveClassController(MyDbContext dbcontext, IMemoryCache memoryCache, ILiveClassService liveClassService)
         {
             _dbcontext = dbcontext;
             _memoryCache = memoryCache;
+            _liveClassService = liveClassService;
         }
 
         public IActionResult Index()
@@ -39,12 +42,9 @@ namespace mvc.Controllers
         [Route("api/LiveClass/AllList")]
         public async Task<IActionResult> AllList()
         {
+            List<LiveClass> list = await _liveClassService.AllList();
 
-            var query = from c in _dbcontext.LiveClasses select c;
-
-            int count = await (from c in _dbcontext.LiveClasses select 1).CountAsync();
-            List<LiveClass> list = await query.ToListAsync();
-            return Json(true, "成功", list, count);
+            return Json(true, "成功", list, list.Count);
         }
 
         [HttpPost]
@@ -60,11 +60,7 @@ namespace mvc.Controllers
             int page = int.Parse(GetVal("page", "1"));
             int rows = int.Parse(GetVal("rows", "10"));
 
-            var query = from c in _dbcontext.LiveClasses select c;
-            if (keyword != "") query = query.Where(t => t.Name.Contains(keyword));
-            int count = await (from c in _dbcontext.LiveClasses select 1).CountAsync();
-            List<LiveClass> list = await query.Skip((page - 1) * rows).Take(rows).ToListAsync();
-            return Json(true, "成功", list, count);
+            return Json(await _liveClassService.List(keyword, page, rows));
         }
 
 
@@ -78,35 +74,20 @@ namespace mvc.Controllers
                 return NotFound();
             }
 
-            string Name = Request.Form["Name"];
-            string ID = Request.Form["ID"];
-            string Order = Request.Form["Order"];
-            string ParentId = Request.Form["ParentId"];
+            string Name = GetVal("Name", "");
+            string ID = GetVal("ID", "0");
+            string Order = GetVal("Order", "0");
+            string ParentId = GetVal("ParentId", "0");
 
-            if (ID == "")
+            LiveClass c = new LiveClass()
             {
-                LiveClass c = new LiveClass()
-                {
-                    Name = Name,
-                    Order = int.Parse(Order),
-                    ParentId = int.Parse(ParentId)
-                };
-                await _dbcontext.LiveClasses.AddAsync(c);
-                await _dbcontext.SaveChangesAsync();
-            }
-            else
-            {
-                int id = int.Parse(ID);
-                LiveClass c = await _dbcontext.LiveClasses.FirstOrDefaultAsync(t => t.Id == id);
-                if (c != null)
-                {
-                    c.Name = Name;
-                    c.Order = int.Parse(Order);
-                    c.ParentId = int.Parse(ParentId);
-                    _dbcontext.LiveClasses.Update(c);
-                    await _dbcontext.SaveChangesAsync();
-                }
-            }
+                Id = int.Parse(ID),
+                Name = Name,
+                Order = int.Parse(Order),
+                ParentId = int.Parse(ParentId)
+            };
+
+            await _liveClassService.Edit(c);
 
             return Json(true, "成功", "操作成功");
         }
@@ -124,20 +105,7 @@ namespace mvc.Controllers
 
             string idList = Request.Form["idList"];
 
-            string[] strs = idList.Split(',');
-            List<int> lst = new List<int>();
-            foreach (string item in strs)
-            {
-                if (int.TryParse(item, out int i))
-                {
-                    lst.Add(i);
-                }
-            }
-            var query = from c in _dbcontext.LiveClasses where lst.Contains(c.Id) select c;
-
-            _dbcontext.LiveClasses.RemoveRange(query);
-
-            await _dbcontext.SaveChangesAsync();
+            await _liveClassService.Delete(idList);
 
             return Json(true, "成功", "操作成功");
         }

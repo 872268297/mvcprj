@@ -25,8 +25,10 @@ namespace mvc.Controllers
 
         protected string GetVal(string key, string def = "")
         {
-            if (Request.Form.ContainsKey(key)) {
-                return Request.Form[key].ToString();
+            if (Request.Form.ContainsKey(key))
+            {
+                string str = Request.Form[key].ToString();
+                return str == "" ? def : str;
             }
             return def;
         }

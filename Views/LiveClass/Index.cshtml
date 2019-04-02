@@ -9,12 +9,14 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>直播分类管理</title>
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/js/sui.js"></script>
-    <script src="~/js/datagrid.js"></script>
-    <script src="~/js/layer/layer.js"></script>
+
     <link href="~/css/sui.css" rel="stylesheet" />
     <link href="~/fonts/smartuifont.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/js/layer/layer.js"></script>
+    <script src="~/js/sui.js"></script>
+    <script src="~/js/datagrid.js"></script>
+
 </head>
 <body>
     <div class="sui-container-fluid" style="padding-left:50px;padding-right:50px;">
@@ -52,6 +54,9 @@
     </div>
     <script type="text/javascript">
 
+        sui.initForm();
+
+
         var datagrid = $('#datagrid').datagrid({
             url: 'api/LiveClass/List',
             sortName: 'id',
@@ -59,9 +64,10 @@
             queryParams: { keyword: '' },
             columns: [
                 { checkbox: true },
+                { title: '名称', field: 'name', align: 'center', sortable: false },
                 { title: 'ID', field: 'id', align: 'center', sortable: false },
                 { title: '父ID', field: 'parentId', align: 'center', sortable: false },
-                { title: '名称', field: 'name', align: 'center', sortable: false },
+                
                 { title: '排序', field: 'order', align: 'center', sortable: false },
                 {
                     title: '操作', field: "id", width: 160, align: 'center', sortable: true, formatter: function (value, row, index) {
@@ -119,9 +125,9 @@
                     if (val) {
                         $tr = $(val).parent().parent().children();
                         //console.log($tr.eq(2).text())
-                        $('#ParentId').val($tr.eq(3).text());
-                        $('#ID').val($tr.eq(2).text());
-                        $('#Name').val($tr.eq(4).text());
+                        $('#ParentId').val($tr.eq(4).text());
+                        $('#ID').val($tr.eq(3).text());
+                        $('#Name').val($tr.eq(2).text());
                         $('#Order').val($tr.eq(5).text());
                     } else {
                         $('#divForm [name]').each(function () {
