@@ -18,5 +18,7 @@ namespace Services
         Task Edit(LiveClass model);
 
         Task Delete(string idList);
+
+        Task<Dictionary<int, List<LiveClass>>> GetDict();
     }
 }

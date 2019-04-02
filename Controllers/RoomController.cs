@@ -32,9 +32,9 @@ namespace mvc.Controllers
                 ViewBag.User = "";
             }
 
-            List<LiveClass> classList = await _liveClass.AllList();
+            Dictionary<int,List<LiveClass>> classDict = await _liveClass.GetDict();
 
-            ViewBag.ClassList = classList;
+            ViewBag.classDict = classDict;
 
             return View();
         }
