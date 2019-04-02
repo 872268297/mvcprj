@@ -9,19 +9,18 @@ using Services;
 
 namespace mvc.Controllers
 {
-    public class RoomController : BaseController
+    public class ClassController : BaseController
     {
+
         private readonly ILiveClassService _liveClass;
 
-        public RoomController(ILiveClassService liveClass)
+        public ClassController(ILiveClassService liveClass)
         {
             _liveClass = liveClass;
         }
 
-        [Route("Room/{id?}")]
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index()
         {
-            ViewBag.ID = id;
             UserData user = UserData.Current;
             if (user != null)
             {
@@ -31,10 +30,6 @@ namespace mvc.Controllers
             {
                 ViewBag.User = "";
             }
-
-
-            //主播头像
-            ViewBag.AnchorPicUrl = "/upload/QQ图片20190402225643.jpg";
 
             Dictionary<int, List<LiveClass>> classDict = await _liveClass.GetDict();
 

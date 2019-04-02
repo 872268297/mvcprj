@@ -1,11 +1,12 @@
-﻿@{
+﻿@using Entities;
+@{
     Layout = null;
 }
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>首页</title>
+    <title>直播分类</title>
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -17,15 +18,15 @@
 </head>
 <body>
     <nav class="navbar navbar-default navbar-fixed-top" style="background-color:rgba(255, 255, 255, 0.95);z-index:1000;">
-        <div class="container" id="div_header_container">
+        <div id="div_header_container" class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" style="color: rgba(255,93,35,1);" href="/">首页</a>
+                <a class="navbar-brand" href="/">首页</a>
             </div>
             <div class="navbar-header">
                 <a class="navbar-brand" href="/Directory/0">直播</a>
             </div>
             <div class="navbar-header">
-                <a class="navbar-brand" href="/Class">分类</a>
+                <a class="navbar-brand" style="color: rgba(255,93,35,1);" href="/Class">分类</a>
             </div>
             <div style="float:right;">
                 <a href="javascript:;" class="a_rightTop" id="a_login" style="" onclick="ShowLoginDlg()">登录</a>
@@ -38,6 +39,57 @@
         </div>
     </nav>
 
+    <div class="left" id="left">
+        @{
+            Dictionary<int, List<LiveClass>> dict = ViewBag.classDict as Dictionary<int, List<LiveClass>>;
+            var Roots = dict[0];
+        }
+
+        <div class="left_expand">
+            <a class="liveClass mainClass left_item" id="_left_my_follow" href="/Follow">
+                <div class="heartIcon"></div>
+                <span style="height:21px;display:block;float:left;margin-left:8px;">我的关注</span>
+            </a>
+
+            @foreach (LiveClass root in Roots)
+            {
+                <div class="divClassGroup">
+                    <div>
+                        <a class="liveClass mainClass" href="/Directory/@root.Id" data-id="@root.Id">@root.Name</a>
+                        <a class="a_more" href="/Directory/@root.Id">全部</a>
+                    </div>
+                    @{
+                        if (dict.ContainsKey(root.Id))
+                        {
+                            int i = 0;
+                            var subs = dict[root.Id];
+                            foreach (var item in subs)
+                            {
+                                <a class="liveClass subClass class_item" href="/Directory/@item.Id" data-id="@item.Id">@item.Name</a>
+                                i++;
+                                if (i > 14)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                </div>
+            }
+
+        </div>
+
+        <div class="left_shark">
+
+        </div>
+
+        <div class="Aside-toggle Aside-toggle-Expand" style="text-align:center;">
+            <span style="line-height:80px;color:#a7a7a7;"><</span>
+        </div>
+        <div class="Aside-toggle Aside-toggle-Shark" style="text-align:center;display:none;">
+            <span style="line-height:80px;color:#a7a7a7;">></span>
+        </div>
+    </div>
 
     <div style="display:none;" id="divLoginAndReg">
         <div style="text-align:center;display:none;width:92%;margin:10px auto 0 auto;" id="divReg">

@@ -15,408 +15,27 @@
     <script src="~/js/ck/ckplayer/ckplayer.js"></script>
     <script src="~/js/layer/layer.js"></script>
     <script src="~/js/md5.js"></script>
-    <style>
-
-        ::-webkit-scrollbar-track {
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-            border-radius: 10px;
-            background-color: #F5F5F5;
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-            background-color: #F5F5F5;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            border-radius: 10px;
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-            background-color: #ccc;
-        }
-
-
-
-        a {
-            text-decoration: none;
-        }
-
-            a:visited {
-                text-decoration: none;
-                color: inherit;
-            }
-
-            a:hover {
-                text-decoration: none;
-                color: inherit;
-            }
-
-        .left {
-            padding-top: 65px;
-            width: 240px;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            background-color: #2d2e36;
-            overflow-y: auto;
-            overflow-x: visible;
-        }
-
-            .left::-webkit-scrollbar {
-                display: none;
-            }
-
-        .content {
-            padding-top: 65px;
-            float: left;
-            /*width: 66.6%;*/
-        }
-
-        .right {
-            padding-top: 65px;
-            float: right;
-            min-width: 364px;
-            padding-right: 40px;
-        }
-
-        .txt {
-            box-sizing: content-box;
-            resize: none;
-            float: left;
-            width: 252px;
-            height: 47px;
-            padding: 5px 13px 5px 13px;
-            line-height: 20px;
-            font-size: 12px;
-            background: #fff;
-            border: 1px solid #ff921a;
-            border-right: 0;
-            -webkit-border-radius: 4px 0 0 4px;
-            -moz-border-radius: 4px 0 0 4px;
-            border-radius: 4px 0 0 4px;
-            color: #444;
-            outline: none;
-            overflow: hidden;
-        }
-
-        .send {
-            display: block;
-            width: 43px;
-            height: 59px;
-            line-height: 59px;
-            -webkit-border-radius: 0 4px 4px 0;
-            -moz-border-radius: 0 4px 4px 0;
-            border-radius: 0 4px 4px 0;
-            background: #f70;
-            color: #fff;
-            font-size: 14px;
-            float: left;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .Barrage-content {
-            color: #333;
-            word-break: break-all;
-            word-wrap: break-word;
-            vertical-align: middle;
-        }
-
-        .Barrage-list {
-            padding-left: 10px;
-            overflow: hidden;
-            width: 100%;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-        }
-
-        .Barrage-listItem {
-            position: relative;
-            line-height: 21px;
-            word-break: break-all;
-            word-wrap: break-word;
-            margin-bottom: 8px;
-            margin-top: 8px;
-            font-size: 13px;
-        }
-
-        .navbar-header a:hover {
-            color: rgba(255,93,35,1);
-        }
-
-        .a_rightTop {
-            font-size: 16px;
-            line-height: 50px;
-            color: #555;
-            text-decoration: none;
-        }
-
-            .a_rightTop:hover {
-                text-decoration: underline;
-                color: rgba(255,93,35,1);
-            }
-
-            .a_rightTop:visited {
-                color: #555;
-            }
-
-        .color_select {
-            margin-top: 4px;
-            float: left;
-            line-height: 18px;
-            height: 18px;
-            border-style: solid;
-            width: 18px;
-            margin-right: 5px;
-            border-radius: 4px;
-        }
-
-            .color_select.active {
-                /*border: 1px solid #ffd800 !important;*/
-                width: 20px;
-                height: 20px;
-                margin-top: 2px;
-            }
-
-        .Title-categoryList {
-            padding-top: 1px;
-            color: #555;
-            font-size: 12px;
-            overflow: hidden;
-            height: 20px;
-            float: left;
-            margin-right: 7px;
-            clear: both;
-        }
-
-
-
-        .Title-categoryItem {
-            float: left;
-            vertical-align: top;
-            height: 18px;
-            line-height: 18px;
-            font-size: 11px;
-            color: #838c9a;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-            .Title-categoryItem:hover {
-                border-color: #f60;
-                border-top-color: rgb(255, 102, 0);
-                border-right-color: rgb(255, 102, 0);
-                border-bottom-color: rgb(255, 102, 0);
-                border-left-color: rgb(255, 102, 0);
-                color: #f60;
-                text-decoration: none;
-            }
-
-        #AnchorName {
-            color: #555;
-            font-size: 14px;
-            line-height: 20px;
-            height: 20px;
-        }
-
-            #AnchorName:hover {
-                border-color: #f60;
-                border-top-color: rgb(255, 102, 0);
-                border-right-color: rgb(255, 102, 0);
-                border-bottom-color: rgb(255, 102, 0);
-                border-left-color: rgb(255, 102, 0);
-                color: #f60;
-                text-decoration: none;
-            }
-
-        .guanzhu {
-            float: right;
-            width: 75px;
-            height: 30px;
-            border-color: rgb(255, 136, 0);
-            margin-top: 15px;
-            margin-right: 15px;
-            background-color: #f80;
-            line-height: 30px;
-            color: white;
-            text-align: center;
-            border-radius: 15px;
-            cursor: pointer;
-        }
-
-        .yiguanzhu {
-            float: right;
-            width: 75px;
-            height: 30px;
-            border-color: #bdb6ae;
-            margin-top: 15px;
-            margin-right: 15px;
-            background-color: #bdb6ae;
-            line-height: 30px;
-            color: white;
-            text-align: center;
-            border-radius: 15px;
-            cursor: pointer;
-        }
-
-        .liveClass {
-            color: #a7a7a7;
-            text-decoration: none;
-        }
-
-            .liveClass:hover {
-                text-decoration: none;
-                color: #ff5d23;
-            }
-
-
-            .liveClass:visited {
-                text-decoration: none;
-                color: #a7a7a7;
-            }
-
-            .liveClass:active {
-                text-decoration: none;
-                color: #ff5d23;
-            }
-
-        .mainClass {
-            font-size: 14px;
-            display: inline-block;
-            height: 27.7px;
-            margin-bottom: 6px;
-            box-sizing: border-box;
-        }
-
-        .subClass {
-            font-size: 12px;
-            width: 73.3px;
-            display: block;
-            float: left;
-            height: 26px;
-            box-sizing: border-box;
-            padding-left: 6px;
-            padding-right: 6px;
-        }
-
-        .divClassGroup {
-            width: 100%;
-            word-wrap: normal;
-            box-sizing: border-box;
-            padding-left: 10px;
-            padding-right: 10px;
-            clear: both;
-            padding-top: 10px;
-            padding-bottom: 10px;
-        }
-
-        .a_more {
-            float: right;
-            color: #666;
-            margin-right: 6px;
-            font-size: 12px;
-            margin-top: 2px;
-        }
-
-            .a_more:hover {
-                color: #ff5d23;
-            }
-
-        .heartIcon {
-            display: block;
-            background-image: url('../../fonts/heart.png');
-            border: none;
-            width: 21px;
-            height: 21px;
-            float: left;
-        }
-
-        #_left_my_follow:hover .heartIcon {
-            background-image: url('../../fonts/heart_orange.png');
-        }
-
-        .class_item {
-        }
-
-            .class_item:nth-child(3n+1) {
-                text-align: right;
-            }
-
-            .class_item:nth-child(3n+2) {
-                text-align: left;
-            }
-
-            .class_item:nth-child(3n+3) {
-                text-align: center;
-            }
-
-        .left_item {
-            display: block;
-            height: 30px;
-            padding-left: 10px;
-            padding-right: 10px;
-            font-weight: 400;
-            font-size: 16px;
-            margin: 0;
-        }
-
-            .left_item:hover {
-                background-color: #26272e;
-            }
-
-        .Aside-toggle {
-            position: fixed;
-            top: calc(50% + 25px);
-            overflow: visible;
-            width: 22px;
-            height: 80px;
-            -webkit-transform: translateY(-50%);
-            -moz-transform: translateY(-50%);
-            -ms-transform: translateY(-50%);
-            -o-transform: translateY(-50%);
-            transform: translateY(-50%);
-            background-color: #2d2e36;
-            -webkit-border-radius: 11px;
-            -moz-border-radius: 11px;
-            border-radius: 11px;
-            cursor: pointer;
-        }
-
-            .Aside-toggle:hover {
-                background-color: #3b3c48;
-            }
-
-        .Aside-toggle-Expand {
-            left: 229px;
-        }
-
-        .Aside-toggle-Shark {
-            left: -11px;
-        }
-
-        .left_expand {
-        }
-    </style>
+    <link href="~/css/myStyle.css" rel="stylesheet" />
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container" style="width:75%;">
+    <nav class="navbar navbar-default navbar-fixed-top" style="background-color:rgba(255, 255, 255, 0.95);z-index:1000;">
+        <div class="container" id="div_header_container" >
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">首页</a>
+                <a class="navbar-brand" href="/">首页</a>
             </div>
             <div class="navbar-header">
-                <a class="navbar-brand" style="color: rgba(255,93,35,1);" href="#">直播</a>
+                <a class="navbar-brand" style="color: rgba(255,93,35,1);" href="/Directory/0">直播</a>
             </div>
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">分类</a>
+                <a class="navbar-brand" href="/Class">分类</a>
             </div>
             <div style="float:right;">
                 <a href="javascript:;" class="a_rightTop" id="a_login" style="" onclick="ShowLoginDlg()">登录</a>
                 <span id="_shuxian" style="font-size: 16px;line-height: 50px;">|</span>
                 <a href="javascript:;" class="a_rightTop" id="a_reg" onclick="ShowRegDlg()">注册</a>
-                <a href="javascript:;" class="a_rightTop" id="a_user" style="display:none;margin-right:10px;"></a>
-                <a href="javascript:;" class="a_rightTop" id="a_logout" style="display:none;">退出</a>
+                <a href="javascript:;" class="a_rightTop" id="a_user" style="display:none;"></a>
+                <span id="_shuxian2" style="font-size: 16px;line-height: 50px;display:none;">|</span>
+                <a href="javascript:;" class="a_rightTop" id="a_logout" style="display:none;">注销</a>
             </div>
         </div>
     </nav>
@@ -436,8 +55,8 @@
             {
                 <div class="divClassGroup">
                     <div>
-                        <a class="liveClass mainClass" href="/Class/@root.Id" data-id="@root.Id">@root.Name</a>
-                        <a class="a_more" href="/Class/@root.Id">全部</a>
+                        <a class="liveClass mainClass" href="/Directory/@root.Id" data-id="@root.Id">@root.Name</a>
+                        <a class="a_more" href="/Directory/@root.Id">全部</a>
                     </div>
                     @{
                         if (dict.ContainsKey(root.Id))
@@ -446,7 +65,7 @@
                             var subs = dict[root.Id];
                             foreach (var item in subs)
                             {
-                                <a class="liveClass subClass class_item" href="/Class/@item.Id" data-id="@item.Id">@item.Name</a>
+                                <a class="liveClass subClass class_item" href="/Directory/@item.Id" data-id="@item.Id">@item.Name</a>
                                 i++;
                                 if (i > 14)
                                 {
@@ -461,7 +80,7 @@
         </div>
 
         <div class="left_shark">
-            123
+
         </div>
 
         <div class="Aside-toggle Aside-toggle-Expand" style="text-align:center;">
@@ -473,9 +92,9 @@
     </div>
     <div id="content" class="content">
 
-        <div style="height:92px;margin-bottom:10px; width:100%;border:1px solid #e5e4e4" id="title">
+        <div style="height:92px;margin-bottom:10px; width:100%;border:1px solid #e5e4e4;background-color:rgba(255, 255, 255, 0.95);" id="title">
             <div style="float:left;">
-                <img id="ancorPic" style="width:92px;height:92px;" src="~/upload/QQ图片20190402215023.jpg" />
+                <img id="ancorPic" style="width:92px;height:92px;" src="@ViewBag.AnchorPicUrl" />
             </div>
             <div id="divRoomInfo" style="max-width: 787px;padding-left:10px;float:left;">
                 <div id="TitleHeadLine" style="font-family: Microsoft Yahei,-apple-system,sans-serif;font-size: 12px;line-height: 1.5;padding-top:3px;">
@@ -495,10 +114,10 @@
 
     </div>
     <div class="right" id="right">
-        <div style="border:1px solid #e5e4e4;width:334px;height:775px;margin-left:15px;overflow-y:auto;" id="labChat">
+        <div style="border:1px solid #e5e4e4;width:334px;height:785px;margin-left:15px;overflow-y:auto;background-color:rgba(255, 255, 255, 0.95);" id="labChat">
             <ul id="BarrageList" style="list-style: none;" class="Barrage-list"></ul>
         </div>
-        <div style="border:1px solid #e5e4e4;width:334px;height:95px;margin-left:15px;border-top:none;">
+        <div style="border:1px solid #e5e4e4;width:334px;height:95px;margin-left:15px;border-top:none;background-color:rgba(255, 255, 255, 0.95);">
             <div style="padding-left:5px;height:15px;">
                 <div class="color_select active" style="background-color: #000000;border-color:#000000;" color="#000000"></div>
                 <div class="color_select" style="background-color: #ff0000;border-color:#ff0000;" color="#ff0000"></div>
@@ -910,11 +529,12 @@
         function ShowAfterLogin() {
             $('#a_login,#a_reg,#_shuxian').hide();
             $('#a_user').text(user).show();
+            $('#_shuxian2').show();
             $("#a_logout").show().off('click').on('click', function () {
                 $.post('../api/User/LogOut', {}, function (res) {
                     if (res.success) {
                         $('#a_login,#a_reg,#_shuxian').show();
-                        $('#a_logout,#a_user').hide();
+                        $('#a_logout,#a_user,#_shuxian2').hide();
                         user = '';
                         if (ws) {
                             _isMyReconnet = true;
