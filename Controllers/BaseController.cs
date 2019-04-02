@@ -13,14 +13,22 @@ namespace mvc.Controllers
     [EnableCors("corsSample")]
     public class BaseController : Controller
     {
-        public JsonResult Json(bool success, string message, object data = null)
+        public JsonResult Json(bool success, string message, object data = null, int count = 0)
         {
-            return Json(new JsonModel(success, message, data));
+            return Json(new JsonModel(success, message, data, count));
         }
 
         public bool CheckLogin()
         {
             return !string.IsNullOrWhiteSpace(HttpContext.Session.GetString("UserId"));
+        }
+
+        protected string GetVal(string key, string def = "")
+        {
+            if (Request.Form.ContainsKey(key)) {
+                return Request.Form[key].ToString();
+            }
+            return def;
         }
     }
 }

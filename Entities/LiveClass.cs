@@ -11,9 +11,10 @@ namespace Entities
 
         public int ParentId { get; set; }//父ID
 
-        public bool IsFinal { get; set; }//是否最终节点
-
         public string Name { get; set; }//名称
+
+        public int Order { get; set; }//排序
         
+
     }
 }

@@ -1,0 +1,162 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>直播分类管理</title>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/js/sui.js"></script>
+    <script src="~/js/datagrid.js"></script>
+    <script src="~/js/layer/layer.js"></script>
+    <link href="~/css/sui.css" rel="stylesheet" />
+    <link href="~/fonts/smartuifont.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="sui-container-fluid" style="padding-left:50px;padding-right:50px;">
+        <div class="sui-searchbar">
+            名称：<input type="text" class="sui-input" id="listKey" />
+            <button type="button" class="sui-btn" id="listQuery">查 询</button>
+            <a class="sui-btn" id="btnadd" href="javascript:void(0)">添 加</a>
+            <button type="button" class="sui-btn sui-btn-danger" id="listDel">删 除</button>
+        </div>
+        <table id="datagrid"></table>
+    </div>
+    <div class="dv_edit" style="display: none;">
+        <table class="sui-table" id="divForm" style="margin: 0 auto; width: 94%">
+            <caption style="padding-bottom: 5px;">直播分类编辑</caption>
+            <tr>
+                <th class="sui-th-width">父ID</th>
+                <td colspan="1">
+                    <input type="text" class="sui-input" data-dtype="int" name="ParentId" id="ParentId" />
+                    <input type="hidden" name="ID" id="ID" />
+                </td>
+            </tr>
+            <tr>
+                <th class="sui-th-width">名称</th>
+                <td colspan="1">
+                    <input type="text" class="sui-input" name="Name" id="Name" />
+                </td>
+            </tr>
+            <tr>
+                <th class="sui-th-width">排序</th>
+                <td colspan="1">
+                    <input type="text" class="sui-input" data-dtype="int" name="Order" id="Order" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+
+        var datagrid = $('#datagrid').datagrid({
+            url: 'api/LiveClass/List',
+            sortName: 'id',
+            orderType: 'asc',
+            queryParams: { keyword: '' },
+            columns: [
+                { checkbox: true },
+                { title: 'ID', field: 'id', align: 'center', sortable: false },
+                { title: '父ID', field: 'parentId', align: 'center', sortable: false },
+                { title: '名称', field: 'name', align: 'center', sortable: false },
+                { title: '排序', field: 'order', align: 'center', sortable: false },
+                {
+                    title: '操作', field: "id", width: 160, align: 'center', sortable: true, formatter: function (value, row, index) {
+                        return "<a href='javascript:' onclick=\"showEdit(this)\">编辑</a>";
+                    }
+                }
+            ],
+        });
+
+        function Search() {
+            datagrid.load({
+                page: 1,
+                keyword: $('#listKey').val()
+            });
+        }
+
+        $(function () {
+            $('#btnadd').click(function () {
+                showEdit();
+            });
+
+            $('#listQuery').click(function () {
+                Search();
+            });
+
+            $('#listDel').click(function () {
+                del();
+            });
+        });
+
+        function showEdit(val) {
+            layer.open({
+                type: 1,
+                title: '编辑',
+                area: ['380px', '285px'],
+                content: $(".dv_edit"),
+                btn: ['确 定', '取 消'],
+                yes: function (index, layero) {
+                    var check = $("#divForm").checkForm(),
+                        pdata = $("#divForm").getParams();
+
+                    if (check) {
+                        myPost('api/LiveClass/Edit', pdata, function (res) {
+                            Search();
+                            layer.msg(res);
+                            layer.close(index);
+                        });
+                    }
+                },
+                btn2: function (index) {
+                    layer.close(index);
+                },
+                success: function () {
+                    //console.log(val);
+                    if (val) {
+                        $tr = $(val).parent().parent().children();
+                        //console.log($tr.eq(2).text())
+                        $('#ParentId').val($tr.eq(3).text());
+                        $('#ID').val($tr.eq(2).text());
+                        $('#Name').val($tr.eq(4).text());
+                        $('#Order').val($tr.eq(5).text());
+                    } else {
+                        $('#divForm [name]').each(function () {
+                            $(this).val("");
+                        });
+                    }
+                }
+            });
+
+        }
+
+        function del() {
+            var rows = datagrid.getChecked();
+            if (rows.length <= 0) {
+                layer.msg('请选择需要删除的项目');
+                return;
+            }
+
+            layer.confirm("确定删除吗？", { icon: 3, title: "提示" }, function (idx) {
+
+                var idList = '';
+                $.each(rows, function (i, item) {
+                    idList += (idList != '' ? ',' : '') + item.id
+                });
+
+                myPost('api/LiveClass/Delete', { idList: idList }, function (res) {
+                    layer.msg(res, { icon: 6 });
+                    Search();
+                });
+            }, function (idx) {
+                layer.close(idx)
+            })
+
+        }
+
+    </script>
+</body>
+</html>

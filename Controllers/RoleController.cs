@@ -507,7 +507,7 @@ namespace mvc.Controllers
             try
             {
                 UserData data = UserData.Current;
-                if (data == null || data.CheckPermission("权限管理"))
+                if (data == null || !data.CheckPermission("权限管理"))
                 {
                     return NotFound();
                 }
@@ -528,7 +528,7 @@ namespace mvc.Controllers
             try
             {
                 UserData data = UserData.Current;
-                if (data == null || data.CheckPermission("权限管理"))
+                if (data == null || !data.CheckPermission("权限管理"))
                 {
                     return NotFound();
                 }
@@ -553,7 +553,7 @@ namespace mvc.Controllers
             try
             {
                 UserData data = UserData.Current;
-                if (data == null || data.CheckPermission("权限管理"))
+                if (data == null || !data.CheckPermission("权限管理"))
                 {
                     return NotFound();
                 }

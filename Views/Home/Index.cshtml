@@ -11,17 +11,7 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="~/js/vue.min.js"></script>
-    @*<script src="~/js/video/TcPlayer-2.2.2.js"></script>*@
-    @*<!--引入播放器样式-->
-        <link href="http://vjs.zencdn.net/5.19/video-js.min.css" rel="stylesheet">
-        <!--引入播放器js-->
-
-        <script src="http://vjs.zencdn.net/5.19/video.min.js"></script>
-
-        <script src="https://cdn.jsdelivr.net/npm/videojs-flash@2/dist/videojs-flash.min.js"></script>*@
-    @*<link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.8.1/skins/default/aliplayer-min.css" />
-        <script type="text/javascript" charset="utf-8" src="https://g.alicdn.com/de/prismplayer/2.8.1/aliplayer-min.js"></script>
-        <script type="text/javascript" charset="utf-8" src="https://player.alicdn.com/aliplayer/presentation/js/aliplayercomponents.min.js"></script>*@
+    
     <script src="~/js/ck/ckplayer/ckplayer.js"></script>
 
 </head>
@@ -36,164 +26,13 @@
     </nav>
 
     <div class="container">
-        <div class="video" style="width: 1000px;height: 600px;"></div>
 
-        @*<div id="id_test_video" style="width:100%; height:auto;"></div>*@
-        @*
-            <video id="my-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" autoplay="autoplay"
-                   width="1280" height="720" data-setup='{}'>
-                <!--src: 规定媒体文件的 URL  type:规定媒体资源的类型-->
-
-                <source src='rtmp://localhost:1935/live/123' type='rtmp/flv' />
-
-            </video>
-        *@
-        @*<div class="prism-player" id="player-con"></div>*@
-        <button type="button" onclick="newAnimate()">发送</button>
     </div>
 
 
 
     <script type="text/javascript">
 
-        var nowI = 5;
-        var effectName = 'None',
-            typeName = 'easeOut';
-        var speed = 20;
-        var attribute = 'x';
-        var start = 0,
-            end = 0;
-        var animatePosition = [];
-        var alpha = 1;
-        var fontSize = 18;
-
-        var videoObject = {
-            container: '.video',//“#”代表容器的ID，“.”或“”代表容器的class
-            variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
-            autoplay: true,//自动播放
-            loaded: 'loadedHandler',
-            live: true,//直播视频形式
-            video: 'rtmp://127.0.0.1:1935/live/123',//视频地址 rtmp://127.0.0.1:1935/live/123,
-            
-        };
-        var player = new ckplayer(videoObject);
-
-        var playerLoad = false;
-        function loadedHandler() { //播放器加载后会调用该函数
-            playerLoad = true;
-        }
-
-        function randomNum(minNum, maxNum) {
-            switch (arguments.length) {
-                case 1:
-                    return parseInt(Math.random() * minNum + 1, 10);
-                    break;
-                case 2:
-                    return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
-                    break;
-                default:
-                    return 0;
-                    break;
-            }
-        }
-
-        function newAnimate() {
-            if (!playerLoad) {
-                alert('播放器还没有加载，不能添加缓动');
-                return;
-            }
-            alpha = 1;
-            //nowI += 30;
-            nowI = 5 + randomNum(1, 15) * 30;
-            switch (attribute) {
-                case 'x':
-                    animatePosition = [2, 0, 0, nowI];
-                    break;
-                case 'y':
-                    animatePosition = [0, 2, nowI, 0];
-                    break;
-                case 'alpha':
-                    animatePosition = [0, 0, nowI, nowI];
-                    alpha = 0;
-                    break;
-            }
-            var obj = {
-                list: [ //list=定义元素列表
-                    {
-                        type: 'text', //说明是文本
-                        text: '演示弹幕内容，支持互动功能 ，点击可以播放视频', //文本内容
-                        color: '0xFFFFFF', //文本颜色
-                        size: fontSize, //文本字体大小，单位：px
-                        font: '"Microsoft YaHei", YaHei, "微软雅黑", SimHei,"\5FAE\8F6F\96C5\9ED1", "黑体",Arial', //文本字体
-                        leading: 30, //文字行距
-                        alpha: 1, //文本透明度(0-1)
-                        paddingLeft: 10, //文本内左边距离
-                        paddingRight: 10, //文本内右边距离
-                        paddingTop: 0, //文本内上边的距离
-                        paddingBottom: 0, //文本内下边的距离
-                        marginLeft: 0, //文本离左边的距离
-                        marginRight: 10, //文本离右边的距离
-                        marginTop: 10, //文本离上边的距离
-                        marginBottom: 0, //文本离下边的距离
-                        backgroundColor: '0x000000', //文本的背景颜色
-                        backAlpha: 0.1, //文本的背景透明度(0-1)
-                        backRadius: 30, //文本的背景圆角弧度     
-                        //clickEvent: "actionScript->videoPlay"
-                    }
-                ],
-                //x: 10, //元件x轴坐标，注意，如果定义了position就没有必要定义x,y的值了，x,y支持数字和百分比，使用百分比时请使用单引号，比如'50%'
-                //y: 50, //元件y轴坐标
-                //position:[1,1],//位置[x轴对齐方式（0=左，1=中，2=右），y轴对齐方式（0=上，1=中，2=下），x轴偏移量（不填写或null则自动判断，第一个值为0=紧贴左边，1=中间对齐，2=贴合右边），y轴偏移量（不填写或null则自动判断，0=紧贴上方，1=中间对齐，2=紧贴下方）]
-                position: animatePosition,
-                alpha: alpha, //元件的透明度
-                //backgroundColor: '0xFFDD00', //元件的背景色
-                backAlpha: 0.5, //元件的背景透明度(0-1)
-                backRadius: 60, //元件的背景圆角弧度
-                // clickEvent: "actionScript->videoPlay"
-            }
-            var ele = player.addElement(obj);
-            var eleObj = player.getElement(ele);
-            switch (attribute) {
-                case 'x':
-                    start = null;
-                    end = 0 - eleObj['width'];
-                    break;
-                case 'y':
-                    start = '85%';
-                    end = 0 - eleObj['height'];
-                    break;
-                case 'alpha':
-                    start = 0;
-                    end = 1;
-                    alpha = 0;
-                    break;
-            }
-            //if (nowI > 160) {
-            //    nowI = 5;
-            //}
-            var obj = {
-                element: ele,
-                parameter: attribute,
-                static: true, //是否禁止其它属性，true=是，即当x(y)(alpha)变化时，y(x)(x,y)在播放器尺寸变化时不允许变化
-                effect: effectName + '.' + typeName,
-                start: start,
-                end: end,
-                speed: speed,
-                overStop: true,
-                pauseStop: true,
-                callBack: 'deleteChild'
-            };
-            var animate = player.animate(obj);
-        }
-
-        function deleteChild(ele) {
-            if (player) {
-                window.setTimeout(function () {
-                    player.deleteElement(ele);
-                }, 1000);
-
-            }
-        }
 
     </script>
 
