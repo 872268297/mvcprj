@@ -23,7 +23,7 @@ namespace Services
         public async Task<string> Register(User user)
         {
             string userName = user.UserName;
-            if (userName.Length < 5 || user.Password.Length < 5)
+            if (userName.Length < 1 || user.Password.Length < 1)
             {
                 return "用户名或密码长度不足";
             }

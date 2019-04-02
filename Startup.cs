@@ -14,6 +14,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Services;
 using System.Web;
+using System.Net.WebSockets;
+using System.Threading;
+using mvc.Services;
+
 namespace mvc
 {
     public class Startup
@@ -47,7 +51,7 @@ namespace mvc
             services.AddMemoryCache();
 
             services.AddSession();
-            
+
 
             services.AddCors(options =>
             {
@@ -78,7 +82,37 @@ namespace mvc
             app.UseCors("corsSample");
             app.UseStaticHttpContext();
             app.UseSession();
-            
+
+            var webSocketOptions = new WebSocketOptions()
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(120),
+                ReceiveBufferSize = 4 * 1024
+            };
+
+            app.UseWebSockets(webSocketOptions);
+
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path == "/ws")
+                {
+                    if (context.WebSockets.IsWebSocketRequest)
+                    {
+                        WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                        await WSHandler.Echo(context, webSocket);
+                    }
+                    else
+                    {
+                        context.Response.StatusCode = 400;
+                    }
+                }
+                else
+                {
+                    await next();
+                }
+
+            });
+
+
             //mvc.Util.MyHttpContext.ServiceProvider = app.
             app.UseMvc(routes =>
             {
@@ -87,5 +121,6 @@ namespace mvc
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+
     }
 }
