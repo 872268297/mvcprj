@@ -30,19 +30,24 @@
             </div>
             <div class="navbar-header" style="padding-top:8px;padding-bottom:8px;box-sizing:border-box;height:50px;">
                 <div class="header-search">
-                    <input type="text" id="txt_search" placeholder="搜索" readonly onfocus="this.removeAttribute('readonly');" autocomplete="off" />
+                    <input type="text" id="txt_search" readonly onfocus="this.removeAttribute('readonly');" autocomplete="off" />
                     <div class="header-search-btn">
                         <img style="width:20px;height:20px;" src="../fonts/Search_24.14055636896px_1181298_easyicon.net.png" />
                     </div>
                 </div>
             </div>
-            <div style="float:right;">
-                <a href="javascript:;" class="a_rightTop" id="a_login" style="" onclick="ShowLoginDlg()">登录</a>
-                <span id="_shuxian" style="font-size: 16px;line-height: 50px;">|</span>
-                <a href="javascript:;" class="a_rightTop" id="a_reg" onclick="ShowRegDlg()">注册</a>
-                <a href="javascript:;" class="a_rightTop" id="a_user" style="display:none;"></a>
-                <span id="_shuxian2" style="font-size: 16px;line-height: 50px;display:none;">|</span>
-                <a href="javascript:;" class="a_rightTop" id="a_logout" style="display:none;">注销</a>
+            <div id="right_top_float" style="float:right;display:none;">
+                <div id="div_login_panel" style="display:inline-block">
+                    <a href="javascript:;" class="a_rightTop" id="a_login" style="" onclick="ShowLoginDlg()">登录</a>
+                    <span id="_shuxian" style="font-size: 16px;line-height: 50px;">|</span>
+                    <a href="javascript:;" class="a_rightTop" id="a_reg" onclick="ShowRegDlg()">注册</a>
+                </div>
+                <div id="div_login_ed_panel" style="display:inline-block;display:none;">
+                    <img id="head_right_top" style="width:36px;height:36px;border-radius:18px;margin-right:2px;cursor:pointer;" onclick="location.href='/Personal'" src="@Html.Raw(ViewBag.UserAsset == null ? "" : ViewBag.UserAsset.HeadIcon)" />
+                    <a href="/Personal" class="a_rightTop" id="a_user"></a>
+                    <span id="_shuxian2" style="font-size: 16px;line-height: 50px;">|</span>
+                    <a href="javascript:;" class="a_rightTop" id="a_logout">注销</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -147,7 +152,7 @@
                         <input type="text" class="form-control" id="validCode" />
                     </div>
                     <div class="col-sm-4">
-                        <img src="../api/User/VerificationCode?seed=123" onclick="this.src+='1'" alt="验证码" title="点击换一个" />
+                        <img src="../api/User/VerificationCode?seed=123" id="imgCode" onclick="this.src+='1'" alt="验证码" title="点击换一个" />
                     </div>
 
                 </div>
@@ -159,6 +164,14 @@
 
         var user = '@ViewBag.User';
         user = unescape(user.replace(/&#x/g, '%u').replace(/;/g, ''));
+
+        var asset = '@ViewBag.UserAssetJson';
+
+        if (asset != 'null') {
+            asset = JSON.parse(asset.replace(/&quot;/gi, '"'));
+        } else {
+            asset = null;
+        }
 
         function getStyle(obj, styleName) {
             if (obj.currentStyle) { return obj.currentStyle[styleName]; } else {
@@ -246,6 +259,8 @@
             if (user != '') {
                 ShowAfterLogin();
             }
+
+            $('#right_top_float').show();
         });
 
         function Login(username , pwd ,code) {
@@ -255,7 +270,9 @@
             }, function(res) {
                 if (res.success) {
                     layer.closeAll();
-                    user = res.data.userName;
+                    user = res.data[0].userName;
+                    asset = res.data[1];
+                    $('#head_right_top').attr('src', asset.headIcon);
                     ShowAfterLogin();
                 } else {
                     layer.msg(res.message);
@@ -264,15 +281,16 @@
         }
 
         function ShowAfterLogin() {
-            $('#a_login,#a_reg,#_shuxian').hide();
-            $('#a_user').text(user).show();
-            $('#_shuxian2').show();
+            $('#div_login_panel').hide();
+            $('#a_user').text(user);
+            $('#div_login_ed_panel').show();
             $("#a_logout").show().off('click').on('click', function () {
                 $.post('../api/User/LogOut', {}, function (res) {
                     if (res.success) {
-                        $('#a_login,#a_reg,#_shuxian').show();
-                        $('#a_logout,#a_user,#_shuxian2').hide();
+                        $('#div_login_panel').show();
+                        $('#div_login_ed_panel').hide();
                         user = '';
+                        asset = null;
                     } else {
                         layer.msg(res.message);
                     }
@@ -286,6 +304,7 @@
             $('#validCode').val('');
             $('#divReg').hide();
             $('#divLogin').show();
+            $('#imgCode').click();
             layer.open({
                 type: 1,
                 title: '登录',

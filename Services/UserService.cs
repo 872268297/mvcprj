@@ -127,10 +127,13 @@ namespace Services
                     UserId = userId,
                     Exp = 0,
                     Gold = 0,
-                    Level = 0,
+                    Level = 1,
                     HeadIcon = "/fonts/defaultHead.jpeg",
                     RechargeAmount = 0,
-                    Silver = 0
+                    Silver = 0,
+                    Age = 18,
+                    Sex = "男",
+                    Sign = ""
                 };
                 await _dbContext.UserAssets.AddAsync(asset);
                 await _dbContext.SaveChangesAsync();

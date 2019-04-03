@@ -11,6 +11,7 @@ using Services;
 using Newtonsoft.Json.Linq;
 using mvc.Util;
 using Microsoft.AspNetCore.Http;
+using mvc.Entities;
 
 namespace mvc.Controllers
 {
@@ -66,7 +67,17 @@ namespace mvc.Controllers
 
             HttpContext.Session.Remove("verificationCode");
             string r = await _userService.Login(Request.Form["username"], Request.Form["password"]);
-            return Json(r == "true", r, UserData.Current);
+
+            if (r == "true")
+            {
+                var user = UserData.Current;
+                UserAsset asset = await _userService.GetUserAsset(user.UserId);
+                return Json(true, "µ«¬º≥…π¶", new List<object>() { user, asset });
+            }
+            else
+            {
+                return Json(false, "’À∫≈ªÚ√‹¬Î¥ÌŒÛ", null);
+            }
         }
 
 

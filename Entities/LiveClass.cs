@@ -14,7 +14,8 @@ namespace Entities
         public string Name { get; set; }//名称
 
         public int Order { get; set; }//排序
-        
 
+        [MaxLength(200)]
+        public string ImgUrl { get; set; }
     }
 }

@@ -25,5 +25,12 @@ namespace mvc.Entities
 
         [MaxLength(500)]
         public string HeadIcon { get; set; }
+
+        public string Sex { get; set; }
+
+        public int Age { get; set; }
+
+        [MaxLength(60)]
+        public string Sign { get; set; }
     }
 }
