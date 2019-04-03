@@ -400,7 +400,7 @@ a {
 }
 
 #div_header_container {
-    width: 74%;
+    width: 76%;
 }
 
 .nav-active {
@@ -609,12 +609,12 @@ input:-webkit-autofill {
     background-image: url('../fonts/male.png');
 }
 
-personal_female {
+.personal_female {
     display: inline-block;
     background-repeat: no-repeat;
     height: 12px;
     width: 12px;
-    background-image: url('../fonts/female.png');
+    background-image: url('/fonts/female.png');
 }
 
 .personal_age {
@@ -636,5 +636,56 @@ personal_female {
 .div_set_header:hover .head_mask {
     background-color: rgba(0,0,0,0.4);
     display: block;
-    cursor:pointer;
+    cursor: pointer;
 }
+
+
+.left-nav-item.active a {
+    padding-left: 16px;
+}
+
+.btn-save {
+    display: inline-block;
+    width: 140px;
+    height: 40px;
+    background-color: #f80;
+    color: white;
+    line-height: 40px;
+    text-align: center;
+    cursor: pointer;
+    moz-user-select: -moz-none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+    .btn-save:hover {
+        background-color: #f16c00
+    }
+
+
+.btn_back {
+    display: inline-block;
+    color: #f80;
+    border: 2px solid #f80;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    border-radius: 14px;
+    line-height: 25px;
+    moz-user-select: -moz-none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+    .btn_back:hover {
+        background-color: #f80;
+        color: white;
+    }

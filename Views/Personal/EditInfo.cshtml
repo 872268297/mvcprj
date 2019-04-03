@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>个人中心</title>
+    <title>编辑资料</title>
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -56,12 +56,12 @@
         <div class="main_div" style="width:80%;margin:0 auto 0 auto; background-color:rgba(255, 255, 255, 0.95);min-height:890px;position:relative;">
             <div class="divLeftNav">
                 <div class="left-nav-header">个人中心</div>
-                <div class="left-nav-item active">
+                <div class="left-nav-item ">
                     <a href="/Personal">
                         我的信息
                     </a>
                 </div>
-                <div class="left-nav-item">
+                <div class="left-nav-item active">
                     <a href="/Personal/EditInfo">
                         编辑资料
                     </a>
@@ -70,57 +70,67 @@
             <div style="margin-left:180px;position:relative;">
 
                 <div class="main_content">
-                    <div class="div_set_header">
-                        <img style="width:120px;height:120px;border-radius:60px;" id="img_head_icon" src="@ViewBag.UserAsset.HeadIcon" />
-                        <div class="btnUploadHead">修改头像</div><div style="display:none;">
-                            <form id="uploadForm">
-                                <input type="file" name="file" />
-                            </form>
-                        </div>
-                        <div class="head_mask">
+                    <div style="font-size:24px;height:70px;">
+                        <div class="btn_back" onclick="window.location.href = '/Personal';">＜</div>
+                        编辑资料
+                    </div>
 
+                    <div style="vertical-align:top;">
+                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
+                            昵称
+                        </span>
+                        <span style="display:inline-block;margin-left:20px;color:#777;">
+                            @ViewBag.User
+                        </span>
+                    </div>
+
+                    <div style="vertical-align:top;margin-top:15px;">
+                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
+                            个性签名
+                        </span>
+                        <textarea id="sign" style="resize: none;border-color:#ccc;display:inline-block;margin-left:20px;" maxlength="64" rows="4" cols="36">@ViewBag.UserAsset.Sign</textarea>
+                    </div>
+                    <div style="vertical-align:top;margin-top:15px;">
+                        <span id="sex" style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
+                            性别
+                        </span>
+                        <div style="display:inline-block;margin-left:20px;">
+                            <input type="radio" name="sex" value="男" @Html.Raw(ViewBag.UserAsset.Sex == "男" ? "checked" : "") />男
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="radio" name="sex" value="女" @Html.Raw(ViewBag.UserAsset.Sex == "男" ? "" : "checked") />女
                         </div>
                     </div>
-                    <div style="position:absolute;height:120px;left:154px;top:20px;">
-                        <div>
-                            <span class="personal_username">
-                                @ViewBag.User
-                            </span>
-                            <span class="@Html.Raw(ViewBag.UserAsset.Sex == "男" ? "personal_male" : "personal_female")"></span>
-                        </div>
-                        <div>
-                            <span class="personal_age">
-                                @ViewBag.UserAsset.Age
-                                岁
-                                &nbsp;&nbsp;&nbsp;
-                                @Html.Raw((ViewBag.UserAsset.Sign == "" || ViewBag.UserAsset.Sign == null) ? "你还没编辑个性签名。" : ViewBag.UserAsset.Sign)
-                                &nbsp;&nbsp;&nbsp;
-                                <a href="/Personal/EditInfo" style="color:#09f;">编辑资料</a>
-                            </span>
-                        </div>
-                        <div style="margin-top:5px;">
-                            <span style="font-size:12px;color:#333;font-family: Microsoft Yahei,Hiragino Sans GB,WenQuanYi Micro Hei,sans-serif;">
-                                LV
-                                @ViewBag.UserAsset.Level
-                                &nbsp;
-                                @*exp
-                                    @ViewBag.UserAsset.Exp*@
-
-                            </span>
-                        </div>
-                        <div style="margin-top:5px;">
-                            <span class="personal_age">
-                                金币:@{
-                                    int gold = (int)((decimal)ViewBag.UserAsset.Gold);
-                                    int silver = (int)((decimal)ViewBag.UserAsset.Silver);
+                    <div style="vertical-align:top;margin-top:15px;">
+                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align:middle;">
+                            年龄
+                        </span>
+                        <div style="display:inline-block;margin-left:20px;">
+                            <select id="age" class="form-control">
+                                @{
+                                    int age = ViewBag.UserAsset.Age;
                                 }
-                                @gold
-                                &nbsp;&nbsp;&nbsp;
-                                银币:@silver
-                            </span>
+                                @for (int i = 0; i < 120; i++)
+                                {
+                                    if (age == i)
+                                    {
+                                        <option selected="selected">@i</option>
+                                    }
+                                    else
+                                    {
+                                        <option>@i</option>
+                                    }
+                                }
+                            </select>
                         </div>
                     </div>
-                    @*<img style="width:120px;height:120px;border-radius:60px;" src="~/upload/QQ图片20190402215023.jpg" />*@
+                    <div style="vertical-align:top;margin-top:15px;">
+                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align:middle;">
+                            &nbsp;
+                        </span>
+                        <div class="btn-save" style="margin-left:20px;">
+                            保存
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -282,6 +292,21 @@
             });
             $('[name=file]').on('change', function () {
                 doUploadHead();
+            });
+
+            $('.btn-save').click(function () {
+                $.post('/api/Personal/EditInfo', {
+                    sign : $('#sign').val(),
+                    sex: $('input[name=sex]:checked').val(),
+                    age: $("#age option:selected").text()
+                }, function (res) {
+                    if (res.success) {
+                        layer.msg('修改成功');
+                        //window.location.href = '/Personal/EditInfo';
+                    } else {
+                        layer.msg(res.message);
+                    }
+                });
             });
 
             if (user != '') {

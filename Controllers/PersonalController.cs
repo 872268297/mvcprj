@@ -42,6 +42,54 @@ namespace mvc.Controllers
             ViewBag.UserAsset = asset;
             return View();
         }
+
+        public async Task<IActionResult> EditInfo()
+        {
+            UserData user = UserData.Current;
+            UserAsset asset = null;
+            if (user != null)
+            {
+                ViewBag.User = user.UserName;
+                asset = await _userService.GetUserAsset(user.UserId);
+            }
+            else
+            {
+                return Redirect("/");
+            }
+            ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset);
+            ViewBag.UserAsset = asset;
+            return View();
+        }
+
+        [Route("api/Personal/EditInfo")]
+        public async Task<IActionResult> EditInfoApi()
+        {
+            UserData user = UserData.Current;
+
+            if (user == null) return NotFound();
+            try
+            {
+                int userid = user.UserId;
+                string sex = GetVal("sex", "男");
+                int age = int.Parse(GetVal("age", "0"));
+                string sign = GetVal("sign", "");
+                UserAsset asset = await _userService.GetUserAsset(userid);
+
+                asset.Sex = sex;
+                asset.Age = age;
+                asset.Sign = sign;
+
+                await _userService.UpdateUserAsset(asset);
+
+            }
+            catch (Exception e)
+            {
+                return Json(false, "修改失败", e.Message);
+            }
+            return Json(true, "修改成功", null);
+
+        }
+
         [Route("api/Personal/UploadHead")]
         public async Task<IActionResult> UploadHead()
         {
