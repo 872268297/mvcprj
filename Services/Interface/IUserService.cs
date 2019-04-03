@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Entities;
 using Microsoft.AspNetCore.Http;
+using mvc.Entities;
 
 namespace Services
 {
@@ -16,5 +17,9 @@ namespace Services
         Task<string> Login(string username, string password);
 
         bool LogOut();
+
+        Task<UserAsset> GetUserAsset(int userId);
+
+        Task UpdateUserAsset(UserAsset asset);
     }
 }

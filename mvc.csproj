@@ -25,4 +25,7 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\upload\head\" />
+  </ItemGroup>
 </Project>

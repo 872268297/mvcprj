@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>首页</title>
+    <title>个人中心</title>
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -19,7 +19,7 @@
     <nav class="navbar navbar-default navbar-fixed-top" style="background-color:rgba(255, 255, 255, 0.95);z-index:1000;">
         <div class="container" id="div_header_container">
             <div class="navbar-header">
-                <a class="navbar-brand nav-active" href="/"><span class="top_header_item">首页</span></a>
+                <a class="navbar-brand " href="/"><span class="top_header_item">首页</span></a>
             </div>
             <div class="navbar-header">
                 <a class="navbar-brand" href="/Directory/0"><span class="top_header_item">直播</span></a>
@@ -29,7 +29,7 @@
             </div>
             <div class="navbar-header" style="padding-top:8px;padding-bottom:8px;box-sizing:border-box;height:50px;">
                 <div class="header-search">
-                    <input type="text" id="txt_search"  placeholder="搜索"  readonly onfocus="this.removeAttribute('readonly');" autocomplete="off" />
+                    <input type="text" id="txt_search" placeholder="搜索" readonly onfocus="this.removeAttribute('readonly');" autocomplete="off" />
                     <div class="header-search-btn">
                         <img style="width:20px;height:20px;" src="../fonts/Search_24.14055636896px_1181298_easyicon.net.png" />
                     </div>
@@ -46,6 +46,35 @@
         </div>
     </nav>
 
+
+    <div class="container" style="margin-top:62px;">
+        <div class="main_div" style="width:80%;margin:0 auto 0 auto; background-color:rgba(255, 255, 255, 0.95);min-height:850px;position:relative;">
+            <div class="divLeftNav">
+                <div class="left-nav-header">个人中心</div>
+                <div class="left-nav-item active">
+                    <a href="/Personal">
+                        我的信息
+                    </a>
+                </div>
+            </div>
+            <div style="margin-left:180px;position:relative;">
+                <div class="main_content">
+                    <div class="div_set_header">
+                        <img style="width:120px;height:120px;border-radius:60px;" id="img_head_icon" src="@ViewBag.UserAsset.HeadIcon" />
+                        <div class="btnUploadHead">修改头像</div>
+                        <div style="display:none;">
+                            <form id="uploadForm">
+                                <input type="file" name="file" />
+                            </form>
+
+                        </div>
+                    </div>
+
+                    @*<img style="width:120px;height:120px;border-radius:60px;" src="~/upload/QQ图片20190402215023.jpg" />*@
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div style="display:none;" id="divLoginAndReg">
         <div style="text-align:center;display:none;width:92%;margin:10px auto 0 auto;" id="divReg">
@@ -107,6 +136,14 @@
 
         var user = '@ViewBag.User';
         user = unescape(user.replace(/&#x/g, '%u').replace(/;/g, ''));
+
+        var asset = '@ViewBag.UserAssetJson';
+
+        if (asset != 'null') {
+            asset = JSON.parse(asset.replace(/&quot;/gi, '"'));
+        } else {
+            asset = null;
+        }
 
         function getStyle(obj, styleName) {
             if (obj.currentStyle) { return obj.currentStyle[styleName]; } else {
@@ -190,11 +227,38 @@
                 }
             });
 
+            $('.btnUploadHead').click(function () {
+                $('[name=file]').click();
+            });
+            $('[name=file]').on('change', function () {
+                doUploadHead();
+            });
 
             if (user != '') {
                 ShowAfterLogin();
             }
         });
+
+        function doUploadHead() {
+            var formData = new FormData($("#uploadForm")[0]);
+            console.log(formData);
+            $.ajax({
+                url: '../api/Personal/UploadHead',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    asset.HeadIcon = res.data;
+                    $('#img_head_icon').attr('src', res.data);
+                },
+                error: function (res) {
+                    layer.msg(res.message);
+                }
+            });
+        }
 
         function Login(username , pwd ,code) {
             $.post('../api/User/Login', {
@@ -203,10 +267,12 @@
             }, function(res) {
                 if (res.success) {
                     layer.closeAll();
+                    $('#imgCode').click();
                     user = res.data.userName;
                     ShowAfterLogin();
                 } else {
                     layer.msg(res.message);
+                    $('#imgCode').click();
                 }
             });
         }
@@ -218,6 +284,7 @@
             $("#a_logout").show().off('click').on('click', function () {
                 $.post('../api/User/LogOut', {}, function (res) {
                     if (res.success) {
+                        window.location.href = "/";
                         $('#a_login,#a_reg,#_shuxian').show();
                         $('#a_logout,#a_user,#_shuxian2').hide();
                         user = '';
@@ -234,12 +301,14 @@
             $('#validCode').val('');
             $('#divReg').hide();
             $('#divLogin').show();
-            $('#imgCode').click();
             layer.open({
                 type: 1,
                 title: '登录',
                 content: $('#divLoginAndReg'),
-                area: ['420px', '260px']
+                area: ['420px', '260px'],
+                cancel: function () {
+                    $('#imgCode').click();
+                }
 
             });
         }

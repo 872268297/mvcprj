@@ -8,6 +8,7 @@ using Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using mvc.Entities;
 using mvc.Models;
 
 namespace Services
@@ -109,7 +110,39 @@ namespace Services
             {
                 return false;
             }
-            
+
+        }
+
+        public async Task<UserAsset> GetUserAsset(int userId)
+        {
+            var query = from c in _dbContext.UserAssets where c.UserId == userId select c;
+
+            var asset = await query.FirstOrDefaultAsync();
+            if (asset != null) return asset;
+
+            if (await (from a in _dbContext.Users where a.Id == userId select a).AnyAsync())
+            {
+                asset = new UserAsset()
+                {
+                    UserId = userId,
+                    Exp = 0,
+                    Gold = 0,
+                    Level = 0,
+                    HeadIcon = "/fonts/defaultHead.jpeg",
+                    RechargeAmount = 0,
+                    Silver = 0
+                };
+                await _dbContext.UserAssets.AddAsync(asset);
+                await _dbContext.SaveChangesAsync();
+            }
+
+            return asset;
+        }
+
+        public async Task UpdateUserAsset(UserAsset asset)
+        {
+            _dbContext.UserAssets.Update(asset);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

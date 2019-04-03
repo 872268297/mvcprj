@@ -23,6 +23,7 @@ namespace mvc.Entities
 
         public decimal RechargeAmount { get; set; }//历史充值金额
 
-
+        [MaxLength(500)]
+        public string HeadIcon { get; set; }
     }
 }

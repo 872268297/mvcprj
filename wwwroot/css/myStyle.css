@@ -439,7 +439,7 @@ input:-webkit-autofill {
     border-radius: 16px;
     padding-right: 16px;
     width: 252px;
-    margin-left:12px;
+    margin-left: 12px;
 }
 
     .header-search input[type=text] {
@@ -489,7 +489,7 @@ input:-webkit-autofill {
 
 
 .header-search-btn {
-    margin-top:5.2px;
+    margin-top: 5.2px;
     width: 28px;
     height: 20px;
     background-color: rgba(255,255,255,0) !important;
@@ -498,7 +498,86 @@ input:-webkit-autofill {
     float: right;
     margin-right: -14px;
     /*background-image: url('../fonts/search_32px_1223096_easyicon.net.png');*/
-    background-repeat:no-repeat;
-    cursor:pointer;
-   
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+
+.divLeftNav {
+    width: 180px;
+    background-color: #e5e5e5;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    /*box-shadow: -5px 0 0 0 #d4d4d4 inset;*/
+    border-left: none;
+    border-top: none;
+    border-bottom: none;
+    border-right-width: 2px;
+    box-sizing: border-box;
+    border-right-color: #d4d4d4;
+    border-right-style: solid;
+}
+
+.left-nav-header {
+    width: 100%;
+    height: 44px;
+    line-height: 44px;
+    padding-left: 20px;
+    font-weight: 700;
+    font-size: 14px;
+    color: #666;
+}
+
+.left-nav-item {
+    width: 100%;
+    height: 35px;
+}
+
+    .left-nav-item a {
+        width: 100%;
+        padding-left: 20px;
+        height: 35px;
+        display: block;
+        line-height: 35px;
+    }
+
+    .left-nav-item.active {
+        background-color: #f5f5f5;
+        border-left: 4px solid rgb(255, 136, 0);
+    }
+
+
+    .left-nav-item:hover {
+        background-color: #c5c5c5;
+    }
+
+.main_content {
+    position: relative;
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.div_set_header {
+    width: 120px;
+    height: 120px;
+}
+
+.btnUploadHead {
+    position: absolute;
+    top: 50%;
+    left: 43px;
+    width: 74px;
+    height: 28px;
+    line-height: 30px;
+    text-align: center;
+    background-color: white;
+    cursor: pointer;
+    border-radius: 6px;
+    display: none;
+}
+
+.div_set_header:hover .btnUploadHead {
+    display: block;
 }
