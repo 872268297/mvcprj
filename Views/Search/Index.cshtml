@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>直播</title>
+    <title>搜索</title>
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -18,15 +18,15 @@
 </head>
 <body>
     <nav class="navbar navbar-default navbar-fixed-top" style="background-color:rgba(255, 255, 255, 0.95);z-index:1000;">
-        <div class="container" id="div_header_container">
+        <div id="div_header_container" class="container">
             <div class="navbar-header">
                 <a class="navbar-brand" href="/"><span class="top_header_item">首页</span></a>
             </div>
             <div class="navbar-header">
-                <a class="navbar-brand nav-active" href="/Directory/0"><span class="top_header_item">直播</span></a>
+                <a class="navbar-brand" href="/Directory/0"><span class="top_header_item">直播</span></a>
             </div>
             <div class="navbar-header">
-                <a class="navbar-brand" href="/Class"><span class="top_header_item">分类</span></a>
+                <a class="navbar-brand nav-active" href="/Class"><span class="top_header_item">分类</span></a>
             </div>
             <div class="navbar-header" style="padding-top:8px;padding-bottom:8px;box-sizing:border-box;height:50px;">
                 <div class="header-search">
@@ -46,7 +46,6 @@
             </div>
         </div>
     </nav>
-
 
     <div class="left" id="left">
         @{
@@ -231,7 +230,6 @@
                 $('.left').css('width', '240px');
                 //resize();
             });
-
 
 
             $('.header-search-btn ').click(function () {

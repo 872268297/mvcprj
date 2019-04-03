@@ -19,13 +19,21 @@
     <nav class="navbar navbar-default navbar-fixed-top" style="background-color:rgba(255, 255, 255, 0.95);z-index:1000;">
         <div class="container" id="div_header_container">
             <div class="navbar-header">
-                <a class="navbar-brand" style="color: rgba(255,93,35,1);" href="/">首页</a>
+                <a class="navbar-brand nav-active" href="/"><span class="top_header_item">首页</span></a>
             </div>
             <div class="navbar-header">
-                <a class="navbar-brand" href="/Directory/0">直播</a>
+                <a class="navbar-brand" href="/Directory/0"><span class="top_header_item">直播</span></a>
             </div>
             <div class="navbar-header">
-                <a class="navbar-brand" href="/Class">分类</a>
+                <a class="navbar-brand" href="/Class"><span class="top_header_item">分类</span></a>
+            </div>
+            <div class="navbar-header" style="padding-top:8px;padding-bottom:8px;box-sizing:border-box;height:50px;">
+                <div class="header-search">
+                    <input type="text" id="txt_search" readonly onfocus="this.removeAttribute('readonly');" autocomplete="off" />
+                    <div class="header-search-btn">
+                        <img style="width:20px;height:20px;" src="../fonts/Search_24.14055636896px_1181298_easyicon.net.png" />
+                    </div>
+                </div>
             </div>
             <div style="float:right;">
                 <a href="javascript:;" class="a_rightTop" id="a_login" style="" onclick="ShowLoginDlg()">登录</a>
@@ -161,15 +169,27 @@
                 $('.Aside-toggle-Expand,.left_expand').hide();
                 $('.Aside-toggle-Shark,.left_shark').show();
                 $('.left').css('width', '0');
-                resize();
+                //resize();
             });
 
             $('.Aside-toggle-Shark').off('click').on('click', function (e) {
                 $('.Aside-toggle-Expand,.left_expand').show();
                 $('.Aside-toggle-Shark,.left_shark').hide();
                 $('.left').css('width', '240px');
-                resize();
+                //resize();
             });
+
+
+            $('.header-search-btn ').click(function () {
+                window.location.href = '/Search/' + $('#txt_search').val();
+            });
+
+            $('#txt_search').keyup(function (event) {
+                if (event.keyCode == 13) {
+                    window.location.href = '/Search/' + $('#txt_search').val();
+                }
+            });
+
 
             if (user != '') {
                 ShowAfterLogin();

@@ -390,11 +390,115 @@ a {
 
 .navbar-default .navbar-brand {
     color: #555;
-    font-size:16px;
-    font-weight:400;
-    margin-right:10px;
+    font-size: 16px;
+    font-weight: 400;
+    min-width: 70px;
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: -5px !important;
 }
 
-#div_header_container{
-    width:74%;
+#div_header_container {
+    width: 74%;
+}
+
+.nav-active {
+}
+
+.top_header_item {
+    height: 20px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 14.4px;
+    padding-right: 14.4px;
+    border: 0;
+}
+
+.nav-active .top_header_item {
+    background-color: rgb(255, 150, 0) !important;
+    color: white;
+    border-radius: 16px;
+}
+
+.navbar-default .navbar-brand:hover .top_header_item {
+    background-color: rgb(255, 150, 0) !important;
+    color: white;
+    border-radius: 16px;
+}
+
+input:-webkit-autofill {
+    -webkit-text-fill-color: #fff !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.header-search {
+    height: 34px;
+    display: block;
+    background-color: #e5e7eb;
+    border-radius: 16px;
+    padding-right: 16px;
+    width: 252px;
+    margin-left:12px;
+}
+
+    .header-search input[type=text] {
+        margin-left: 13px;
+        margin-top: 2px;
+        height: 28px;
+        line-height: 28px;
+        border: none !important;
+        outline: none !important;
+        /*background-color: rgb(229, 231, 235) !important;*/
+        background-color: rgba(255,255,255,0) !important;
+        color: #777 !important;
+    }
+
+
+
+    .header-search:focus {
+        border: 1px solid #ff9806 !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+    }
+
+    .header-search:hover {
+        border: 1px solid #f80 !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+    }
+
+
+    .header-search:focus-within {
+        border: 1px solid #ff9806 !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        color: #000 !important;
+    }
+
+    .header-search:hover input[type=text] {
+        border: none !important;
+        background-color: rgba(255,255,255,0) !important;
+        color: #000 !important;
+        /*border: 1px solid #f80 !important;*/
+    }
+
+    .header-search:focus input[type=text] {
+        border: none !important;
+        background-color: rgba(255,255,255,0) !important;
+        color: #000 !important;
+        /*border: 1px solid #f80 !important;*/
+    }
+
+
+.header-search-btn {
+    margin-top:5.2px;
+    width: 28px;
+    height: 20px;
+    background-color: rgba(255,255,255,0) !important;
+    border: none;
+    display: block;
+    float: right;
+    margin-right: -14px;
+    /*background-image: url('../fonts/search_32px_1223096_easyicon.net.png');*/
+    background-repeat:no-repeat;
+    cursor:pointer;
+   
 }

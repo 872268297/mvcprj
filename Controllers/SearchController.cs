@@ -9,20 +9,18 @@ using Services;
 
 namespace mvc.Controllers
 {
-    public class DirectoryController : BaseController
+    public class SearchController : BaseController
     {
 
         private readonly ILiveClassService _liveClass;
 
-        public DirectoryController(ILiveClassService liveClass)
+        public SearchController(ILiveClassService liveClass)
         {
             _liveClass = liveClass;
         }
-
-        [Route("Directory/{id?}")]
-        public async Task<IActionResult> Index(int id)
+        [Route("Search/{id?}")]
+        public async Task<IActionResult> Index(string id)
         {
-
             UserData user = UserData.Current;
             if (user != null)
             {
