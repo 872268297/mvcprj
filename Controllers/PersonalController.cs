@@ -111,8 +111,8 @@ namespace mvc.Controllers
                 {
                     string fileExt = Path.GetExtension(formFile.FileName);
                     long fileSize = formFile.Length; //获得文件大小，以字节为单位
-                    string newFileName = System.Guid.NewGuid().ToString() + "." + fileExt; //随机生成新的文件名
-                    var filePath = webRootPath + "/upload/head" + newFileName;
+                    string newFileName = System.Guid.NewGuid().ToString() + fileExt; //随机生成新的文件名
+                    var filePath = webRootPath + "/upload/head/" + newFileName;
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await formFile.CopyToAsync(stream);
@@ -120,11 +120,11 @@ namespace mvc.Controllers
 
                     UserAsset assert = await _userService.GetUserAsset(user.UserId);
 
-                    assert.HeadIcon = "/upload/head" + newFileName;
+                    assert.HeadIcon = "/upload/head/" + newFileName;
 
                     await _userService.UpdateUserAsset(assert);
 
-                    return Json(true, "上传成功", "/upload/head" + newFileName);
+                    return Json(true, "上传成功", "/upload/head/" + newFileName);
                 }
             }
             catch (Exception e)

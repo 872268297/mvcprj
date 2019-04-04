@@ -105,6 +105,34 @@
         </div>
     </div>
 
+    <div class="div_main_content_warp">
+        <div class="div_main_content">
+            <div class="div_room_item_container">
+                @foreach (int i in new int[24])
+                {
+                    <a class="div_romm_item" href="/Room/123">
+                        <div class="div_room_item_cover">
+                            <img class="img_room_item_cover" src="~/upload/head8b848051-bd92-4674-bbdd-899dd6324c2b..jpg" />
+                            <div class="img_room_item_cover_mask"></div>
+                            <img class="img_room_item_cover_mask_play" src="~/fonts/play-icon_a.png" />
+                        </div>
+                        <div class="div_room_item_bottom">
+                            <div class="div_room_item_bottom_room_name">快来看我直播~~~</div>
+                            <div class="div_room_item_bottom_head_row">
+                                <div class="div_room_item_bottom_class">英雄联盟</div>
+                                <img class="div_room_item_bottom_head" src="~/upload/head92c18802-976b-4ede-acf6-010a61f11695..jpg" />
+                                <div class="div_room_item_bottom_anchor_name">
+                                    hhh
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                }
+
+            </div>
+        </div>
+    </div>
+
     <div style="display:none;" id="divLoginAndReg">
         <div style="text-align:center;display:none;width:92%;margin:10px auto 0 auto;" id="divReg">
             <div class="form-horizontal  ">
@@ -196,6 +224,10 @@
             }
         }
 
+        function resize() {
+            $('.div_main_content_warp').css('margin-left',$('.left').width()+14+'px');
+        }
+
         $(function () {
 
             $('#btnReg').off('click').on('click', function () {
@@ -237,14 +269,14 @@
                 $('.Aside-toggle-Expand,.left_expand').hide();
                 $('.Aside-toggle-Shark,.left_shark').show();
                 $('.left').css('width', '0');
-                //resize();
+                resize&&resize();
             });
 
             $('.Aside-toggle-Shark').off('click').on('click', function (e) {
                 $('.Aside-toggle-Expand,.left_expand').show();
                 $('.Aside-toggle-Shark,.left_shark').hide();
                 $('.left').css('width', '240px');
-                //resize();
+                resize && resize();
             });
 
 
@@ -265,6 +297,8 @@
             }
 
             $('#right_top_float').show();
+
+            resize && resize();
         });
 
         function Login(username , pwd ,code) {
