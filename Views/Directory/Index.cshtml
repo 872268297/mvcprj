@@ -17,7 +17,7 @@
     <link href="~/css/myStyle.css" rel="stylesheet" />
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top" style="background-color:rgba(255, 255, 255, 0.95);z-index:1000;">
+    <nav class="navbar navbar-default navbar-fixed-top" style="background-color:rgb(255, 255, 255);z-index:10000;">
         <div class="container" id="div_header_container">
             <div class="navbar-header">
                 <a class="navbar-brand" href="/"><span class="top_header_item">首页</span></a>
@@ -43,10 +43,27 @@
                     <a href="javascript:;" class="a_rightTop" id="a_reg" onclick="ShowRegDlg()">注册</a>
                 </div>
                 <div id="div_login_ed_panel" style="display:inline-block;display:none;">
-                    <img id="head_right_top" style="width:36px;height:36px;border-radius:18px;margin-right:2px;cursor:pointer;" onclick="location.href='/Personal'" src="@Html.Raw(ViewBag.UserAsset == null ? "" : ViewBag.UserAsset.HeadIcon)" />
-                    <a href="/Personal" class="a_rightTop" id="a_user"></a>
-                    <span id="_shuxian2" style="font-size: 16px;line-height: 50px;">|</span>
-                    <a href="javascript:;" class="a_rightTop" id="a_logout">注销</a>
+                    <div class="_group_user" style="display:inline-block;cursor:pointer; " onclick="location.href='/Personal'">
+                        <img class="head_right_top" style="width:36px;height:36px;border-radius:18px;margin-right:5px;cursor:pointer;" />
+                        <a href="/Personal" class="a_rightTop a_user"></a>
+                    </div>
+                    <div class="padnel_head_right_top">
+                        <div class="div_arrow"></div>
+                        <a href="javascript:;" class="a_log_out" id="a_logout"><div class="header-exit-icon"></div><span>退出</span></a>
+                        <div style="width:64px;height:64px;margin:10px auto 0 auto;">
+                            <img class="head_right_top" style="height:100%;width:100%;border-radius:32px;cursor:pointer;"
+                                 onclick="location.href='/Personal'" />
+                        </div>
+                        <div style="width:100%;text-align:center;">
+                            <span class="a_user" style="padding-left:5px;"></span>
+                            <span class="_sex" style="vertical-align:middle;"></span>
+                            <br />
+                            <span class="_sign" style="font-size:12px;"></span>
+                        </div>
+                    </div>
+
+                    @*<span id="_shuxian2" style="font-size: 16px;line-height: 50px;">|</span>*@
+
                 </div>
             </div>
         </div>
@@ -191,14 +208,20 @@
     </div>
     <script type="text/javascript">
 
-        var user = '@ViewBag.User';
-        user = unescape(user.replace(/&#x/g, '%u').replace(/;/g, ''));
+        var user = '@Html.Raw(ViewBag.User)';
+        //user = unescape(user.replace(/&#x/g, '%u').replace(/;/g, ''));
 
 
-        var asset = '@ViewBag.UserAssetJson';
+        function decode(val) {
+            if (val != null)
+                return val.replace(/&#x/g, '%u').replace(/;/g, '');
+            return '';
+        }
+
+        var asset = '@Html.Raw(ViewBag.UserAssetJson)';
 
         if (asset != 'null') {
-            asset = JSON.parse(asset.replace(/&quot;/gi, '"'));
+            asset = JSON.parse(asset);
         } else {
             asset = null;
         }
@@ -310,7 +333,6 @@
                     layer.closeAll();
                     user = res.data[0].userName;
                     asset = res.data[1];
-                    $('#head_right_top').attr('src', asset.headIcon);
                     ShowAfterLogin();
                 } else {
                     layer.msg(res.message);
@@ -318,9 +340,28 @@
             });
         }
 
+        function SetUserAsset(asset) {
+            $('#a_user,.a_user').text(decode(user));
+            var headIcon = asset.headIcon;
+            $('.head_right_top').each(function (i, o) {
+                $(this).attr('src', headIcon );
+            });
+            var sex = asset.sex;
+            if (sex == "男") {
+                $('._sex').removeClass("personal_female").addClass("personal_male");
+            } else {
+                $('._sex').removeClass("personal_male").addClass("personal_female");
+            }
+            if (asset.sign) {
+                $('._sign').empty().text(asset.sign);
+            } else {
+                $('._sign').empty().append($('<a class="_a_edit_sign" href="/Personal/EditInfo" >点击编辑个性签名</a>'));
+            }
+        }
+
         function ShowAfterLogin() {
             $('#div_login_panel').hide();
-            $('#a_user').text(user);
+            SetUserAsset(asset);
             $('#div_login_ed_panel').show();
             $("#a_logout").show().off('click').on('click', function () {
                 $.post('../api/User/LogOut', {}, function (res) {

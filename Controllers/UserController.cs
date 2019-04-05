@@ -80,7 +80,21 @@ namespace mvc.Controllers
             }
         }
 
-
+        [HttpPost]
+        public async Task<IActionResult> GetUserAsset()
+        {
+            UserData user = UserData.Current;
+            UserAsset asset = null;
+            if (user != null)
+            {
+                asset = await _userService.GetUserAsset(user.UserId);
+            }
+            else
+            {
+                return NotFound();
+            }
+            return Json(true, "³É¹¦", asset);
+        }
 
         [HttpPost]
         public IActionResult LogOut()

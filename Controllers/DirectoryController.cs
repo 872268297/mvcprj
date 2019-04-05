@@ -6,6 +6,8 @@ using Entities;
 using Microsoft.AspNetCore.Mvc;
 using mvc.Entities;
 using mvc.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Services;
 
 namespace mvc.Controllers
@@ -37,7 +39,11 @@ namespace mvc.Controllers
             {
                 ViewBag.User = "";
             }
-            ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset);
+
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset, settings);
             ViewBag.UserAsset = asset;
 
             Dictionary<int, List<LiveClass>> classDict = await _liveClass.GetDict();
