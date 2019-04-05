@@ -9,6 +9,8 @@ using mvc.Models;
 using System.IO;
 using Services;
 using mvc.Entities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace mvc.Controllers
 {
@@ -38,7 +40,11 @@ namespace mvc.Controllers
             {
                 return Redirect("/");
             }
-            ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset);
+
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset, settings);
             ViewBag.UserAsset = asset;
             return View();
         }
@@ -56,7 +62,10 @@ namespace mvc.Controllers
             {
                 return Redirect("/");
             }
-            ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset);
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset, settings);
             ViewBag.UserAsset = asset;
             return View();
         }

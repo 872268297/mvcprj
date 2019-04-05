@@ -101,5 +101,65 @@ namespace mvc.Controllers
         {
             return Json(_userService.LogOut(), "");
         }
+
+        [HttpPost]
+        public IActionResult GetDailyTask()
+        {
+            List<DailyTask> list = new List<DailyTask>() {
+                new DailyTask(){
+                    Discribe="观看1次直播",
+                    CurrentCount =1 ,
+                    TotalCount = 1,
+                    Exp = 20,
+                    Id= 1,
+                    IsComplete = true
+                },
+                new DailyTask(){
+                    Discribe="关注1个主播",
+                    CurrentCount =1 ,
+                    TotalCount = 1,
+                    Exp = 50,
+                    Id=2,
+                    IsComplete = false
+                },
+                new DailyTask(){
+                    Discribe="发送1次弹幕",
+                    CurrentCount = 0 ,
+                    TotalCount = 1,
+                    Exp = 100,
+                    Id=3,
+                    IsComplete = false
+                }
+            };
+
+            return Json(true, "成功", list);
+        }
+
+        public async Task<IActionResult> CompleteTask()
+        {
+            UserData user = UserData.Current;
+            if (user != null)
+            {
+                var a = await _userService.GetUserAsset(user.UserId);
+                if (a == null)
+                {
+                    return Json(false, "用户不存在", null);
+                }
+                //获取加经验
+                a.Exp += 50;
+                while (a.Exp >= a.Level * 100)
+                {
+                    a.Exp -= a.Level * 100;
+                    a.Level += 1;
+                }
+                await _userService.UpdateUserAsset(a);
+                return Json(true, "领取成功", null);
+            }
+            else
+            {
+                return Json(false, "没有登录", null);
+            }
+
+        }
     }
 }

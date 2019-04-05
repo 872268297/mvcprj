@@ -35,17 +35,64 @@
                     </div>
                 </div>
             </div>
-            <div id="right_top_float" style="float:right;">
+            <div id="right_top_float" style="float:right;display:none;">
                 <div id="div_login_panel" style="display:inline-block">
                     <a href="javascript:;" class="a_rightTop" id="a_login" style="" onclick="ShowLoginDlg()">登录</a>
                     <span id="_shuxian" style="font-size: 16px;line-height: 50px;">|</span>
                     <a href="javascript:;" class="a_rightTop" id="a_reg" onclick="ShowRegDlg()">注册</a>
                 </div>
                 <div id="div_login_ed_panel" style="display:inline-block;display:none;">
-                    <img id="head_right_top" style="width:36px;height:36px;border-radius:18px;margin-right:2px;cursor:pointer;" onclick="location.href='/Personal'" src="@ViewBag.UserAsset.HeadIcon" />
-                    <a href="/Personal" class="a_rightTop" id="a_user"></a>
-                    <span id="_shuxian2" style="font-size: 16px;line-height: 50px;">|</span>
-                    <a href="javascript:;" class="a_rightTop" id="a_logout">注销</a>
+                    <div class="_group_user" style="display:inline-block;cursor:pointer; " onclick="location.href='/Personal'">
+                        <img class="head_right_top" style="width:36px;height:36px;border-radius:18px;margin-right:5px;cursor:pointer;" />
+                        <a href="/Personal" class="a_rightTop a_user"></a>
+                    </div>
+                    <div class="padnel_head_right_top">
+                        <div class="div_arrow"></div>
+                        <a href="javascript:;" class="a_log_out" id="a_logout"><div class="header-exit-icon"></div><span>退出</span></a>
+                        <div style="width:64px;height:64px;margin:10px auto 0 auto;">
+                            <img class="head_right_top" style="height:100%;width:100%;border-radius:32px;cursor:pointer;"
+                                 onclick="location.href='/Personal'" />
+                        </div>
+                        <div style="width:100%;text-align:center;">
+                            <span class="a_user" style="padding-left:5px;"></span>
+                            <span class="_sex" style="vertical-align:middle;"></span>
+                            <br />
+                            <span class="_sign" style="font-size:12px;"></span>
+                        </div>
+                        <div class="div_level_bar_wrap">
+                            <div class="div_level_bar">
+                                <span class="div_level_bar_cur_level">LV1</span>
+                                <div class="div_level_bar_containter">
+                                    <span>0/100</span>
+                                    <div class="div_level_bar_scroll"></div>
+                                </div>
+                                <span class="div_level_bar_nex_level">LV2</span>
+                            </div>
+                        </div>
+                        <div class="div_wallet_wrap">
+                            <div class="div_wallet_float_chongzhi orange_btn" onclick="layer.msg('暂未开启')">充值</div>
+                            <div style="color:#555;">钱包</div>
+                            <div style="margin-top:5px;">
+                                <span class="span_gold">金币&nbsp;&nbsp;0</span>
+                                <span class="span_siliver">银币&nbsp;&nbsp;0</span>
+                            </div>
+                        </div>
+                        <div class="div_task_wrap">
+                            <div class="div_task_wrap_top_line"></div>
+                            <div style="margin-left:13px;margin-right:13px;margin-top:5px;">
+                                <a style="display:none;float:right;" class="a_normal" href="/Personal/DailyTask">更多</a>
+                                <div style="color:#555;">每日任务</div>
+                                <div class="div_task_list">
+                                    @*<div class="div_task_list_item">
+                                            <span class="div_task_list_item_progress">0/1</span>
+                                            <span class="div_task_list_item_discribe">观看1次直播</span>
+                                            <span class="div_task_list_item_exp">(+20EXP)</span>
+                                        </div>*@
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -53,7 +100,7 @@
 
 
     <div class="container" style="margin-top:66px;">
-        <div class="main_div" style="width:80%;margin:0 auto 0 auto; background-color:rgba(255, 255, 255, 0.95);min-height:890px;position:relative;">
+        <div class="main_div" style="width:80%;margin:0 auto 0 auto; background-color:rgba(255, 255, 255, 0.95);min-height:901px;position:relative;">
             <div class="divLeftNav">
                 <div class="left-nav-header">个人中心</div>
                 <div class="left-nav-item active">
@@ -70,7 +117,7 @@
             <div style="margin-left:180px;position:relative;">
 
                 <div class="main_content">
-                    <div class="div_set_header">
+                    <div class="div_set_header" style="float:left;width:120px;height:120px;">
                         <img style="width:120px;height:120px;border-radius:60px;" id="img_head_icon" src="@ViewBag.UserAsset.HeadIcon" />
                         <div class="btnUploadHead">修改头像</div><div style="display:none;">
                             <form id="uploadForm">
@@ -81,7 +128,7 @@
 
                         </div>
                     </div>
-                    <div style="position:absolute;height:120px;left:154px;top:20px;">
+                    <div style="float:left;margin-left:10px;">
                         <div>
                             <span class="personal_username">
                                 @ViewBag.User
@@ -98,18 +145,26 @@
                                 <a href="/Personal/EditInfo" style="color:#09f;">编辑资料</a>
                             </span>
                         </div>
-                        <div style="margin-top:5px;">
-                            <span style="font-size:12px;color:#333;font-family: Microsoft Yahei,Hiragino Sans GB,WenQuanYi Micro Hei,sans-serif;">
-                                LV
-                                @ViewBag.UserAsset.Level
-                                &nbsp;
-                                @*exp
-                                    @ViewBag.UserAsset.Exp*@
-
-                            </span>
+                        <div style="margin-top:5px;width:320px;">
+                            <div class="div_level_bar">
+                                <span class="div_level_bar_cur_level">LV1</span>
+                                <div class="div_level_bar_containter">
+                                    <span>0/100</span>
+                                    <div class="div_level_bar_scroll"></div>
+                                </div>
+                                <span class="div_level_bar_nex_level">LV2</span>
+                            </div>
                         </div>
                         <div style="margin-top:5px;">
-                            <span class="personal_age">
+                            <div >
+                                <div class="div_wallet_float_chongzhi orange_btn" onclick="layer.msg('暂未开启')">充值</div>
+                                <div style="color:#555;">钱包</div>
+                                <div style="margin-top:5px;">
+                                    <span class="span_gold">金币&nbsp;&nbsp;0</span>
+                                    <span class="span_siliver">银币&nbsp;&nbsp;0</span>
+                                </div>
+                            </div>
+                            @*<span class="personal_age">
                                 金币:@{
                                     int gold = (int)((decimal)ViewBag.UserAsset.Gold);
                                     int silver = (int)((decimal)ViewBag.UserAsset.Silver);
@@ -117,7 +172,7 @@
                                 @gold
                                 &nbsp;&nbsp;&nbsp;
                                 银币:@silver
-                            </span>
+                            </span>*@
                         </div>
                     </div>
                     @*<img style="width:120px;height:120px;border-radius:60px;" src="~/upload/QQ图片20190402215023.jpg" />*@
@@ -184,13 +239,20 @@
     </div>
     <script type="text/javascript">
 
-        var user = '@ViewBag.User';
-        user = unescape(user.replace(/&#x/g, '%u').replace(/;/g, ''));
+       var user = '@Html.Raw(ViewBag.User)';
+        //user = unescape(user.replace(/&#x/g, '%u').replace(/;/g, ''));
 
-        var asset = '@ViewBag.UserAssetJson';
+
+        function decode(val) {
+            if (val != null)
+                return val.replace(/&#x/g, '%u').replace(/;/g, '');
+            return '';
+        }
+
+        var asset = '@Html.Raw(ViewBag.UserAssetJson)';
 
         if (asset != 'null') {
-            asset = JSON.parse(asset.replace(/&quot;/gi, '"'));
+            asset = JSON.parse(asset);
         } else {
             asset = null;
         }
@@ -284,11 +346,97 @@
                 doUploadHead();
             });
 
+            $('._group_user').hover(function () {
+                UpadteUserAsset();
+                GetDailyTask();
+            }, function () {
+
+            });
+
             if (user != '') {
                 ShowAfterLogin();
             }
             $('#right_top_float').show();
         });
+
+        function getNextExp(val) {
+            return parseInt(val) * 100;
+        }
+
+        function UpadteUserAsset() {
+            //更新用户信息
+            $.post('/api/User/GetUserAsset', {}, function (res) {
+                if (res.success) {
+                    asset = res.data;
+                    SetUserAsset(asset);
+                }
+            });
+        }
+
+        function compleTask(id) {
+            $.post('/api/User/CompleteTask', { id: id }, function (res) {
+                if (res.success) {
+                    UpadteUserAsset();
+                    GetDailyTask();
+                } else {
+                    layer.msg(res.message);
+                }
+            });
+        }
+
+        function GetDailyTask() {
+            //获取每日任务
+            $.post('/api/User/GetDailyTask', {}, function (res) {
+                var data = res.data;
+                var str = '';
+                $.each(data, function (i, v) {
+                    if (v.currentCount >= v.totalCount) {
+                        if (v.isComplete) {
+                            str += '<div class="div_task_list_item"><span class="div_task_list_item_progress_received">';
+                            str += '已完成</span>';
+                        } else {
+                            str += '<div class="div_task_list_item"><span class="div_task_list_item_progress_complete" onclick="compleTask(' + v.id + ')">';
+                            str += '领取</span>';
+                        }
+                    } else {
+                        str += '<div class="div_task_list_item"><span class="div_task_list_item_progress">';
+                        str += v.currentCount + '/' + v.totalCount + '</span>';
+                    }
+                    str += '<span class="div_task_list_item_discribe">';
+                    str += v.discribe + '</span><span class="div_task_list_item_exp">(+' + v.exp + 'EXP)</span> </div>';
+                });
+                $('.div_task_list').empty().append($(str));
+            });
+        }
+
+        function SetUserAsset(asset) {
+            $('#a_user,.a_user').text(decode(user));
+            var headIcon = asset.headIcon;
+            $('.head_right_top').each(function (i, o) {
+                $(this).attr('src', headIcon);
+            });
+            var sex = asset.sex;
+            if (sex == "男") {
+                $('._sex').removeClass("personal_female").addClass("personal_male");
+            } else {
+                $('._sex').removeClass("personal_male").addClass("personal_female");
+            }
+            if (asset.sign) {
+                $('._sign').empty().text(asset.sign);
+            } else {
+                $('._sign').empty().append($('<a class="_a_edit_sign" href="/Personal/EditInfo" >点击编辑个性签名</a>'));
+            }
+            var exp = parseInt(asset.exp);
+            var level = asset.level;
+            var nextExp = getNextExp(level);
+            $('.div_level_bar_containter span').text(exp + '/' + nextExp);
+            $('.div_level_bar_cur_level').text('LV' + level);
+            $('.div_level_bar_nex_level').text('LV' + (parseInt(level) + 1));
+            $('.div_level_bar_scroll').css('width', (exp / nextExp) * 100 + '%');
+            $('.span_gold').html('金币&nbsp;&nbsp;' + parseInt(asset.gold));
+            $('.span_siliver').html('银币&nbsp;&nbsp;' + parseInt(asset.silver));
+
+        }
 
         function doUploadHead() {
             var formData = new FormData($("#uploadForm")[0]);
@@ -334,7 +482,7 @@
 
         function ShowAfterLogin() {
             $('#div_login_panel').hide();
-            $('#a_user').text(user);
+            SetUserAsset(asset);
             $('#div_login_ed_panel').show();
             $("#a_logout").show().off('click').on('click', function () {
                 $.post('../api/User/LogOut', {}, function (res) {

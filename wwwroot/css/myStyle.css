@@ -308,6 +308,10 @@ a {
     margin-top: 2px;
 }
 
+    .a_more:visited {
+        color: #666;
+    }
+
     .a_more:hover {
         color: #ff5d23;
     }
@@ -385,7 +389,6 @@ a {
 }
 
 .left_expand {
-    padding-top: 15px;
 }
 
 .navbar-brand:hover {
@@ -559,8 +562,9 @@ input:-webkit-autofill {
 
 .main_content {
     position: relative;
-    padding-top: 20px;
-    padding-left: 20px;
+    padding-top: 40px;
+    padding-left: 40px;
+    position:relative;
 }
 
 .div_set_header {
@@ -570,8 +574,6 @@ input:-webkit-autofill {
 
 .btnUploadHead {
     position: absolute;
-    top: 50%;
-    left: 43px;
     width: 74px;
     height: 28px;
     line-height: 30px;
@@ -580,6 +582,8 @@ input:-webkit-autofill {
     cursor: pointer;
     border-radius: 6px;
     display: none;
+    top: 88px;
+    left: 64px;
     z-index: 1000
 }
 
@@ -629,8 +633,8 @@ input:-webkit-autofill {
 .head_mask {
     display: none;
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 40px;
+    left: 40px;
     width: 120px;
     height: 120px;
     z-index: 999;
@@ -825,23 +829,31 @@ input:-webkit-autofill {
 
 
 .padnel_head_right_top {
-    display: none;
+    visibility: hidden;
     position: absolute;
     margin-left: -200px;
     background-color: rgb(255,255,255);
     width: 300px;
-    height: 400px;
+    height: 350px;
     border-radius: 8px;
     box-shadow: 0 3px 8px 2px rgba(1,1,1,.2);
     border-top: 2px solid #f80;
+    transition: all ease-in 0.1s;
+    opacity: 0;
 }
 
 ._group_user:hover + .padnel_head_right_top {
-    display: block;
+    transform: scale(1);
+    visibility: visible;
+    opacity: 1;
+    /*display: block;*/
 }
 
 .padnel_head_right_top:hover {
-    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    /*display: block;*/
 }
 
 
@@ -854,14 +866,16 @@ input:-webkit-autofill {
     vertical-align: middle;
 }
 
+    .a_log_out:visited {
+        color: #666;
+    }
+
     .a_log_out:hover {
         font-size: 12px;
         color: #f80;
     }
 
-    .a_log_out:visited {
-        color: #666;
-    }
+
 
 .header-exit-icon {
     vertical-align: middle;
@@ -905,9 +919,199 @@ input:-webkit-autofill {
 }
 
     ._a_edit_sign:visited {
-        color:#777;
+        color: #777;
     }
 
     ._a_edit_sign:hover {
         color: #09f;
+    }
+
+
+.div_level_bar_wrap {
+    margin-top: 20px;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+.div_level_bar {
+    width: 100%;
+    height: 15px;
+    vertical-align: middle;
+}
+
+.div_level_bar_cur_level, .div_level_bar_nex_level {
+    vertical-align: middle;
+    height: 15px;
+    width: 10%;
+    margin: 0;
+    line-height: 16px;
+    display: inline-block;
+    display: block;
+    float: left;
+    font-size: 12px;
+}
+
+.div_level_bar_cur_level {
+    text-align: center;
+    padding-right: 5px;
+}
+
+.div_level_bar_nex_level {
+    text-align: center;
+    padding-left: 5px;
+}
+
+.div_level_bar_containter {
+    float: left;
+    vertical-align: middle;
+    height: 15px;
+    line-height: 16px;
+    width: 80%;
+    text-align: center;
+    background-color: #b9c1cd;
+    border-radius: 6px;
+    position: relative;
+}
+
+    .div_level_bar_containter span {
+        line-height: 16px;
+        position: absolute;
+        width: 100px;
+        left: 50%;
+        text-align: center;
+        margin-left: -50px;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 400;
+        z-index: 20000;
+    }
+
+
+.div_level_bar_scroll {
+    height: 100%;
+    border-radius: 6px;
+    width: 80%;
+    background: -webkit-linear-gradient(left, #fe8703, #f65e7d); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #fe8703, #f65e7d); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #fe8703, #f65e7d); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #fe8703, #f65e7d); /* 标准的语法 */
+}
+
+
+.div_wallet_wrap {
+    margin-top: 15px;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+.div_wallet_float_chongzhi {
+    float: right;
+}
+
+.orange_btn {
+    background-color: #f80;
+    width: 40px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 10px;
+    color: #fff;
+    text-align: center;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+    .orange_btn:hover {
+        background-color: #f60;
+    }
+
+
+.span_gold, .span_siliver {
+    font-size: 12px;
+    color: #777;
+    margin-right: 10px;
+}
+
+.div_task_wrap {
+    margin-top: 10px;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.div_task_wrap_top_line {
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+}
+
+#_left_my_follow {
+    padding-top: 15px;
+    height: 50px;
+}
+
+    #_left_my_follow:hover {
+        background-color: #26272e;
+    }
+
+
+
+.a_normal {
+    font-size: 12px;
+    color: #888;
+    float: right;
+}
+
+    .a_normal:visited {
+        color: #888;
+    }
+
+    .a_normal:hover {
+        font-size: 12px;
+        color: #f80;
+    }
+
+.div_task_list_item {
+    margin-top: 8px;
+}
+
+    .div_task_list_item .div_task_list_item_progress {
+        float: right;
+        color: #888;
+        width: 40px;
+        text-align: center;
+    }
+
+    .div_task_list_item .div_task_list_item_progress_complete {
+        font-size: 12px;
+        float: right;
+        color: #20bf28;
+        line-height: 20px;
+        margin-top: 1px;
+        width: 40px;
+        text-align: center;
+        border: 1px solid #23bb3d;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .div_task_list_item .div_task_list_item_progress_complete:hover {
+        background-color:#15b035;
+        color:#fff;
+    }
+
+    .div_task_list_item .div_task_list_item_progress_received {
+        float: right;
+        font-size: 12px;
+        color: #20ac41;
+        line-height: 20px;
+        margin-top: 1px;
+        width: 40px;
+        text-align:center;
+    }
+
+    .div_task_list_item .div_task_list_item_discribe {
+        color: #888;
+    }
+
+    .div_task_list_item .div_task_list_item_exp {
+        color: #20bf28;
     }
