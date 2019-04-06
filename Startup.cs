@@ -50,7 +50,14 @@ namespace mvc
 
             services.AddMemoryCache();
 
-            services.AddSession();
+            //添加redis
+            //services.AddDistributedRedisCache(options =>
+            //{
+            //    options.Configuration = "localhost";
+
+            //});
+
+            services.AddSession(o => o.IdleTimeout = TimeSpan.FromHours(4));
 
 
             services.AddCors(options =>

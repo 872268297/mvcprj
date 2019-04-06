@@ -111,9 +111,14 @@
                         我的信息
                     </a>
                 </div>
-                <div class="left-nav-item active">
+                <div class="left-nav-item ">
                     <a href="/Personal/EditInfo">
                         编辑资料
+                    </a>
+                </div>
+                <div class="left-nav-item active">
+                    <a href="/Personal/ChangePWD">
+                        修改密码
                     </a>
                 </div>
             </div>
@@ -125,60 +130,37 @@
                         修改密码
                     </div>
 
-                    <div style="vertical-align:top;">
-                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
-                            昵称
+                    <div style="vertical-align:top;margin-bottom:10px;">
+                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: middle;">
+                            当前密码
                         </span>
                         <span style="display:inline-block;margin-left:20px;color:#777;">
-                            @ViewBag.User
+                            <input type="password" name="cur_pwd" class="form-control" />
+                        </span>
+                    </div>
+                    <div style="vertical-align:top;margin-bottom:10px;">
+                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: middle;">
+                            新密码
+                        </span>
+                        <span style="display:inline-block;margin-left:20px;color:#777;">
+                            <input type="password" name="new_pwd" class="form-control" />
+                        </span>
+                    </div>
+                    <div style="vertical-align:top;margin-bottom:10px;">
+                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: middle;">
+                            重复密码
+                        </span>
+                        <span style="display:inline-block;margin-left:20px;color:#777;">
+                            <input type="password" name="new_pwd2" class="form-control" />
                         </span>
                     </div>
 
-                    <div style="vertical-align:top;margin-top:15px;">
-                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
-                            个性签名
-                        </span>
-                        <textarea id="sign" style="resize: none;border-color:#ccc;display:inline-block;margin-left:20px;" maxlength="64" rows="4" cols="36">@ViewBag.UserAsset.Sign</textarea>
-                    </div>
-                    <div style="vertical-align:top;margin-top:15px;">
-                        <span id="sex" style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
-                            性别
-                        </span>
-                        <div style="display:inline-block;margin-left:20px;">
-                            <input type="radio" name="sex" value="男" @Html.Raw(ViewBag.UserAsset.Sex == "男" ? "checked" : "") />男
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                            <input type="radio" name="sex" value="女" @Html.Raw(ViewBag.UserAsset.Sex == "男" ? "" : "checked") />女
-                        </div>
-                    </div>
-                    <div style="vertical-align:top;margin-top:15px;">
-                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align:middle;">
-                            年龄
-                        </span>
-                        <div style="display:inline-block;margin-left:20px;">
-                            <select id="age" class="form-control">
-                                @{
-                                    int age = ViewBag.UserAsset.Age;
-                                }
-                                @for (int i = 0; i < 120; i++)
-                                {
-                                    if (age == i)
-                                    {
-                                        <option selected="selected">@i</option>
-                                    }
-                                    else
-                                    {
-                                        <option>@i</option>
-                                    }
-                                }
-                            </select>
-                        </div>
-                    </div>
                     <div style="vertical-align:top;margin-top:15px;">
                         <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align:middle;">
                             &nbsp;
                         </span>
                         <div class="btn-save" style="margin-left:20px;">
-                            保存
+                            确认修改
                         </div>
                     </div>
                 </div>
@@ -352,13 +334,23 @@
             });
 
             $('.btn-save').click(function () {
-                $.post('/api/Personal/EditInfo', {
-                    sign : $('#sign').val(),
-                    sex: $('input[name=sex]:checked').val(),
-                    age: $("#age option:selected").text()
+                var new_pwd = $('[name=new_pwd]').val();
+                var new_pwd2 = $('[name=new_pwd2]').val();
+                var cur_pwd = $('[name=cur_pwd]').val();
+                if (new_pwd == '' || new_pwd2 == '' || cur_pwd == '') {
+                    return;
+                }
+                if (new_pwd != new_pwd2) {
+                    layer.msg('两次输入的密码不一致');
+                    return;
+                }
+                $.post('/api/Personal/ChangePWD', {
+                    cur_pwd: hex_md5(cur_pwd),
+                    new_pwd: hex_md5(new_pwd)
                 }, function (res) {
                     if (res.success) {
                         layer.msg('修改成功');
+                        $('[name]').val("");
                         //window.location.href = '/Personal/EditInfo';
                     } else {
                         layer.msg(res.message);

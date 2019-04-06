@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Entities;
 using Microsoft.AspNetCore.Http;
 using mvc.Entities;
+using mvc.Models;
 
 namespace Services
 {
@@ -21,5 +22,7 @@ namespace Services
         Task<UserAsset> GetUserAsset(int userId);
 
         Task UpdateUserAsset(UserAsset asset);
+
+        Task<JsonModel> ChangePWD(string username, string cur_pwd, string new_pwd);
     }
 }

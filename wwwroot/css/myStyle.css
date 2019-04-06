@@ -1141,17 +1141,17 @@ input:-webkit-autofill {
 
 .div_account_manager_item {
     float: left;
-    width: 35%;
-    height: 60px;
-    border: 1px solid #cecece;
+    width: 45%;
+    height: 80px;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    margin-right: 6%;
+    margin-right: 5%;
     text-align: center;
-    line-height: 60px;
+    line-height: 80px;
     cursor: pointer;
     background-color: #fafafc;
-    font-size:12px;
-    font-weight:600;
+    font-size:14px;
+    font-weight:500;
 }
 
     .div_account_manager_item:hover {

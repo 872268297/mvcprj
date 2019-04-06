@@ -49,24 +49,38 @@ namespace mvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Login()
         {
-            string sessionCode = HttpContext.Session.GetString("verificationCode");
-            if (string.IsNullOrWhiteSpace(sessionCode))
-            {
-                HttpContext.Session.Remove("verificationCode");
-                return Json(false, "验证码过期,请刷新验证码");
-            }
+
             string code = Request.Form["code"];
             if (code != "15212310")
             {
+                string sessionCode = HttpContext.Session.GetString("verificationCode");
+                if (string.IsNullOrWhiteSpace(sessionCode))
+                {
+                    HttpContext.Session.Remove("verificationCode");
+                    return Json(false, "验证码过期,请刷新验证码");
+                }
+
                 if (string.IsNullOrWhiteSpace(sessionCode) || code != sessionCode)
                 {
                     HttpContext.Session.Remove("verificationCode");
                     return Json(false, "验证码错误");
                 }
             }
+            else
+            {
+                string s = HttpContext.Session.GetString("_register");
+                if (s != null && s == "_register")
+                {
+                    HttpContext.Session.Remove("_register");
+                }
+                else
+                {
+                    return Json(false, "验证码错误");
+                }
+            }
 
             HttpContext.Session.Remove("verificationCode");
-            string r = await _userService.Login(Request.Form["username"], Request.Form["password"]);
+            string r = await _userService.Login(GetVal("username"), GetVal("password"));
 
             if (r == "true")
             {

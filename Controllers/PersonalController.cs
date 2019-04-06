@@ -91,6 +91,25 @@ namespace mvc.Controllers
             return View();
         }
 
+        [Route("api/Personal/ChangePWD")]
+        public async Task<IActionResult> ChangePWDApi()
+        {
+            UserData user = UserData.Current;
+
+            if (user != null)
+            {
+                var result = await _userService.ChangePWD(user.UserName, GetVal("cur_pwd"), GetVal("new_pwd"));
+
+                return Json(result);
+            }
+            else
+            {
+                return Json(false, "未登录", "");
+            }
+
+
+        }
+
         [Route("api/Personal/EditInfo")]
         public async Task<IActionResult> EditInfoApi()
         {

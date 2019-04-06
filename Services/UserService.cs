@@ -15,6 +15,7 @@ namespace Services
 {
     public class UserService : IUserService
     {
+        private const string _pwd_salt = "sdf!!~@90sjd";
         private readonly MyDbContext _dbContext;
         public UserService(MyDbContext dbContext)
         {
@@ -36,9 +37,10 @@ namespace Services
             {
                 return "用户名已存在"; //重复名
             }
-            user.Password = Md5Util.Encode(Md5Util.Encode(user.Password + "sdf!!~@90sjd") + userName);
+            user.Password = Md5Util.Encode(Md5Util.Encode(user.Password + _pwd_salt) + userName);
             await _dbContext.Users.AddAsync(user);
             await _dbContext.SaveChangesAsync();
+            MyHttpContext.Current.Session.SetString("_register", "_register");
             return "true";
         }
 
@@ -50,7 +52,7 @@ namespace Services
 
         public async Task<string> Login(string username, string password)
         {
-            string md5pwd = Md5Util.Encode(Md5Util.Encode(password + "sdf!!~@90sjd") + username);
+            string md5pwd = Md5Util.Encode(Md5Util.Encode(password + _pwd_salt) + username);
             var linq = from c in _dbContext.Users
                        where c.UserName == username && c.Password == md5pwd
                        select c;
@@ -146,6 +148,39 @@ namespace Services
         {
             _dbContext.UserAssets.Update(asset);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<JsonModel> ChangePWD(string username, string cur_pwd, string new_pwd)
+        {
+            try
+            {
+                var user = await (from c in _dbContext.Users where c.UserName == username select c).FirstOrDefaultAsync();
+
+                if (user == null)
+                {
+                    return new JsonModel(false, "用户不存在", null);
+                }
+
+                string cur_md5pwd = Md5Util.Encode(Md5Util.Encode(cur_pwd + _pwd_salt) + username);
+
+                if (cur_md5pwd != user.Password)
+                {
+                    return new JsonModel(false, "当前密码错误", null);
+                }
+                string new_md5pwd = Md5Util.Encode(Md5Util.Encode(new_pwd + _pwd_salt) + username);
+
+                user.Password = new_md5pwd;
+
+                _dbContext.Users.Update(user);
+
+                await _dbContext.SaveChangesAsync();
+
+                return new JsonModel(true, "修改成功", null);
+            }
+            catch (Exception e)
+            {
+                return new JsonModel(false, "修改失败", e.Message);
+            }
         }
     }
 }
