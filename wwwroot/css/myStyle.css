@@ -1008,7 +1008,8 @@ input:-webkit-autofill {
 .div_level_bar_scroll {
     height: 100%;
     border-radius: 6px;
-    width: 80%;
+    width: 0%;
+    transition: all ease 0.3s;
     background: -webkit-linear-gradient(left, #fe8703, #f65e7d); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(right, #fe8703, #f65e7d); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(right, #fe8703, #f65e7d); /* Firefox 3.6 - 15 */
@@ -1150,8 +1151,8 @@ input:-webkit-autofill {
     line-height: 80px;
     cursor: pointer;
     background-color: #fafafc;
-    font-size:14px;
-    font-weight:500;
+    font-size: 14px;
+    font-weight: 500;
 }
 
     .div_account_manager_item:hover {

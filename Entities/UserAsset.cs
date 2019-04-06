@@ -32,5 +32,7 @@ namespace mvc.Entities
 
         [MaxLength(60)]
         public string Sign { get; set; }
+
+        public string NickName { get; set; }
     }
 }

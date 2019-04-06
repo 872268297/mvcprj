@@ -124,26 +124,30 @@
             </div>
             <div style="margin-left:180px;position:relative;">
 
-                <div class="main_content" >
+                <div class="main_content">
                     <div style="font-size:24px;height:70px;">
                         <div class="btn_back" onclick="history.back(-1)">＜</div>
                         编辑资料
                     </div>
 
                     <div style="vertical-align:top;">
-                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
+                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: middle;">
                             昵称
                         </span>
-                        <span style="display:inline-block;margin-left:20px;color:#777;">
-                            @ViewBag.User
-                        </span>
+                        <div style="display:inline-block;margin-left:20px;color:#777;">
+                            <input maxlength="12" name="nickName" class="form-control" value="@Html.Raw(ViewBag.UserAsset.NickName)" />
+                        </div>
+
                     </div>
 
                     <div style="vertical-align:top;margin-top:15px;">
-                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
+                        <span  style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
                             个性签名
                         </span>
-                        <textarea id="sign" style="resize: none;border-color:#ccc;display:inline-block;margin-left:20px;" maxlength="64" rows="4" cols="36">@ViewBag.UserAsset.Sign</textarea>
+                        <div style="display:inline-block;margin-left:20px;">
+                            <textarea class="form-control" id="sign" style="resize: none;border-color:#ccc;" maxlength="64" rows="4" cols="36">@ViewBag.UserAsset.Sign</textarea>
+                        </div>
+                       
                     </div>
                     <div style="vertical-align:top;margin-top:15px;">
                         <span id="sex" style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
@@ -360,10 +364,12 @@
                 $.post('/api/Personal/EditInfo', {
                     sign : $('#sign').val(),
                     sex: $('input[name=sex]:checked').val(),
-                    age: $("#age option:selected").text()
+                    age: $("#age option:selected").text(),
+                    nickName: $('input[name=nickName]').val()
                 }, function (res) {
                     if (res.success) {
                         layer.msg('修改成功');
+                        UpadteUserAsset();
                         //window.location.href = '/Personal/EditInfo';
                     } else {
                         layer.msg(res.message);
@@ -438,7 +444,7 @@
         }
 
         function SetUserAsset(asset) {
-            $('#a_user,.a_user').text(decode(user));
+            $('#a_user,.a_user').text(asset.nickName);
             var headIcon = asset.headIcon;
             $('.head_right_top').each(function (i, o) {
                 $(this).attr('src', headIcon);

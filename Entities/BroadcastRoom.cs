@@ -18,9 +18,13 @@ namespace mvc.Entities
         [MaxLength(32)]
         public string Name { get; set; }//房间名
 
+        public int ClassId { get; set; }//分类ID
+
         public int RoomNum { get; set; }//房间号码
 
         public bool IsLiving { get; set; }//是否正在直播
+
+        public bool IsBan { get; set; }//是否封禁
 
         public DateTime? LastLiveTime { get; set; }//最后直播时间
 
@@ -28,6 +32,10 @@ namespace mvc.Entities
 
         public string StreamChannel { get; set; }//推流频道
 
+        public string Notice { get; set; }//直播公告
 
+        public string CoverUrl { get; set; }//房间封面
+
+        public string StreamCode { get; set; }//推流码
     }
 }

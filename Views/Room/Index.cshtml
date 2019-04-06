@@ -501,7 +501,7 @@
                     var obj = {};
                     obj.message = s;
                     obj.color = BarrageColor;
-                    obj.sender = user;
+                    obj.sender = asset.nickName;
                     //console.log(obj);
                     ws.send(JSON.stringify(obj));
                 }
@@ -677,7 +677,7 @@
         }
 
         function SetUserAsset(asset) {
-            $('#a_user,.a_user').text(decode(user));
+            $('#a_user,.a_user').text(asset.nickName);
             var headIcon = asset.headIcon;
             $('.head_right_top').each(function (i, o) {
                 $(this).attr('src', headIcon);

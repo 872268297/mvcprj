@@ -425,7 +425,7 @@
         }
 
         function SetUserAsset(asset) {
-            $('#a_user,.a_user').text(decode(user));
+            $('#a_user,.a_user').text(asset.nickName);
             var headIcon = asset.headIcon;
             $('.head_right_top').each(function (i, o) {
                 $(this).attr('src', headIcon);

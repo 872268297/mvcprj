@@ -71,6 +71,7 @@ namespace mvc
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ILiveClassService, LiveClassService>();
+            services.AddTransient<IAnchorService, AnchorService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

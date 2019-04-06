@@ -122,11 +122,13 @@ namespace Services
             var asset = await query.FirstOrDefaultAsync();
             if (asset != null) return asset;
 
-            if (await (from a in _dbContext.Users where a.Id == userId select a).AnyAsync())
+            var user = await (from a in _dbContext.Users where a.Id == userId select a).FirstOrDefaultAsync();
+            if (user != null)
             {
                 asset = new UserAsset()
                 {
-                    UserId = userId,
+                    NickName = user.UserName,
+                    UserId = user.Id,
                     Exp = 0,
                     Gold = 0,
                     Level = 1,

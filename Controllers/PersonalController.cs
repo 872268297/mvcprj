@@ -127,7 +127,7 @@ namespace mvc.Controllers
                 asset.Sex = sex;
                 asset.Age = age;
                 asset.Sign = sign;
-
+                asset.NickName = GetVal("nickName");
                 await _userService.UpdateUserAsset(asset);
 
             }
