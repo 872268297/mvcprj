@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace mvc.Controllers
 {
-    [EnableCors("corsSample")]
+    [EnableCors("corsSample2")]
     public class BaseController : Controller
     {
         public JsonResult Json(bool success, string message, object data = null, int count = 0)

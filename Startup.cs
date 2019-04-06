@@ -57,6 +57,8 @@ namespace mvc
             {
                 options.AddPolicy("corsSample", p => p.WithOrigins("http://localhost:8080")
                    .AllowAnyMethod().AllowAnyHeader());
+                options.AddPolicy("corsSample2", p => p.WithOrigins("http://localhost:5000")
+                   .AllowAnyMethod().AllowAnyHeader());
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -80,7 +82,7 @@ namespace mvc
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseCors("corsSample");
+            app.UseCors("corsSample2");
             app.UseStaticHttpContext();
             app.UseSession();
 

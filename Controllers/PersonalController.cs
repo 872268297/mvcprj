@@ -70,6 +70,27 @@ namespace mvc.Controllers
             return View();
         }
 
+        public async Task<IActionResult> ChangePWD()
+        {
+            UserData user = UserData.Current;
+            UserAsset asset = null;
+            if (user != null)
+            {
+                ViewBag.User = user.UserName;
+                asset = await _userService.GetUserAsset(user.UserId);
+            }
+            else
+            {
+                return Redirect("/");
+            }
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset, settings);
+            ViewBag.UserAsset = asset;
+            return View();
+        }
+
         [Route("api/Personal/EditInfo")]
         public async Task<IActionResult> EditInfoApi()
         {
