@@ -36,7 +36,7 @@ namespace mvc.Controllers
             {
                 if (!await _anchorService.IsAnchor(user.UserId))
                 {
-                    return RedirectToAction("NewRoom");    
+                    return RedirectToAction("NewRoom");
                 }
 
                 ViewBag.User = user.UserName;
@@ -67,7 +67,7 @@ namespace mvc.Controllers
             UserAsset asset = null;
             if (user != null)
             {
-               
+
                 ViewBag.User = user.UserName;
                 asset = await _userService.GetUserAsset(user.UserId);
 
@@ -79,6 +79,8 @@ namespace mvc.Controllers
 
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            ViewBag.Dict_Class = JsonConvert.SerializeObject(await _liveClass.GetDict(), settings);
 
             ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset, settings);
             ViewBag.UserAsset = asset;

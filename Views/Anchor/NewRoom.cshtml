@@ -127,10 +127,65 @@
             <div style="margin-left:180px;position:relative;">
 
                 <div class="main_content">
-                    <div style="font-size:24px;height:70px;">
+                    <div style="font-size:24px;height:50px;">
                         <span style="border-left:4px solid #f80;padding-left:3px;">主播申请</span>
+
+                    </div>
+                    <div style="margin-left:42px;color:#777;margin-bottom:10px;">
+                        请填写直播间信息
+                    </div>
+                    <div style="vertical-align:top;margin-bottom:10px;">
+                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: middle;">
+                            房间标题
+                        </span>
+                        <span style="display:inline-block;margin-left:20px;color:#777;">
+                            <input type="text" name="RoomName" class="form-control" style="width:295px;" />
+                        </span>
+                    </div>
+                    <div style="vertical-align:top;margin-top:15px;">
+                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
+                            房间公告
+                        </span>
+                        <div style="display:inline-block;margin-left:20px;">
+                            <textarea class="form-control" name="Notice" style="resize: none;border-color:#ccc;" maxlength="64" rows="4" cols="36"></textarea>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <span style="text-align:right;width:100px;display:inline-block;color:#777;">
+                            房间分类
+                        </span>
+                        <span style="display:inline-block;margin-left:20px;margin-top:15px;color:#777;">
+                            <span name="CLASSID" style="line-height:26px;">未选择</span>
+                            <input style="vertical-align:top;margin-left:5px;" type="button" class="white_btn btn_choose_class" value="更改" />
+                        </span>
+                    </div>
+                    <div style="vertical-align:top;margin-top:15px;">
+                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align:middle;">
+                            &nbsp;
+                        </span>
+                        <div class="btn-save" style="margin-left:20px;">
+                            申请
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="position:fixed;top:0;left:0;bottom:0;right:0;background-color:rgba(0,0,0,0.5);display:none;z-index:29999;" id="div_mask"></div>
+
+    <div style="position:fixed;display:none;z-index:39999;width:680px;top:50%;padding-bottom:40px;border-radius:4px;
+        background-color:#fff;left:50%;margin-left:-340px;margin-top:-300px;" class="divChooseClass">
+        <div class="close_btn" style="margin-top:10px;float:right;margin-right:10px;"></div>
+        <div style="padding-left:2%;padding-top:10px;font-size:16px;font-weight:500;">直播分类</div>
+        <div style="width:92%;margin:20px auto 0 auto;">
+            <div class="main_class">
+
+            </div>
+            <div style="clear:both;margin-bottom:5px;margin-top:10px;">点击切换栏目</div>
+            <div style="width:100%;height:1px;border-bottom:1px dotted #ccc;margin-bottom:10px;"></div>
+            <div class="sub_class">
+
             </div>
         </div>
     </div>
@@ -209,6 +264,14 @@
             asset = JSON.parse(asset);
         } else {
             asset = null;
+        }
+
+        var dict_class = '@Html.Raw(ViewBag.Dict_Class)';
+
+        if (dict_class != 'null') {
+            dict_class = JSON.parse(dict_class);
+        } else {
+            dict_class = null;
         }
 
         function getStyle(obj, styleName) {
@@ -305,16 +368,81 @@
                 GetDailyTask();
             }, function () {
 
+                });
+
+            $('.btn_choose_class').click(function () {
+                showClassDlg();
             });
+
+            //////////////////////////选择分类
+            $('.divChooseClass .close_btn').click(function () {
+                $('#div_mask').hide();
+                $('.divChooseClass').hide();
+                if (_is_change_class == true) {
+                    var acitve_item = $('.sub_class .choose_class_item.active');
+                    if (acitve_item.length > 0) {
+                        $('[name=CLASSID]').attr('data-value', acitve_item.attr('data-value')).text(acitve_item.text());
+                    }
+                }
+                _is_change_class = false;
+            });
+
+            set_main_class();
+
+            set_sub_class(dict_class[0][0].id);
+
+            $('.main_class .choose_class_item').click(function () {
+                var _this = $(this)
+                if (!_this.hasClass('active')) {
+                    var id = _this.attr('data-value');
+                    set_sub_class(id);
+                    _is_change_class = true;
+                }
+            });
+
+            $('.divChooseClass .sub_class').on('click', '.choose_class_item', function () {
+                var _this = $(this);
+                $('.divChooseClass .sub_class .choose_class_item').removeClass('active');
+                _this.addClass('active');
+            });
+            //////////////////////////选择分类
 
             if (user != '') {
                 ShowAfterLogin();
             }
             $('#right_top_float').show();
+
         });
 
         function getNextExp(val) {
             return parseInt(val) * 100;
+        }
+
+        function set_sub_class(classid) {
+            var list = dict_class[classid];
+            var str = '';
+            $('.main_class .choose_class_item').removeClass('active');
+            $('.main_class .choose_class_item[data-value=' + classid + ']').addClass('active');
+            $.each(list, function (i,o) {
+                str += '<span class="choose_class_item" data-value="'+o.id + '">'+o.name +'</span>';
+            });
+            $('.sub_class').empty().append($(str));
+        }
+        var _is_change_class = false;
+        function set_main_class() {
+            var list = dict_class[0];
+            var str = '';
+            $.each(list, function (i, o) {
+                str += '<span class="choose_class_item" data-value="' + o.id + '">' + o.name +'('+dict_class[o.id].length+ ')</span>';
+            });
+            $('.main_class').empty().append($(str));
+        }
+
+        function showClassDlg() {
+
+            $('#div_mask').show();
+            $('.divChooseClass').show();
+
         }
 
         function UpadteUserAsset() {
