@@ -374,6 +374,12 @@
                 showClassDlg();
             });
 
+
+            $('.btn-save').click(function () {
+                apply_submit();
+                
+            });
+
             //////////////////////////选择分类
             $('.divChooseClass .close_btn').click(function () {
                 $('#div_mask').hide();
@@ -396,12 +402,12 @@
                 if (!_this.hasClass('active')) {
                     var id = _this.attr('data-value');
                     set_sub_class(id);
-                    _is_change_class = true;
                 }
             });
 
             $('.divChooseClass .sub_class').on('click', '.choose_class_item', function () {
                 var _this = $(this);
+                _is_change_class = true;
                 $('.divChooseClass .sub_class .choose_class_item').removeClass('active');
                 _this.addClass('active');
             });
@@ -416,6 +422,23 @@
 
         function getNextExp(val) {
             return parseInt(val) * 100;
+        }
+
+        function apply_submit() {
+            var CLASSID = $('[name=CLASSID]').attr('data-value');
+            var Name = $('[name=RoomName]').val();
+            var Notice = $('[name=Notice]').val();
+            if (CLASSID == '' || Name == '' || Notice == '') {
+                layer.msg('请先填写完整信息');
+                return;
+            }
+            $.post('/api/Anchor/CreateBroadcastRoom', {
+                CLASSID: CLASSID,
+                Name: Name,
+                Notice: Notice
+            }, function (res) {
+                console.log(res);
+            });
         }
 
         function set_sub_class(classid) {

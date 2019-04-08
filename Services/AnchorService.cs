@@ -39,7 +39,8 @@ namespace Services
             };
 
             var r = await _dbcontext.Anchors.AddAsync(anchor);
-            int anchorId = r.Entity.Id;
+            await _dbcontext.SaveChangesAsync();
+            int anchorId = anchor.Id;
             int roomNum = 10000;
             //直播间号
             if (await _dbcontext.BroadcastRooms.AnyAsync())

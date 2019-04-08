@@ -87,5 +87,22 @@ namespace mvc.Controllers
 
             return View();
         }
+        [Route("api/Anchor/CreateBroadcastRoom")]
+        public async Task<IActionResult> CreateBroadcastRoom()
+        {
+            UserData user = UserData.Current;
+            if (user == null)
+            {
+                return Json(false, "没有登录", null);
+            }
+            var room = new BroadcastRoom()
+            {
+                UserId = user.UserId,
+                ClassId = int.Parse(GetVal("CLASSID")),
+                Name = GetVal("Name"),
+                Notice = GetVal("Notice")
+            };
+            return Json(await _anchorService.CreateBroadcastRoom(user.UserId, room));
+        }
     }
 }
