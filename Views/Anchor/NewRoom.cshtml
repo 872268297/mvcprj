@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>个人中心</title>
+    <title>直播设置</title>
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -103,7 +103,7 @@
         <div class="main_div" style="width:80%;margin:0 auto 0 auto; background-color:rgba(255, 255, 255, 0.95);min-height:888px;position:relative;">
             <div class="divLeftNav">
                 <div class="left-nav-header">个人中心</div>
-                <div class="left-nav-item active">
+                <div class="left-nav-item ">
                     <a href="/Personal">
                         我的信息
                     </a>
@@ -118,7 +118,7 @@
                         修改密码
                     </a>
                 </div>
-                <div class="left-nav-item  ">
+                <div class="left-nav-item active ">
                     <a href="/Anchor">
                         直播设置
                     </a>
@@ -127,66 +127,8 @@
             <div style="margin-left:180px;position:relative;">
 
                 <div class="main_content">
-                    <div class="div_set_header" style="float:left;width:120px;height:120px;">
-                        <img style="width:120px;height:120px;border-radius:60px;" id="img_head_icon" src="@ViewBag.UserAsset.HeadIcon" />
-                        <div class="btnUploadHead">修改头像</div><div style="display:none;">
-                            <form id="uploadForm">
-                                <input type="file" name="file" />
-                            </form>
-                        </div>
-                        <div class="head_mask">
-
-                        </div>
-                    </div>
-                    <div style="float:left;margin-left:10px;">
-                        <div>
-                            <span class="personal_username">
-                                @ViewBag.UserAsset.NickName
-                            </span>
-                            <span class="@Html.Raw(ViewBag.UserAsset.Sex == "男" ? "personal_male" : "personal_female")"></span>
-                        </div>
-                        <div>
-                            <span class="personal_age">
-                                @ViewBag.UserAsset.Age
-                                岁
-                                &nbsp;&nbsp;&nbsp;
-                                @Html.Raw((ViewBag.UserAsset.Sign == "" || ViewBag.UserAsset.Sign == null) ? "你还没编辑个性签名。" : ViewBag.UserAsset.Sign)
-                                &nbsp;&nbsp;&nbsp;
-                                <a href="/Personal/EditInfo" style="color:#09f;">编辑资料</a>
-                            </span>
-                        </div>
-                        <div style="margin-top:5px;width:320px;">
-                            <div class="div_level_bar">
-                                <span class="div_level_bar_cur_level">LV1</span>
-                                <div class="div_level_bar_containter">
-                                    <span>0/100</span>
-                                    <div class="div_level_bar_scroll"></div>
-                                </div>
-                                <span class="div_level_bar_nex_level">LV2</span>
-                            </div>
-                        </div>
-                        <div style="margin-top:5px;">
-                            <div>
-                                <div class="div_wallet_float_chongzhi orange_btn" onclick="layer.msg('暂未开启')">充值</div>
-                                <div style="color:#555;">钱包</div>
-                                <div style="margin-top:5px;">
-                                    <span class="span_gold">金币&nbsp;&nbsp;0</span>
-                                    <span class="span_siliver">银币&nbsp;&nbsp;0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @*<img style="width:120px;height:120px;border-radius:60px;" src="~/upload/QQ图片20190402215023.jpg" />*@
-
-                    <div style="clear:both;padding-top:26px;">
-                        <div style="font-weight:700;font-size:14px;">
-                            账号管理
-                        </div>
-                        <div class="div_task_wrap_top_line" style="width:98%;margin-top:10px;margin-left:-10px;"></div>
-                        <div class="div_account_manager_list">
-                            <div class="div_account_manager_item"  onclick="window.location.href='/Personal/ChangePWD'">修改密码</div>
-                            <div class="div_account_manager_item" onclick="window.location.href='/Anchor'" >成为主播</div>
-                        </div>
+                    <div style="font-size:24px;height:70px;">
+                        <span style="border-left:4px solid #f80;padding-left:3px;">主播申请</span>
                     </div>
                 </div>
             </div>
