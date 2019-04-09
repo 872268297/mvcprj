@@ -37,5 +37,7 @@ namespace mvc.Entities
         public string CoverUrl { get; set; }//房间封面
 
         public string StreamCode { get; set; }//推流码
+
+        public bool IsCustomCover { get; set; }//个性化封面
     }
 }

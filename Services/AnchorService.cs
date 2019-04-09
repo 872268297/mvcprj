@@ -236,7 +236,8 @@ namespace Services
                 r.Name = room.Name;
                 r.Notice = room.Notice;
                 r.ClassId = room.ClassId;
-                //r.CoverUrl = room.CoverUrl;
+                r.CoverUrl = room.CoverUrl;
+                r.IsCustomCover = room.IsCustomCover;
                 _dbcontext.BroadcastRooms.Update(r);
                 await _dbcontext.SaveChangesAsync();
 

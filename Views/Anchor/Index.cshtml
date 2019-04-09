@@ -153,12 +153,12 @@
                                 </span>
                                 <div style="display:inline-block;margin-left:20px;color:#777;margin-top:15px;">
                                     <div>
-                                        rtmp地址&nbsp;:&nbsp;<span id="txtrtmp">rtmp://127.0.0.1:1935/live/<span id="channel">@Html.Raw(ViewBag.RoomInfo.StreamChannel)</span></span>
+                                        rtmp地址&nbsp;:&nbsp;<span id="txtrtmp">rtmp://127.0.0.1:1935/live</span>
                                         <input onclick="copyRTMP()" type="button" class="white_btn" style="width:45px;" value="复制" />
                                     </div>
                                     <div style="margin-top:10px;">
                                         推流码&nbsp;:&nbsp;
-                                        <span id="txtStreamCode">@Html.Raw(ViewBag.RoomInfo.StreamChannel)&pass=<span id="streamCode">@Html.Raw(ViewBag.RoomInfo.StreamCode)</span></span>
+                                        <span id="txtStreamCode"><span id="channel">@Html.Raw(ViewBag.RoomInfo.StreamChannel)</span>?pass=<span id="streamCode">@Html.Raw(ViewBag.RoomInfo.StreamCode)</span></span>
                                         <input onclick="copyStreamCode()" type="button" class="white_btn" style="width:45px;" value="复制" />
                                         <input id="btn_re_code" type="button" class="white_btn" style="width:70px;" value="重新获取" />
 
@@ -199,6 +199,34 @@
                                 <input style="vertical-align:top;margin-left:5px;" type="button" class="white_btn btn_choose_class" value="更改" />
                             </span>
                         </div>
+
+
+                        <div style="vertical-align:top;">
+                            <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
+                                个性封面
+                            </span>
+                            <div style="display:inline-block;margin-left:20px;color:#777;">
+                                <div style="display:none;">
+                                    <form id="uploadForm">
+                                        <input type="file" name="file" />
+                                    </form>
+                                </div>
+                                <div id="custom_cover_switch" class="sui-switch @Html.Raw(ViewBag.RoomInfo.IsCustomCover==true?"sui-active":"")">
+                                    <i></i>
+                                </div>
+                                <div id="div_upload_cover" style="margin-top:10px;display:@Html.Raw(ViewBag.RoomInfo.IsCustomCover==true?"block":"none")">
+                                    <div id="div_cover" style="display:@Html.Raw(string.IsNullOrWhiteSpace(ViewBag.RoomInfo.CoverUrl)?"none":"block")">
+                                        <img id="img_cover" style="width:288px;height:162px;"
+                                             src="@Html.Raw(string.IsNullOrWhiteSpace(ViewBag.RoomInfo.CoverUrl)?"/fonts/black.png":ViewBag.RoomInfo.CoverUrl)" />
+                                    </div>
+                                    <input id="btn_upload" type="button" class="white_btn" style="width:45px;margin-top:10px;" value="上传" />
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
                         <div style="vertical-align:top;margin-top:15px;">
                             <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align:middle;">
                                 &nbsp;
@@ -393,7 +421,7 @@
                 $.post('../api/User/Reg', { 'username': username, 'password': hex_md5(password) }, res => {
                     if (res.success) {
                         layer.closeAll();
-                        Login(username, hex_md5(password),'15212310');//注册成功登录
+                        Login(username, hex_md5(password), '15212310');//注册成功登录
                         layer.msg('注册成功');
                     } else {
                         alert(res.message);
@@ -406,10 +434,10 @@
                 var username = $('#txtLoginUser').val();
                 var password = $('#txtLoginPass').val();
                 var code = $('#validCode').val();
-                if (username == '' || password == ''||code=='') {
+                if (username == '' || password == '' || code == '') {
                     return;
                 }
-                Login(username, hex_md5(password),code);
+                Login(username, hex_md5(password), code);
             });
 
 
@@ -438,12 +466,12 @@
                 }
             });
 
-            $('#img_head_icon,.btnUploadHead,.head_mask').click(function () {
-                $('[name=file]').click();
-            });
-            $('[name=file]').on('change', function () {
-                doUploadHead();
-            });
+            //$('#img_head_icon,.btnUploadHead,.head_mask').click(function () {
+            //    $('[name=file]').click();
+            //});
+            //$('[name=file]').on('change', function () {
+            //    doUploadHead();
+            //});
 
             $('._group_user').hover(function () {
                 UpadteUserAsset();
@@ -486,7 +514,29 @@
                 $('.divChooseClass .sub_class .choose_class_item').removeClass('active');
                 _this.addClass('active');
             });
+
+
             //////////////////////////选择分类
+
+
+            $('#btn_upload').click(function () {
+                $('[name=file]').click();
+            });
+
+            $('[name=file]').on('change', function () {
+                upload_cover();
+            });
+
+            $('#custom_cover_switch').click(function () {
+                var h = $(this).hasClass('sui-active');
+                if (h) {
+                    //关
+                    $('#div_upload_cover').hide();
+                } else {
+                    //开
+                    $('#div_upload_cover').show();
+                }
+            });
 
             $('#stream_switch').click(function () {
                 var h = $(this).hasClass('sui-active');
@@ -531,7 +581,8 @@
                     }
                 }
             }
-            
+
+
 
             if (user != '') {
                 ShowAfterLogin();
@@ -554,7 +605,9 @@
             $.post('/api/Anchor/SetRoomInfo', {
                 CLASSID: CLASSID,
                 Name: Name,
-                Notice: Notice
+                Notice: Notice,
+                CoverUrl: $('#img_cover').attr('src'),
+                IsCustomCover:$('#custom_cover_switch').hasClass('sui-active')?"true":"false"
             }, function (res) {
                 if (res.success) {
                     layer.msg("修改成功");
@@ -687,6 +740,28 @@
 
         }
 
+
+        function upload_cover() {
+            var formData = new FormData($("#uploadForm")[0]);
+            //console.log(formData);
+            $.ajax({
+                url: '../api/Anchor/UploadCover',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    $('#img_cover').attr('src', res.data);
+                    $('#div_upload_cover,#div_cover').show();
+                },
+                error: function (res) {
+                    layer.msg(res.message);
+                }
+            });
+        }
+
         function doUploadHead() {
             var formData = new FormData($("#uploadForm")[0]);
             //console.log(formData);
@@ -702,7 +777,7 @@
                     asset.HeadIcon = res.data;
                     $('#head_right_top').attr('src', res.data);
                     $('#img_head_icon').attr('src', res.data);
-                    layer.msg('修改成功');
+                    layer.msg('保存成功');
                 },
                 error: function (res) {
                     layer.msg(res.message);
