@@ -131,41 +131,56 @@
                         <span style="border-left:4px solid #f80;padding-left:3px;">主播申请</span>
 
                     </div>
-                    <div style="margin-left:42px;color:#777;margin-bottom:10px;">
-                        请填写直播间信息
-                    </div>
-                    <div style="vertical-align:top;margin-bottom:10px;">
-                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: middle;">
-                            房间标题
-                        </span>
-                        <span style="display:inline-block;margin-left:20px;color:#777;">
-                            <input type="text" name="RoomName" class="form-control" style="width:295px;" />
-                        </span>
-                    </div>
-                    <div style="vertical-align:top;margin-top:15px;">
-                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
-                            房间公告
-                        </span>
-                        <div style="display:inline-block;margin-left:20px;">
-                            <textarea class="form-control" name="Notice" style="resize: none;border-color:#ccc;" maxlength="64" rows="4" cols="36"></textarea>
+
+                    <div id="apply_success" style="display:none; font-size:18px;">
+                        <div class="success_icon" style="vertical-align:middle;"></div>
+                        <div style="display:inline-block;vertical-align:middle;margin-left:10px;">
+                            恭喜你创建直播间成功!
+                            <div onclick="window.location.href = '/Anchor';"
+                                 class="btn-save" style="display:block;width:90px;margin-top:10px;height:30px;line-height:30px;font-size:14px;">
+                                点击开播
+                            </div>
                         </div>
                     </div>
-                    <div style="margin-bottom:10px;">
-                        <span style="text-align:right;width:100px;display:inline-block;color:#777;">
-                            房间分类
-                        </span>
-                        <span style="display:inline-block;margin-left:20px;margin-top:15px;color:#777;">
-                            <span name="CLASSID" style="line-height:26px;">未选择</span>
-                            <input style="vertical-align:top;margin-left:5px;" type="button" class="white_btn btn_choose_class" value="更改" />
-                        </span>
-                    </div>
-                    <div style="vertical-align:top;margin-top:15px;">
-                        <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align:middle;">
-                            &nbsp;
-                        </span>
-                        <div class="btn-save" style="margin-left:20px;">
-                            申请
+
+                    <div id="apply_form">
+                        <div style="margin-left:42px;color:#777;margin-bottom:10px;">
+                            请填写直播间信息
                         </div>
+                        <div style="vertical-align:top;margin-bottom:10px;">
+                            <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: middle;">
+                                房间标题
+                            </span>
+                            <span style="display:inline-block;margin-left:20px;color:#777;">
+                                <input type="text" name="RoomName" class="form-control" style="width:295px;" />
+                            </span>
+                        </div>
+                        <div style="vertical-align:top;margin-top:15px;">
+                            <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
+                                房间公告
+                            </span>
+                            <div style="display:inline-block;margin-left:20px;">
+                                <textarea class="form-control" name="Notice" style="resize: none;border-color:#ccc;" maxlength="64" rows="4" cols="36"></textarea>
+                            </div>
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <span style="text-align:right;width:100px;display:inline-block;color:#777;">
+                                房间分类
+                            </span>
+                            <span style="display:inline-block;margin-left:20px;margin-top:15px;color:#777;">
+                                <span name="CLASSID" style="line-height:26px;">未选择</span>
+                                <input style="vertical-align:top;margin-left:5px;" type="button" class="white_btn btn_choose_class" value="更改" />
+                            </span>
+                        </div>
+                        <div style="vertical-align:top;margin-top:15px;">
+                            <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align:middle;">
+                                &nbsp;
+                            </span>
+                            <div class="btn-save" style="margin-left:20px;">
+                                申请
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -375,9 +390,9 @@
             });
 
 
-            $('.btn-save').click(function () {
+            $('#apply_form .btn-save').click(function () {
                 apply_submit();
-                
+
             });
 
             //////////////////////////选择分类
@@ -438,6 +453,12 @@
                 Notice: Notice
             }, function (res) {
                 console.log(res);
+                if (res.success) {
+                    $('#apply_form').hide();
+                    $('#apply_success').show();
+                } else {
+                    layer.msg(res.message);
+                }
             });
         }
 

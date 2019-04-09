@@ -1214,3 +1214,11 @@ input:-webkit-autofill {
     background-color:#f80;
     border:none;
 }
+
+.success_icon {
+    background-image: url('../fonts/success_128px_1194837_easyicon.net.png');
+    width: 128px;
+    height: 128px;
+    background-size: cover;
+    display:inline-block;
+}
