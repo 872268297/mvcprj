@@ -101,6 +101,7 @@
     </nav>
     <div class="left" id="left">
         @{
+            BroadcastRoomDTO Room = ViewBag.Room as BroadcastRoomDTO;
             Dictionary<int, List<LiveClass>> dict = ViewBag.classDict as Dictionary<int, List<LiveClass>>;
             var Roots = dict[0];
         }
@@ -154,17 +155,19 @@
 
         <div style="height:92px;margin-bottom:10px; width:100%;border:1px solid #e5e4e4;background-color:rgba(255, 255, 255, 0.95);" id="title">
             <div style="float:left;">
-                <img id="ancorPic" style="width:92px;height:92px;" src="@ViewBag.AnchorPicUrl" />
+                <img id="ancorPic" style="width:92px;height:92px;" src="@Html.Raw(Room.UserAsset.HeadIcon) " />
             </div>
             <div id="divRoomInfo" style="max-width: 787px;padding-left:10px;float:left;">
                 <div id="TitleHeadLine" style="font-family: Microsoft Yahei,-apple-system,sans-serif;font-size: 12px;line-height: 1.5;padding-top:3px;">
-                    <h3 id="roomTitle" style="font-size: 18px;line-height: 30px;float:left;color:#2c3e50;font-weight: bolder;margin: 0;">房间标题</h3>
+                    <h3 id="roomTitle" style="font-size: 18px;line-height: 30px;float:left;color:#2c3e50;font-weight: bolder;margin: 0;">
+                        @Html.Raw(Room.Room.Name)
+                    </h3>
                 </div>
                 <div id="categoryList" class="Title-categoryList">
-                    <a class="Title-categoryItem">网游竞技</a>
+                    <a class="Title-categoryItem" href=" @Html.Raw("/Directory/"+Room.LiveClass.Id)">@Html.Raw(Room.LiveClass.Name)</a>
                 </div>
-                <div class="Title-categoryList" style="height:26px;">
-                    <a id="AnchorName" class="Title-categoryItem">主播名称</a>
+                <div class="Title-categoryList" style="margin-top:10px;">
+                    <a id="AnchorName" class="Title-categoryItem">@Html.Raw(Room.UserAsset.NickName)</a>
                 </div>
             </div>
             <div id="guanzhu" class="guanzhu">关注</div>
@@ -281,6 +284,8 @@
             asset = null;
         }
 
+        var rtmpAddr = 'rtmp://@Html.Raw(ViewBag.RTMPAddress)' + '@Html.Raw(Room.Room.StreamChannel)';
+
        // console.log(roomId);
         var nowI = 5;
         var effectName = 'None',
@@ -322,7 +327,7 @@
             autoplay: true,//自动播放
             loaded: 'loadedHandler',
             live: true,//直播视频形式
-            video: 'rtmp://127.0.0.1:1935/live/' + roomId,//视频地址 rtmp://127.0.0.1:1935/live/123,
+            video: rtmpAddr,//视频地址 rtmp://127.0.0.1:1935/live/123,
 
         };
         var player = new ckplayer(videoObject);
@@ -445,7 +450,6 @@
 
             }
         }
-        //var user = '帅哥' + randomNum(0, 1000);
 
         var ws = null;
         var _isMyReconnet = false;

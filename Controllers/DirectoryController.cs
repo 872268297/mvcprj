@@ -17,11 +17,16 @@ namespace mvc.Controllers
 
         private readonly ILiveClassService _liveClass;
         private readonly IUserService _userService;
+        private readonly IAnchorService _anchorService;
 
-        public DirectoryController(ILiveClassService liveClass, IUserService _userService)
+        public DirectoryController(ILiveClassService liveClass
+            , IUserService _userService
+            , IAnchorService _anchorService
+        )
         {
             _liveClass = liveClass;
             this._userService = _userService;
+            this._anchorService = _anchorService;
         }
 
         [Route("Directory/{id?}")]
@@ -47,6 +52,10 @@ namespace mvc.Controllers
             ViewBag.UserAsset = asset;
 
             Dictionary<int, List<LiveClass>> classDict = await _liveClass.GetDict();
+
+            List<BroadcastRoomDTO> list = await _anchorService.GetRoomListLiving(id);
+
+            ViewBag.RoomList = list;
 
             ViewBag.classDict = classDict;
 

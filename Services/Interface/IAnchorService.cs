@@ -19,7 +19,9 @@ namespace Services
 
         Task<BroadcastRoom> GetRoomByAnchorId(int anchorId);
 
-        Task<BroadcastRoom> GetRoomByRoomId(int roomId);
+        Task<BroadcastRoomDTO> GetRoomByRoomId(int roomId);
+
+        Task<BroadcastRoomDTO> GetRoomByRoomNum(int roomnum);
 
         Task<UserAsset> GetAnchorAssetByRoomId(int roomId);
 
@@ -31,10 +33,12 @@ namespace Services
 
         Task<JsonModel> StopBroadcast(int userid);
 
-        Task<List<BroadcastRoom>> GetRoomList(int classid = 0);
+        Task<List<BroadcastRoomDTO>> GetRoomList(int classid = 0);
 
-        Task<List<BroadcastRoom>> GetRoomListLiving(int classid = 0);
+        Task<List<BroadcastRoomDTO>> GetRoomListLiving(int classid = 0);
 
         Task<JsonModel> UpdateStreamCode(int userid);
+
+        Task<bool> CheckStreamCodeValid(string channel, string code);
     }
 }

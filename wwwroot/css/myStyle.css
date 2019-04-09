@@ -760,6 +760,22 @@ input:-webkit-autofill {
 .div_romm_item:hover .div_room_item_bottom_room_name {
 }
 
+.div_room_item_bottom_room_name:hover {
+    color: #000;
+}
+
+.div_room_item_bottom_room_name:visited {
+    color: #000;
+}
+
+.div_room_item_bottom_room_name:active {
+    color: #000;
+}
+
+.div_room_item_bottom_room_name:focus {
+    color: #000;
+}
+
 .div_room_item_bottom_head_row {
     margin-top: 2px;
 }
@@ -1200,25 +1216,25 @@ input:-webkit-autofill {
     height: 30px;
     margin-right: 8px;
     float: left;
-    line-height:30px;
-    text-align:center;
-    padding-left:6px;
-    padding-right:6px;
-    cursor:pointer;
-    margin-bottom:6px;
-    background-color:#e5e5e5;
+    line-height: 30px;
+    text-align: center;
+    padding-left: 6px;
+    padding-right: 6px;
+    cursor: pointer;
+    margin-bottom: 6px;
+    background-color: #e5e5e5;
 }
 
-.choose_class_item.active{
-    color:#fff;
-    background-color:#f80;
-    border:none;
-}
+    .choose_class_item.active {
+        color: #fff;
+        background-color: #f80;
+        border: none;
+    }
 
 .success_icon {
     background-image: url('../fonts/success_128px_1194837_easyicon.net.png');
     width: 128px;
     height: 128px;
     background-size: cover;
-    display:inline-block;
+    display: inline-block;
 }

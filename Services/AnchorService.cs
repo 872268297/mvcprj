@@ -87,17 +87,39 @@ namespace Services
                         where r.AnchorId == anchorId
                         select r;
             var room = await query.FirstOrDefaultAsync();
-            
+
             return room;
         }
 
-        public async Task<BroadcastRoom> GetRoomByRoomId(int roomId)
+        public async Task<BroadcastRoomDTO> GetRoomByRoomId(int roomId)
         {
             var query = from r in _dbcontext.BroadcastRooms
+                        join u in _dbcontext.UserAssets on r.UserId equals u.UserId
+                        join lc in _dbcontext.LiveClasses on r.ClassId equals lc.Id
                         where r.Id == roomId
-                        select r;
+                        select new BroadcastRoomDTO()
+                        {
+                            Room = new BroadcastRoom()
+                            {
+                                AnchorId = r.AnchorId,
+                                ClassId = r.ClassId,
+                                Id = r.Id,
+                                CoverUrl = r.CoverUrl,
+                                IsBan = r.IsBan,
+                                IsLiving = r.IsLiving,
+                                LastLiveTime = r.LastLiveTime,
+                                Name = r.Name,
+                                Notice = r.Notice,
+                                RoomNum = r.RoomNum,
+                                StreamChannel = r.StreamChannel,
+                                UserId = r.UserId,
+                                Viewer = r.Viewer
+                            },
+                            UserAsset = u,
+                            LiveClass = lc
+                        };
             var room = await query.FirstOrDefaultAsync();
-            
+
             return room;
         }
 
@@ -107,58 +129,94 @@ namespace Services
                         where r.UserId == userid
                         select r;
             var room = await query.FirstOrDefaultAsync();
-            
+
             return room;
         }
 
-        public async Task<List<BroadcastRoom>> GetRoomList(int classid = 0)
+        public async Task<List<BroadcastRoomDTO>> GetRoomList(int classid = 0)
         {
 
             var dict = await _liveClassService.GetDict();
-            IQueryable<BroadcastRoom> query = from c in _dbcontext.BroadcastRooms where 1 == 0 select c;
-            List<IQueryable<BroadcastRoom>> l = new List<IQueryable<BroadcastRoom>>()
-            {
-                query
-            };
-            Fun(classid, dict, l, false);
-            var list = await l[0].ToListAsync();
-            list.ForEach(r => r.StreamCode = "");
+            var classes = await _liveClassService.AllList();
+            List<int> classList = new List<int>();
+            Fun(classid, dict, classList);
+            IQueryable<BroadcastRoomDTO> query = from r in _dbcontext.BroadcastRooms
+                                                 join u in _dbcontext.UserAssets on r.UserId equals u.UserId
+                                                 join lc in classes on r.ClassId equals lc.Id
+                                                 where classList.Contains(r.ClassId)
+                                                 select new BroadcastRoomDTO()
+                                                 {
+                                                     Room = new BroadcastRoom()
+                                                     {
+                                                         AnchorId = r.AnchorId,
+                                                         ClassId = r.ClassId,
+                                                         Id = r.Id,
+                                                         CoverUrl = r.CoverUrl,
+                                                         IsBan = r.IsBan,
+                                                         IsLiving = r.IsLiving,
+                                                         LastLiveTime = r.LastLiveTime,
+                                                         Name = r.Name,
+                                                         Notice = r.Notice,
+                                                         RoomNum = r.RoomNum,
+                                                         StreamChannel = r.StreamChannel,
+                                                         UserId = r.UserId,
+                                                         Viewer = r.Viewer
+                                                     },
+                                                     UserAsset = u,
+                                                     LiveClass = lc
+                                                 };
+            var list = await query.ToListAsync();
+
             return list;
         }
 
-        private void Fun(int root, Dictionary<int, List<LiveClass>> dict, List<IQueryable<BroadcastRoom>> query, bool live)
+        private void Fun(int root, Dictionary<int, List<LiveClass>> dict, List<int> classList)
         {
-            IQueryable<BroadcastRoom> cur_List;
-            if (live)
-            {
-                cur_List = _dbcontext.BroadcastRooms.Where(t => t.ClassId == root && t.IsLiving == true);
-            }
-            else
-            {
-                cur_List = _dbcontext.BroadcastRooms.Where(t => t.ClassId == root);
-            }
-            query[0] = query[0].Union(cur_List);
+            classList.Add(root);
             if (dict.ContainsKey(root))
             {
                 var list = dict[root];
                 foreach (var item in list)
                 {
-                    Fun(item.Id, dict, query, live);
+                    Fun(item.Id, dict, classList);
                 }
             }
         }
 
-        public async Task<List<BroadcastRoom>> GetRoomListLiving(int classid = 0)
+        public async Task<List<BroadcastRoomDTO>> GetRoomListLiving(int classid = 0)
         {
             var dict = await _liveClassService.GetDict();
-            IQueryable<BroadcastRoom> query = from c in _dbcontext.BroadcastRooms where 1 == 0 select c;
-            List<IQueryable<BroadcastRoom>> l = new List<IQueryable<BroadcastRoom>>()
-            {
-                query
-            };
-            Fun(classid, dict, l, true);
+            var classes = await _liveClassService.AllList();
+            List<int> classList = new List<int>();
+            Fun(classid, dict, classList);
+            IQueryable<BroadcastRoomDTO> query = from r in _dbcontext.BroadcastRooms
+                                                 join u in _dbcontext.UserAssets on r.UserId equals u.UserId
+                                                 join lc in classes on r.ClassId equals lc.Id
+                                                 where r.IsLiving == true && classList.Contains(r.ClassId)
+                                                 select new BroadcastRoomDTO()
+                                                 {
+                                                     Room = new BroadcastRoom()
+                                                     {
+                                                         AnchorId = r.AnchorId,
+                                                         ClassId = r.ClassId,
+                                                         Id = r.Id,
+                                                         CoverUrl = r.CoverUrl,
+                                                         IsBan = r.IsBan,
+                                                         IsLiving = r.IsLiving,
+                                                         LastLiveTime = r.LastLiveTime,
+                                                         Name = r.Name,
+                                                         Notice = r.Notice,
+                                                         RoomNum = r.RoomNum,
+                                                         StreamChannel = r.StreamChannel,
+                                                         UserId = r.UserId,
+                                                         Viewer = r.Viewer
+                                                     },
+                                                     UserAsset = u,
+                                                     LiveClass = lc
+                                                 };
+            var list = await query.ToListAsync();
 
-            return await l[0].ToListAsync();
+            return list;
         }
 
         public async Task<bool> IsAnchor(int userid)
@@ -166,7 +224,7 @@ namespace Services
             return await _dbcontext.Anchors.AnyAsync(t => t.UserId == userid);
         }
 
-        public async Task<JsonModel> SetRoomInfo(int userid , BroadcastRoom room)
+        public async Task<JsonModel> SetRoomInfo(int userid, BroadcastRoom room)
         {
             try
             {
@@ -194,7 +252,7 @@ namespace Services
         {
             Random random = new Random();
             string c = userid + random.Next() + "932qj@dawrr" + DateTime.Now.Ticks.ToString();
-            string result = Md5Util.Encode(Md5Util.Encode(c)+"th8jusde21@HRFIh");
+            string result = Md5Util.Encode(Md5Util.Encode(c) + "th8jusde21@HRFIh");
             return result;
         }
 
@@ -256,11 +314,52 @@ namespace Services
                 return new JsonModel(false, "失败", "找不到直播间");
             }
             r.StreamCode = this.GenarateStreamCode(userid);
-
+            r.LastLiveTime = DateTime.Now;
             _dbcontext.BroadcastRooms.Update(r);
             await _dbcontext.SaveChangesAsync();
 
             return new JsonModel(true, "成功", r.StreamCode);
+        }
+
+        public async Task<bool> CheckStreamCodeValid(string channel, string code)
+        {
+            var query = from r in _dbcontext.BroadcastRooms
+                        where code == r.StreamCode && r.StreamChannel == channel
+                        select 1
+                        ;
+            return await query.AnyAsync();
+        }
+
+        public async Task<BroadcastRoomDTO> GetRoomByRoomNum(int roomnum)
+        {
+            var query = from r in _dbcontext.BroadcastRooms
+                        join u in _dbcontext.UserAssets on r.UserId equals u.UserId
+                        join lc in _dbcontext.LiveClasses on r.ClassId equals lc.Id
+                        where r.RoomNum == roomnum
+                        select new BroadcastRoomDTO()
+                        {
+                            Room = new BroadcastRoom()
+                            {
+                                AnchorId = r.AnchorId,
+                                ClassId = r.ClassId,
+                                Id = r.Id,
+                                CoverUrl = r.CoverUrl,
+                                IsBan = r.IsBan,
+                                IsLiving = r.IsLiving,
+                                LastLiveTime = r.LastLiveTime,
+                                Name = r.Name,
+                                Notice = r.Notice,
+                                RoomNum = r.RoomNum,
+                                StreamChannel = r.StreamChannel,
+                                UserId = r.UserId,
+                                Viewer = r.Viewer
+                            },
+                            UserAsset = u,
+                            LiveClass = lc
+                        };
+            var room = await query.FirstOrDefaultAsync();
+
+            return room;
         }
     }
 }

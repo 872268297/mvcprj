@@ -18,15 +18,28 @@ namespace mvc.Controllers
 
         private readonly IUserService _userService;
 
-        public RoomController(ILiveClassService liveClass, IUserService _userService)
+        private readonly IServerService _serverService;
+
+        private readonly IAnchorService _anchorService;
+
+        public RoomController(ILiveClassService liveClass
+            , IUserService _userService
+            , IServerService _serverService
+            , IAnchorService _anchorService
+            )
         {
             _liveClass = liveClass;
             this._userService = _userService;
+            this._serverService = _serverService;
+            this._anchorService = _anchorService;
         }
 
         [Route("Room/{id?}")]
         public async Task<IActionResult> Index(int id)
         {
+            BroadcastRoomDTO room = await _anchorService.GetRoomByRoomNum(id);
+            if (room == null) return NotFound();
+
             UserData user = UserData.Current;
             UserAsset asset = null;
             if (user != null)
@@ -49,7 +62,11 @@ namespace mvc.Controllers
             ViewBag.ID = id;
 
             //主播头像
-            ViewBag.AnchorPicUrl = "/upload/QQ图片20190402225643.jpg";
+            //ViewBag.AnchorPicUrl = "/upload/QQ图片20190402225643.jpg";
+
+            ViewBag.RTMPAddress = _serverService.GetRtmpAddress();
+
+            ViewBag.Room = room;
 
             Dictionary<int, List<LiveClass>> classDict = await _liveClass.GetDict();
 

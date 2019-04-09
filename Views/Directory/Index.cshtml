@@ -1,4 +1,5 @@
 ﻿@using Entities;
+@using mvc.Entities;
 @{
     Layout = null;
 }
@@ -158,22 +159,29 @@
     <div class="div_main_content_warp">
         <div class="div_main_content">
             <div class="div_room_item_container">
-                @foreach (int i in new int[24])
+                @{
+                    List<BroadcastRoomDTO> list = ViewBag.RoomList as List<BroadcastRoomDTO>;
+
+                }
+                @foreach (var item in list)
                 {
-                    <a class="div_romm_item" href="/Room/123">
+                    <a class="div_romm_item" href="/Room/@Html.Raw(item.Room.RoomNum)">
                         <div class="div_room_item_cover">
-                            <img class="img_room_item_cover" src="~/upload/1546094467686.jpg" />
+                            @* ~/upload/1546094467686.jpg *@
+                            <img class="img_room_item_cover" 
+                                 src=" @Html.Raw(string.IsNullOrWhiteSpace(item.Room.CoverUrl)?"/fonts/black.png":item.Room.CoverUrl)" />
                             @*<img class="img_room_item_cover" src="~/upload/head8b848051-bd92-4674-bbdd-899dd6324c2b..jpg" />*@
                             <div class="img_room_item_cover_mask"></div>
                             <img class="img_room_item_cover_mask_play" src="~/fonts/play-icon_a.png" />
                         </div>
                         <div class="div_room_item_bottom">
-                            <div class="div_room_item_bottom_room_name">快来看我直播~~~</div>
+                            <div class="div_room_item_bottom_room_name">@Html.Raw(item.Room.Name)</div>
                             <div class="div_room_item_bottom_head_row">
-                                <div class="div_room_item_bottom_class">英雄联盟</div>
-                                <img class="div_room_item_bottom_head" src="~/upload/head92c18802-976b-4ede-acf6-010a61f11695..jpg" />
+                                <div class="div_room_item_bottom_class">@Html.Raw(item.LiveClass.Name)</div>
+                                <img class="div_room_item_bottom_head" src="@Html.Raw(item.UserAsset.HeadIcon)" />
+                                @*~/upload/head92c18802-976b-4ede-acf6-010a61f11695..jpg*@
                                 <div class="div_room_item_bottom_anchor_name">
-                                    hhh
+                                    @Html.Raw(item.UserAsset.NickName)
                                 </div>
                             </div>
                         </div>
