@@ -14,6 +14,8 @@
     <script src="~/js/layer/layer.js"></script>
     <script src="~/js/md5.js"></script>
     <link href="~/css/myStyle.css" rel="stylesheet" />
+    <link href="~/css/sui.css" rel="stylesheet" />
+    <script src="~/js/sui.js"></script>
 </head>
 <body style="background-color:#f2f2f3;">
     <nav class="navbar navbar-default navbar-fixed-top" style="background-color:rgba(255, 255, 255, 0.95);z-index:1000;">
@@ -127,10 +129,106 @@
             <div style="margin-left:180px;position:relative;">
 
                 <div class="main_content">
-                    <div style="font-size:24px;height:70px;">
-                        <span style="border-left:4px solid #f80;padding-left:3px;">直播设置</span>
+
+
+                    <div style="font-size:22px;height:70px;">
+                        <span style="border-left:4px solid #f80;padding-left:3px;">推流设置</span>
                     </div>
+                    <div id="stream_info" style="margin-top:-20px;margin-bottom:35px;">
+                        <div style="vertical-align:top;">
+                            <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: middle;">
+                                直播开关
+                            </span>
+                            <div style="display:inline-block;margin-left:20px;color:#777;">
+                                <div id="stream_switch" class="sui-switch @Html.Raw(ViewBag.RoomInfo.IsLiving==true?"sui-active":"")">
+                                    <i></i>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div id="streamInfo" style="display:none;">
+                            <div style="vertical-align:top;">
+                                <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: middle;">
+
+                                </span>
+                                <div style="display:inline-block;margin-left:20px;color:#777;margin-top:15px;">
+                                    <div>
+                                        rtmp地址&nbsp;:&nbsp;<span id="txtrtmp">rtmp://127.0.0.1:1935/live/<span id="channel">@Html.Raw(ViewBag.RoomInfo.StreamChannel)</span></span>
+                                        <input onclick="copyRTMP()" type="button" class="white_btn" style="width:45px;" value="复制" />
+                                    </div>
+                                    <div style="margin-top:10px;">
+                                        推流码&nbsp;:&nbsp;
+                                        <span id="txtStreamCode">@Html.Raw(ViewBag.RoomInfo.StreamChannel)&pass=<span id="streamCode">@Html.Raw(ViewBag.RoomInfo.StreamCode)</span></span>
+                                        <input onclick="copyStreamCode()" type="button" class="white_btn" style="width:45px;" value="复制" />
+                                        <input id="btn_re_code" type="button" class="white_btn" style="width:70px;" value="重新获取" />
+
+                                        <br />
+                                        <span>(请不要泄露你的直播推流码)</span>
+                                    </div>
+                                    <div id="copy-temp"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size:22px;height:70px;">
+                        <span style="border-left:4px solid #f80;padding-left:3px;">房间设置</span>
+                    </div>
+                    <div id="room_form">
+                        <div style="vertical-align:middle;margin-bottom:10px;">
+                            <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: middle;">
+                                房间标题
+                            </span>
+                            <span style="display:inline-block;margin-left:20px;color:#777;">
+                                <input type="text" name="RoomName" class="form-control" value="@Html.Raw(ViewBag.RoomInfo.Name)" style="width:295px;" />
+                            </span>
+                        </div>
+                        <div style="vertical-align:top;margin-top:15px;">
+                            <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align: top;">
+                                房间公告
+                            </span>
+                            <div style="display:inline-block;margin-left:20px;">
+                                <textarea class="form-control" name="Notice" style="resize: none;border-color:#ccc;" maxlength="64" rows="4" cols="36">@Html.Raw(ViewBag.RoomInfo.Notice)</textarea>
+                            </div>
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <span style="text-align:right;width:100px;display:inline-block;color:#777;">
+                                房间分类
+                            </span>
+                            <span style="display:inline-block;margin-left:20px;margin-top:15px;color:#777;">
+                                <span name="CLASSID" data-value="@Html.Raw(ViewBag.RoomInfo.ClassId)" style="line-height:26px;">未选择</span>
+                                <input style="vertical-align:top;margin-left:5px;" type="button" class="white_btn btn_choose_class" value="更改" />
+                            </span>
+                        </div>
+                        <div style="vertical-align:top;margin-top:15px;">
+                            <span style="text-align:right;width:100px;display:inline-block;color:#777;vertical-align:middle;">
+                                &nbsp;
+                            </span>
+                            <div class="btn-save" style="margin-left:20px;">
+                                保存
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div style="position:fixed;top:0;left:0;bottom:0;right:0;background-color:rgba(0,0,0,0.5);display:none;z-index:29999;" id="div_mask"></div>
+
+    <div style="position:fixed;display:none;z-index:39999;width:680px;top:50%;padding-bottom:40px;border-radius:4px;
+        background-color:#fff;left:50%;margin-left:-340px;margin-top:-300px;" class="divChooseClass">
+        <div class="close_btn" style="margin-top:10px;float:right;margin-right:10px;"></div>
+        <div style="padding-left:2%;padding-top:10px;font-size:16px;font-weight:500;">直播分类</div>
+        <div style="width:92%;margin:20px auto 0 auto;">
+            <div class="main_class">
+
+            </div>
+            <div style="clear:both;margin-bottom:5px;margin-top:10px;">点击切换栏目</div>
+            <div style="width:100%;height:1px;border-bottom:1px dotted #ccc;margin-bottom:10px;"></div>
+            <div class="sub_class">
+
             </div>
         </div>
     </div>
@@ -211,6 +309,16 @@
             asset = null;
         }
 
+        var dict_class = '@Html.Raw(ViewBag.Dict_Class)';
+
+        if (dict_class != 'null') {
+            dict_class = JSON.parse(dict_class);
+        } else {
+            dict_class = null;
+        }
+
+        sui.initForm();
+
         function getStyle(obj, styleName) {
             if (obj.currentStyle) { return obj.currentStyle[styleName]; } else {
                 return getComputedStyle(obj, null)[styleName];
@@ -229,6 +337,43 @@
                     return 0;
                     break;
             }
+        }
+
+        function copyStreamCode() {
+            var $o = $("<textarea rows='10' cols='50'>");
+            $o.val($("#txtStreamCode").text())//填充要复制的文字
+            $("#copy-temp").append($o)
+            if (copy($o[0])) {
+                $o.remove()
+                //alert("复制成功！");
+            } else {
+                alert("复制失败，请手动复制");
+            }
+        }
+
+        function copyRTMP() {
+            var $o = $("<textarea rows='10' cols='50'>");
+            $o.val($("#txtrtmp").text())//填充要复制的文字
+            $("#copy-temp").append($o)
+            if (copy($o[0])) {
+                $o.remove()
+                //alert("复制成功！");
+            } else {
+                alert("复制失败，请手动复制");
+            }
+        }
+
+        function copy(obj) {
+            obj.select();
+            try {
+                if (document.execCommand('copy', false, null)) {
+                    document.execCommand("Copy");
+                    return true;
+                }
+            } catch (err) {
+
+            }
+            return false;
         }
 
         $(function () {
@@ -307,6 +452,87 @@
 
             });
 
+            //////////////////////////选择分类
+            $('.btn_choose_class').click(function () {
+                showClassDlg();
+            });
+            $('.divChooseClass .close_btn').click(function () {
+                $('#div_mask').hide();
+                $('.divChooseClass').hide();
+                if (_is_change_class == true) {
+                    var acitve_item = $('.sub_class .choose_class_item.active');
+                    if (acitve_item.length > 0) {
+                        $('[name=CLASSID]').attr('data-value', acitve_item.attr('data-value')).text(acitve_item.text());
+                    }
+                }
+                _is_change_class = false;
+            });
+
+            set_main_class();
+
+            set_sub_class(dict_class[0][0].id);
+
+            $('.main_class .choose_class_item').click(function () {
+                var _this = $(this)
+                if (!_this.hasClass('active')) {
+                    var id = _this.attr('data-value');
+                    set_sub_class(id);
+                }
+            });
+
+            $('.divChooseClass .sub_class').on('click', '.choose_class_item', function () {
+                var _this = $(this);
+                _is_change_class = true;
+                $('.divChooseClass .sub_class .choose_class_item').removeClass('active');
+                _this.addClass('active');
+            });
+            //////////////////////////选择分类
+
+            $('#stream_switch').click(function () {
+                var h = $(this).hasClass('sui-active');
+                if (h) {
+                    //关播
+                    stopStream();
+                } else {
+                    //开播
+                    startStream();
+                }
+            });
+
+            if ($('#stream_switch').hasClass('sui-active')) {
+                $('#streamInfo').show();
+            }
+
+            $('#btn_re_code').click(function () {
+                //重新获取推流码
+                $.post('/api/Anchor/UpdateStreamCode', {}, function (res) {
+                    if (res.success) {
+                        $('#streamCode').html(res.data);
+                    }
+                });
+            });
+
+
+            $('#room_form .btn-save').click(function () {
+                saveRoomInfo();
+
+            });
+
+            var classid = $('[name=CLASSID]').attr('data-value');
+            for (var key in dict_class) {
+                var list = dict_class[key];
+                var flag = false;
+                for (var i = 0; i < list.length; i++) {
+                    if (flag) break;
+                    if (list[i].id == classid) {
+                        $('[name=CLASSID]').text(list[i].name);
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            
+
             if (user != '') {
                 ShowAfterLogin();
             }
@@ -316,6 +542,75 @@
         function getNextExp(val) {
             return parseInt(val) * 100;
         }
+
+        function saveRoomInfo() {
+            var CLASSID = $('[name=CLASSID]').attr('data-value');
+            var Name = $('[name=RoomName]').val();
+            var Notice = $('[name=Notice]').val();
+            if (CLASSID == '' || Name == '' || Notice == '') {
+                layer.msg('请先填写完整信息');
+                return;
+            }
+            $.post('/api/Anchor/SetRoomInfo', {
+                CLASSID: CLASSID,
+                Name: Name,
+                Notice: Notice
+            }, function (res) {
+                if (res.success) {
+                    layer.msg("修改成功");
+                } else {
+                    layer.msg(res.message);
+                }
+            });
+        }
+
+        function startStream() {
+            $.post('/api/Anchor/StartBroadcast',{}, function (res) {
+                console.log(res);
+                if (res.success) {
+                    $('#streamInfo').show();
+                    $('#channel').html(res.data.streamChannel);
+                    $('#streamCode').html(res.data.streamCode);
+                }
+            });
+        }
+
+        function stopStream() {
+            $.post('/api/Anchor/StopBroadcast', {}, function (res) {
+                //console.log(res);
+                if (res.success) {
+                    $('#streamInfo').hide();
+                }
+            });
+        }
+
+        function set_sub_class(classid) {
+            var list = dict_class[classid];
+            var str = '';
+            $('.main_class .choose_class_item').removeClass('active');
+            $('.main_class .choose_class_item[data-value=' + classid + ']').addClass('active');
+            $.each(list, function (i, o) {
+                str += '<span class="choose_class_item" data-value="' + o.id + '">' + o.name + '</span>';
+            });
+            $('.sub_class').empty().append($(str));
+        }
+        var _is_change_class = false;
+        function set_main_class() {
+            var list = dict_class[0];
+            var str = '';
+            $.each(list, function (i, o) {
+                str += '<span class="choose_class_item" data-value="' + o.id + '">' + o.name + '(' + dict_class[o.id].length + ')</span>';
+            });
+            $('.main_class').empty().append($(str));
+        }
+
+        function showClassDlg() {
+
+            $('#div_mask').show();
+            $('.divChooseClass').show();
+
+        }
+
 
         function UpadteUserAsset() {
             //更新用户信息

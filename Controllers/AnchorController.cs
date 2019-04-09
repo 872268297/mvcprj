@@ -51,10 +51,13 @@ namespace mvc.Controllers
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
+
+            ViewBag.Dict_Class = JsonConvert.SerializeObject(await _liveClass.GetDict(), settings);
+
+            var romm = await _anchorService.GetRoomByUserId(user.UserId);
+            ViewBag.RoomInfo = romm;
             ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset, settings);
             ViewBag.UserAsset = asset;
-
-
 
 
             return View();
@@ -87,6 +90,8 @@ namespace mvc.Controllers
 
             return View();
         }
+
+
         [Route("api/Anchor/CreateBroadcastRoom")]
         public async Task<IActionResult> CreateBroadcastRoom()
         {
@@ -103,6 +108,61 @@ namespace mvc.Controllers
                 Notice = GetVal("Notice")
             };
             return Json(await _anchorService.CreateBroadcastRoom(user.UserId, room));
+        }
+
+        [Route("api/Anchor/SetRoomInfo")]
+        public async Task<IActionResult> SetRoomInfo()
+        {
+            UserData user = UserData.Current;
+            if (user == null)
+            {
+                return Json(false, "没有登录", null);
+            }
+            var room = new BroadcastRoom()
+            {
+                UserId = user.UserId,
+                ClassId = int.Parse(GetVal("CLASSID")),
+                Name = GetVal("Name"),
+                Notice = GetVal("Notice")
+            };
+            return Json(await _anchorService.SetRoomInfo(user.UserId, room));
+        }
+
+
+        [Route("api/Anchor/UpdateStreamCode")]
+        public async Task<IActionResult> UpdateStreamCode()
+        {
+            UserData user = UserData.Current;
+            if (user == null)
+            {
+                return Json(false, "没有登录", null);
+            }
+            
+            return Json(await _anchorService.UpdateStreamCode(user.UserId));
+        }
+
+
+        [Route("api/Anchor/StartBroadcast")]
+        public async Task<IActionResult> StartBroadcast()
+        {
+            UserData user = UserData.Current;
+            if (user == null)
+            {
+                return Json(false, "没有登录", null);
+            }
+            return Json(await _anchorService.StartBroadcast(user.UserId));
+        }
+
+        [Route("api/Anchor/StopBroadcast")]
+        public async Task<IActionResult> StopBroadcast()
+        {
+            UserData user = UserData.Current;
+            if (user == null)
+            {
+                return Json(false, "没有登录", null);
+            }
+            
+            return Json(await _anchorService.StopBroadcast(user.UserId));
         }
     }
 }

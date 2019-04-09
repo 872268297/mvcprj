@@ -385,10 +385,7 @@
 
                 });
 
-            $('.btn_choose_class').click(function () {
-                showClassDlg();
-            });
-
+            
 
             $('#apply_form .btn-save').click(function () {
                 apply_submit();
@@ -396,6 +393,10 @@
             });
 
             //////////////////////////选择分类
+
+            $('.btn_choose_class').click(function () {
+                showClassDlg();
+            });
             $('.divChooseClass .close_btn').click(function () {
                 $('#div_mask').hide();
                 $('.divChooseClass').hide();
@@ -452,7 +453,6 @@
                 Name: Name,
                 Notice: Notice
             }, function (res) {
-                console.log(res);
                 if (res.success) {
                     $('#apply_form').hide();
                     $('#apply_success').show();

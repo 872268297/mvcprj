@@ -25,7 +25,7 @@ namespace Services
 
         Task<UserAsset> GetAnchorAssetByUserId(int userid);
 
-        Task<JsonModel> SetRoomInfo(BroadcastRoom room);
+        Task<JsonModel> SetRoomInfo(int userid, BroadcastRoom room);
 
         Task<JsonModel> StartBroadcast(int userid);
 
@@ -34,5 +34,7 @@ namespace Services
         Task<List<BroadcastRoom>> GetRoomList(int classid = 0);
 
         Task<List<BroadcastRoom>> GetRoomListLiving(int classid = 0);
+
+        Task<JsonModel> UpdateStreamCode(int userid);
     }
 }

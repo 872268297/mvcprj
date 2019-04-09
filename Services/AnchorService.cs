@@ -86,7 +86,9 @@ namespace Services
             var query = from r in _dbcontext.BroadcastRooms
                         where r.AnchorId == anchorId
                         select r;
-            return await query.FirstOrDefaultAsync();
+            var room = await query.FirstOrDefaultAsync();
+            
+            return room;
         }
 
         public async Task<BroadcastRoom> GetRoomByRoomId(int roomId)
@@ -94,7 +96,9 @@ namespace Services
             var query = from r in _dbcontext.BroadcastRooms
                         where r.Id == roomId
                         select r;
-            return await query.FirstOrDefaultAsync();
+            var room = await query.FirstOrDefaultAsync();
+            
+            return room;
         }
 
         public async Task<BroadcastRoom> GetRoomByUserId(int userid)
@@ -102,7 +106,9 @@ namespace Services
             var query = from r in _dbcontext.BroadcastRooms
                         where r.UserId == userid
                         select r;
-            return await query.FirstOrDefaultAsync();
+            var room = await query.FirstOrDefaultAsync();
+            
+            return room;
         }
 
         public async Task<List<BroadcastRoom>> GetRoomList(int classid = 0)
@@ -115,8 +121,9 @@ namespace Services
                 query
             };
             Fun(classid, dict, l, false);
-
-            return await l[0].ToListAsync();
+            var list = await l[0].ToListAsync();
+            list.ForEach(r => r.StreamCode = "");
+            return list;
         }
 
         private void Fun(int root, Dictionary<int, List<LiveClass>> dict, List<IQueryable<BroadcastRoom>> query, bool live)
@@ -159,11 +166,11 @@ namespace Services
             return await _dbcontext.Anchors.AnyAsync(t => t.UserId == userid);
         }
 
-        public async Task<JsonModel> SetRoomInfo(BroadcastRoom room)
+        public async Task<JsonModel> SetRoomInfo(int userid , BroadcastRoom room)
         {
             try
             {
-                BroadcastRoom r = await _dbcontext.BroadcastRooms.Where(t => t.Id == room.Id).FirstOrDefaultAsync();
+                BroadcastRoom r = await _dbcontext.BroadcastRooms.Where(t => t.UserId == userid).FirstOrDefaultAsync();
                 if (r == null)
                 {
                     return new JsonModel(false, "修改失败", null);
@@ -171,7 +178,7 @@ namespace Services
                 r.Name = room.Name;
                 r.Notice = room.Notice;
                 r.ClassId = room.ClassId;
-                r.CoverUrl = room.CoverUrl;
+                //r.CoverUrl = room.CoverUrl;
                 _dbcontext.BroadcastRooms.Update(r);
                 await _dbcontext.SaveChangesAsync();
 
@@ -181,6 +188,14 @@ namespace Services
             {
                 return new JsonModel(false, "修改失败", e.Message);
             }
+        }
+
+        private string GenarateStreamCode(int userid)
+        {
+            Random random = new Random();
+            string c = userid + random.Next() + "932qj@dawrr" + DateTime.Now.Ticks.ToString();
+            string result = Md5Util.Encode(Md5Util.Encode(c)+"th8jusde21@HRFIh");
+            return result;
         }
 
         public async Task<JsonModel> StartBroadcast(int userid)
@@ -193,11 +208,17 @@ namespace Services
                     return new JsonModel(false, "失败", "找不到直播间");
                 }
                 r.IsLiving = true;
-
+                if (string.IsNullOrEmpty(r.StreamCode))
+                {
+                    r.StreamCode = this.GenarateStreamCode(userid);
+                }
                 _dbcontext.BroadcastRooms.Update(r);
                 await _dbcontext.SaveChangesAsync();
 
-                return new JsonModel(true, "成功", r.StreamCode);//返回推流码
+                return new JsonModel(true, "成功", new Dictionary<string, string>() {
+                    { "streamCode", r.StreamCode },
+                    { "streamChannel", r.StreamChannel }
+                });//返回推流码
             }
             catch (Exception e)
             {
@@ -225,6 +246,21 @@ namespace Services
             {
                 return new JsonModel(false, "失败", e.Message);
             }
+        }
+
+        public async Task<JsonModel> UpdateStreamCode(int userid)
+        {
+            BroadcastRoom r = await _dbcontext.BroadcastRooms.Where(t => t.UserId == userid).FirstOrDefaultAsync();
+            if (r == null)
+            {
+                return new JsonModel(false, "失败", "找不到直播间");
+            }
+            r.StreamCode = this.GenarateStreamCode(userid);
+
+            _dbcontext.BroadcastRooms.Update(r);
+            await _dbcontext.SaveChangesAsync();
+
+            return new JsonModel(true, "成功", r.StreamCode);
         }
     }
 }
