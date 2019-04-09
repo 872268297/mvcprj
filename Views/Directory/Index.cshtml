@@ -158,36 +158,52 @@
 
     <div class="div_main_content_warp">
         <div class="div_main_content">
-            <div class="div_room_item_container">
-                @{
-                    List<BroadcastRoomDTO> list = ViewBag.RoomList as List<BroadcastRoomDTO>;
+            <div style="padding-bottom:10px;vertical-align:middle;">
+                <span style="font-size:30px;display:inline-block;vertical-align:middle;">在线直播</span>
+                <div class="nav_class_list" style="vertical-align:middle;">
 
-                }
-                @foreach (var item in list)
-                {
-                    <a class="div_romm_item" href="/Room/@Html.Raw(item.Room.RoomNum)">
-                        <div class="div_room_item_cover">
-                            @* ~/upload/1546094467686.jpg *@
-                            <img class="img_room_item_cover" 
-                                 src=" @Html.Raw(string.IsNullOrWhiteSpace(item.Room.CoverUrl)?"/fonts/black.png":item.Room.CoverUrl)" />
-                            @*<img class="img_room_item_cover" src="~/upload/head8b848051-bd92-4674-bbdd-899dd6324c2b..jpg" />*@
-                            <div class="img_room_item_cover_mask"></div>
-                            <img class="img_room_item_cover_mask_play" src="~/fonts/play-icon_a.png" />
-                        </div>
-                        <div class="div_room_item_bottom">
-                            <div class="div_room_item_bottom_room_name">@Html.Raw(item.Room.Name)</div>
-                            <div class="div_room_item_bottom_head_row">
-                                <div class="div_room_item_bottom_class">@Html.Raw(item.LiveClass.Name)</div>
-                                <img class="div_room_item_bottom_head" src="@Html.Raw(item.UserAsset.HeadIcon)" />
-                                @*~/upload/head92c18802-976b-4ede-acf6-010a61f11695..jpg*@
-                                <div class="div_room_item_bottom_anchor_name">
-                                    @Html.Raw(item.UserAsset.NickName)
-                                </div>
+                    @{
+                        int ClassId = ViewBag.ClassId;
+                        <span data-value="@ClassId" class="active">全部</span>
+                        if (dict.ContainsKey(ClassId))
+                        {
+                            foreach (var item in dict[ClassId])
+                            {
+                                <span data-value="@item.Id">@item.Name</span>
+                            }
+                        }
+                    }
+
+                </div>
+            </div>
+            <div class="div_room_item_container" id="room_container_1">
+                @* @{
+                        List<BroadcastRoomDTO> list = new List<BroadcastRoomDTO>(); //ViewBag.RoomList as List<BroadcastRoomDTO>;
+
+                    }
+                    @foreach (var item in list)
+                    {
+                        <a class="div_romm_item" href="/Room/@Html.Raw(item.Room.RoomNum)">
+                            <div class="div_room_item_cover">
+
+                        <img class="img_room_item_cover"
+                             src=" @Html.Raw(string.IsNullOrWhiteSpace(item.Room.CoverUrl)?"/fonts/black.png":item.Room.CoverUrl)" />
+                        <div class="img_room_item_cover_mask"></div>
+                        <img class="img_room_item_cover_mask_play" src="~/fonts/play-icon_a.png" />
+                    </div>
+                    <div class="div_room_item_bottom">
+                        <div class="div_room_item_bottom_room_name">@Html.Raw(item.Room.Name)</div>
+                        <div class="div_room_item_bottom_head_row">
+                            <div class="div_room_item_bottom_class">@Html.Raw(item.LiveClass.Name)</div>
+                            <img class="div_room_item_bottom_head" src="@Html.Raw(item.UserAsset.HeadIcon)" />
+                            <div class="div_room_item_bottom_anchor_name">
+                                @Html.Raw(item.UserAsset.NickName)
                             </div>
                         </div>
+                    </div>
                     </a>
-                }
-
+                    }
+                *@
             </div>
         </div>
     </div>
@@ -252,6 +268,7 @@
 
         var user = '@Html.Raw(ViewBag.User)';
         //user = unescape(user.replace(/&#x/g, '%u').replace(/;/g, ''));
+        var classid = @ViewBag.ClassId;
 
 
         function decode(val) {
@@ -297,7 +314,57 @@
             $('.div_main_content_warp').css('margin-left',$('.left').width()+14+'px');
         }
 
+
+        function setList(data) {
+            var str = '';
+            $.each(data, function (i, item) {
+                str += '<a class="div_romm_item" href="/Room/' + item.room.roomNum + '"><div class="div_room_item_cover">';
+                str += '<img class="img_room_item_cover" src="' + (item.room.coverUrl ? item.room.coverUrl : "/fonts/black.png") + '" />';
+                str += '<div class="img_room_item_cover_mask"></div><img class="img_room_item_cover_mask_play" src="/fonts/play-icon_a.png" /></div>';
+                str += '<div class="div_room_item_bottom"><div class="div_room_item_bottom_room_name">' + item.room.name + '</div>';
+                str += '<div class="div_room_item_bottom_head_row"><div class="div_room_item_bottom_class">' + item.liveClass.name + '</div>';
+                str += '<img class="div_room_item_bottom_head" src="' + item.userAsset.headIcon + '" /><div class="div_room_item_bottom_anchor_name">';
+                str += item.userAsset.nickName + '</div></div></div></a>';
+            });
+            $('#room_container_1').empty().append($(str));
+        }
+
+        function GetListByClassId(id) {
+
+            $.post('/api/Directory/' + id, {}, function (res) {
+                if (res.success) {
+                    setList(res.data);
+                }
+
+            });
+
+            @*<a class="div_romm_item" href="/Room/@Html.Raw(item.Room.RoomNum)">
+                        <div class="div_room_item_cover">
+                            <img class="img_room_item_cover"
+                                 src=" @Html.Raw(string.IsNullOrWhiteSpace(item.Room.CoverUrl)?"/fonts/black.png":item.Room.CoverUrl)" />
+
+                            <div class="img_room_item_cover_mask"></div>
+                            <img class="img_room_item_cover_mask_play" src="~/fonts/play-icon_a.png" />
+                        </div>
+                        <div class="div_room_item_bottom">
+                            <div class="div_room_item_bottom_room_name">@Html.Raw(item.Room.Name)</div>
+                            <div class="div_room_item_bottom_head_row">
+                                <div class="div_room_item_bottom_class">@Html.Raw(item.LiveClass.Name)</div>
+                                <img class="div_room_item_bottom_head" src="@Html.Raw(item.UserAsset.HeadIcon)" />
+
+                                <div class="div_room_item_bottom_anchor_name">
+                                    @Html.Raw(item.UserAsset.NickName)
+                                </div>
+                            </div>
+                        </div>
+                    </a>*@
+        }
+
+
+
         $(function () {
+
+            GetListByClassId(classid);
 
             $('#btnReg').off('click').on('click', function () {
                 var username = $('#txtRegUser').val();
@@ -365,6 +432,14 @@
                 GetDailyTask();
             }, function () {
 
+                });
+            $('.nav_class_list').on('click', 'span', function () {
+                var _this = $(this);
+                if (!_this.hasClass('active')) {
+                    var id = _this.data('value');
+                    _this.addClass('active').siblings().removeClass('active');
+                    GetListByClassId(id);
+                }
             });
 
             if (user != '') {

@@ -163,10 +163,35 @@
                         @Html.Raw(Room.Room.Name)
                     </h3>
                 </div>
-                <div id="categoryList" class="Title-categoryList">
+                <div id="categoryList" style="margin-top:5px;" class="Title-categoryList">
+                    @{
+                        var c = Room.LiveClass;
+                        while (c.ParentId != 0)
+                        {
+                            bool flag = false;
+                            foreach (var item in dict.Values)
+                            {
+
+                                foreach (var i in item)
+                                {
+                                    if (i.Id == c.ParentId)
+                                    {
+                                        flag = true;
+                                        <a class="Title-categoryItem" href=" @Html.Raw("/Directory/"+i.Id)">@Html.Raw(i.Name)</a>
+                                        c = i;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (flag)
+                            {
+                                break;
+                            }
+                        }
+                    }
                     <a class="Title-categoryItem" href=" @Html.Raw("/Directory/"+Room.LiveClass.Id)">@Html.Raw(Room.LiveClass.Name)</a>
                 </div>
-                <div class="Title-categoryList" style="margin-top:10px;">
+                <div class="Title-categoryList" style="margin-top:5px;">
                     <a id="AnchorName" class="Title-categoryItem">@Html.Raw(Room.UserAsset.NickName)</a>
                 </div>
             </div>

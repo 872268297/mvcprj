@@ -59,7 +59,20 @@ namespace mvc.Controllers
 
             ViewBag.classDict = classDict;
 
+            ViewBag.ClassId = id;
+
+
             return View();
+        }
+
+        [HttpPost]
+        [Route("api/Directory/{id?}")]
+        public async Task<IActionResult> List(int id)
+        {
+            
+            List<BroadcastRoomDTO> list = await _anchorService.GetRoomListLiving(id);
+
+            return Json(true, "成功获取数据", list);
         }
     }
 }
