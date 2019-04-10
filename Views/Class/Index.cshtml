@@ -1,4 +1,6 @@
 ﻿@using Entities;
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Serialization;
 @{
     Layout = null;
 }
@@ -157,7 +159,41 @@
 
     <div class="div_main_content_warp">
         <div class="div_main_content">
-           
+            <div style="padding-bottom:10px;vertical-align:middle;">
+                <span id="class_title" style="font-size:30px;display:inline-block;vertical-align:middle;">全部分类</span>
+                <div class="nav_class_list" style="vertical-align:middle;">
+                    @{
+                        <span data-value="0" class="active">全部</span>
+                        if (dict.ContainsKey(0))
+                        {
+                            int i = 0;
+                            foreach (var item in dict[0])
+                            {
+                                <span data-value="@item.Id">@item.Name</span>
+                                i++;
+                            }
+                        }
+                    }
+                </div>
+            </div>
+            <div>
+                <div class="m_class_list">
+                    @foreach (LiveClass item in dict[0])
+                    {
+                        if (dict.ContainsKey(item.Id))
+                        {
+                            foreach (var i in dict[item.Id])
+                            {
+                                <a class="m_class_item" href="/Directory/@item.Id">
+                                    <img src="~/fonts/black.png" />
+                                    @i.Name
+                                </a>
+                            }
+                        }
+
+                    }
+                </div>
+            </div>
         </div>
     </div>
 
@@ -187,7 +223,7 @@
             <input class="btn btn-block  btn-info" type="button" id="btnReg" value="注册" />
         </div>
 
-        <div style="text-align:center;width:92%;margin:10px auto 0 auto;" id="divLogin">
+        <div for;margin:10px auto 0 auto;" id="divLogin">
             <div class="form-horizontal ">
                 <div class="form-group">
                     <span class="col-sm-3 control-label">用户名</span>
@@ -235,6 +271,20 @@
             asset = JSON.parse(asset);
         } else {
             asset = null;
+        }
+
+         @{
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            string dictjson = JsonConvert.SerializeObject(dict, settings);
+        }
+
+        var dict_class = '@Html.Raw(dictjson)';
+
+        if (dict_class != 'null') {
+            dict_class = JSON.parse(dict_class);
+        } else {
+            dict_class = null;
         }
 
 
@@ -334,6 +384,15 @@
                 GetDailyTask();
             }, function () {
 
+                });
+
+            $('.nav_class_list').on('click', 'span', function () {
+                var _this = $(this);
+                if (!_this.hasClass('active')) {
+                    var id = _this.data('value');
+                    _this.addClass('active').siblings().removeClass('active');
+                    setListByClassId(id);
+                }
             });
 
             if (user != '') {
@@ -344,6 +403,34 @@
 
             resize && resize();
         });
+
+
+        function setListByClassId(id) {
+            var data = dict_class[id];
+            var str = '';
+            if (id == 0) {
+                $.each(data, function (i, o) {
+                    $.each(dict_class[o.id], function (i, o) {
+                        str += '<a class="m_class_item" href="/Directory/' + o.id + '"><img src="';
+                        str += '/fonts/black.png';
+                        str += '" />';
+                        str += o.name;
+                        str += '</a>';
+                    });
+                    
+                });
+            } else {
+                $.each(data, function (i, o) {
+                    str += '<a class="m_class_item" href="/Directory/' + o.id + '"><img src="';
+                    str += '/fonts/black.png';
+                    str += '" />';
+                    str += o.name;
+                    str += '</a>';
+                });
+            }
+            $('.m_class_list').empty().append($(str));
+        }
+
 
         function Login(username , pwd ,code) {
             $.post('../api/User/Login', {

@@ -182,7 +182,7 @@ a {
 
 
 .Title-categoryItem {
-    margin-right:5px;
+    margin-right: 5px;
     float: left;
     vertical-align: top;
     height: 18px;
@@ -1243,7 +1243,7 @@ input:-webkit-autofill {
 
 
 .nav_class_list {
-    margin-left:10px;
+    margin-left: 10px;
     display: inline-block;
 }
 
@@ -1258,7 +1258,7 @@ input:-webkit-autofill {
         cursor: pointer;
         background-color: #fff;
         color: #555;
-        margin-right:5px;
+        margin-right: 5px;
     }
 
         .nav_class_list span:hover {
@@ -1271,4 +1271,37 @@ input:-webkit-autofill {
             border: 1px solid #ff5d23;
             color: #fff;
             background-color: #ff5d23;
+        }
+
+
+
+.m_class_list {
+}
+
+    .m_class_list .m_class_item {
+        display: block;
+        float: left;
+        width: 134px;
+        height: 246px;
+        text-align: center;
+        cursor: pointer;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        background-color: #fff;
+        border-radius: 6px;
+        line-height: 33px;
+        color: #000 !important;
+    }
+
+        .m_class_list .m_class_item:hover {
+            color: #f80 !important;
+        }
+
+        .m_class_list .m_class_item img {
+            border-color: #fff;
+            height: 213px;
+            width: 100%;
+            border: none;
+            border: 0px solid #fff;
+            border-radius: 6px 6px 0 0;
         }
