@@ -60,6 +60,7 @@ namespace mvc
             services.AddSession(o => o.IdleTimeout = TimeSpan.FromHours(4));
 
 
+
             services.AddCors(options =>
             {
                 options.AddPolicy("corsSample", p => p.WithOrigins("http://localhost:8080")
@@ -69,10 +70,17 @@ namespace mvc
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ILiveClassService, LiveClassService>();
-            services.AddTransient<IAnchorService, AnchorService>();
-            services.AddTransient<IServerService, ServerService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ILiveClassService, LiveClassService>();
+            services.AddScoped<IAnchorService, AnchorService>();
+            services.AddScoped<IServerService, ServerService>();
+
+            CoverScreenshotsService.options = new DbContextOptionsBuilder<MyDbContext>().UseMySql(connStr).Options;
+
+            services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, CoverScreenshotsService>();
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,6 +102,7 @@ namespace mvc
             app.UseCors("corsSample2");
             app.UseStaticHttpContext();
             app.UseSession();
+
 
             var webSocketOptions = new WebSocketOptions()
             {

@@ -756,6 +756,7 @@ input:-webkit-autofill {
 .div_room_item_bottom_room_name {
     font-size: 14px;
     font-weight: 500;
+    color: #000;
 }
 
 .div_romm_item:hover .div_room_item_bottom_room_name {
@@ -791,7 +792,7 @@ input:-webkit-autofill {
     color: #999;
     display: inline;
     line-height: 24px;
-    padding-left: 2px;
+    padding-left: 8px;
 }
 
 

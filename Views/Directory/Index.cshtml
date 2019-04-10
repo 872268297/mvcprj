@@ -167,9 +167,12 @@
                         <span data-value="@ClassId" class="active">全部</span>
                         if (dict.ContainsKey(ClassId))
                         {
+                            int i = 0;
                             foreach (var item in dict[ClassId])
                             {
+                                if (i >= 10) { break; }
                                 <span data-value="@item.Id">@item.Name</span>
+                                i++;
                             }
                         }
                     }
@@ -316,10 +319,12 @@
 
 
         function setList(data) {
+            console.log(data);
             var str = '';
             $.each(data, function (i, item) {
                 str += '<a class="div_romm_item" href="/Room/' + item.room.roomNum + '"><div class="div_room_item_cover">';
-                str += '<img class="img_room_item_cover" src="' + (item.room.coverUrl ? item.room.coverUrl : "/fonts/black.png") + '" />';
+                str += '<img class="img_room_item_cover" onerror="this.src=\'/fonts/black.png\';this.onerror=null;" src="' +
+                    (item.room.isCustomCover ? item.room.coverUrl : ("/upload/cover/" + item.room.streamChannel + '.jpg')) + '" />';
                 str += '<div class="img_room_item_cover_mask"></div><img class="img_room_item_cover_mask_play" src="/fonts/play-icon_a.png" /></div>';
                 str += '<div class="div_room_item_bottom"><div class="div_room_item_bottom_room_name">' + item.room.name + '</div>';
                 str += '<div class="div_room_item_bottom_head_row"><div class="div_room_item_bottom_class">' + item.liveClass.name + '</div>';

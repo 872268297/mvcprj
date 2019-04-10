@@ -113,7 +113,8 @@ namespace Services
                                 RoomNum = r.RoomNum,
                                 StreamChannel = r.StreamChannel,
                                 UserId = r.UserId,
-                                Viewer = r.Viewer
+                                Viewer = r.Viewer,
+                                IsCustomCover = r.IsCustomCover
                             },
                             UserAsset = u,
                             LiveClass = lc
@@ -144,6 +145,7 @@ namespace Services
                                                  join u in _dbcontext.UserAssets on r.UserId equals u.UserId
                                                  join lc in classes on r.ClassId equals lc.Id
                                                  where classList.Contains(r.ClassId)
+                                                 orderby r.LastLiveTime descending
                                                  select new BroadcastRoomDTO()
                                                  {
                                                      Room = new BroadcastRoom()
@@ -160,7 +162,8 @@ namespace Services
                                                          RoomNum = r.RoomNum,
                                                          StreamChannel = r.StreamChannel,
                                                          UserId = r.UserId,
-                                                         Viewer = r.Viewer
+                                                         Viewer = r.Viewer,
+                                                         IsCustomCover = r.IsCustomCover
                                                      },
                                                      UserAsset = u,
                                                      LiveClass = lc
@@ -193,6 +196,7 @@ namespace Services
                                                  join u in _dbcontext.UserAssets on r.UserId equals u.UserId
                                                  join lc in classes on r.ClassId equals lc.Id
                                                  where r.IsLiving == true && classList.Contains(r.ClassId)
+                                                 orderby r.LastLiveTime descending
                                                  select new BroadcastRoomDTO()
                                                  {
                                                      Room = new BroadcastRoom()
@@ -209,7 +213,8 @@ namespace Services
                                                          RoomNum = r.RoomNum,
                                                          StreamChannel = r.StreamChannel,
                                                          UserId = r.UserId,
-                                                         Viewer = r.Viewer
+                                                         Viewer = r.Viewer,
+                                                         IsCustomCover = r.IsCustomCover
                                                      },
                                                      UserAsset = u,
                                                      LiveClass = lc
@@ -271,6 +276,7 @@ namespace Services
                 {
                     r.StreamCode = this.GenarateStreamCode(userid);
                 }
+                r.LastLiveTime = DateTime.Now;
                 _dbcontext.BroadcastRooms.Update(r);
                 await _dbcontext.SaveChangesAsync();
 

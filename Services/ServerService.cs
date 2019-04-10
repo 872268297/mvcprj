@@ -21,5 +21,10 @@ namespace mvc.Services
         {
             return "127.0.0.1:1935/live/";
         }
+
+        public static string GetRtmpAddr()
+        {
+            return "127.0.0.1:1935/live/";
+        }
     }
 }
