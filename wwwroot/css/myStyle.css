@@ -708,7 +708,7 @@ input:-webkit-autofill {
 
 .div_main_content {
     padding-top: 20px;
-    padding-left: 15px;
+    padding-left: 35px;
 }
 
 
@@ -1305,3 +1305,9 @@ input:-webkit-autofill {
             border: 0px solid #fff;
             border-radius: 6px 6px 0 0;
         }
+
+
+
+#announce:hover{
+    height:auto !important;
+}

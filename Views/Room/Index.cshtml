@@ -202,8 +202,26 @@
 
     </div>
     <div class="right" id="right">
-        <div style="border:1px solid #e5e4e4;width:334px;height:785px;margin-left:15px;overflow-y:auto;background-color:rgba(255, 255, 255, 0.95);" id="labChat">
-            <ul id="BarrageList" style="list-style: none;" class="Barrage-list"></ul>
+
+        <div style="border:1px solid #e5e4e4;width:334px;height:785px;margin-left:15px;background-color:rgba(255, 255, 255, 0.95);" id="labChat">
+            <div id="announce" style="height:40px;padding-left: 10px;padding-top:0px;border-bottom:1px solid #eee;overflow:hidden;overflow-wrap:break-word;text-overflow: ellipsis;">
+                <span style="color:#999;line-height:25px;margin-top:10px;margin-bottom:5px; display:inline-block;margin-right:3px;cursor:default;text-overflow: ellipsis;overflow: hidden;">
+                    <img src="~/fonts/notice_9ceca49.png" style="display:inline-block; margin-top:-3px;margin-right:3px;" />
+                    公告:
+                    @{
+                        string str = string.IsNullOrWhiteSpace(Room.Room.Notice) ? ("欢迎来到&nbsp;" + Room.UserAsset.NickName + "&nbsp;的直播间") : Room.Room.Notice;
+                        string dissstr = str;
+                        if (str.Length > 18)
+                        {
+                            dissstr = str.Substring(0, 15) + "...";
+                        }
+                    }
+                    @Html.Raw(str)
+                    @*<span data-value="@Html.Raw(str)" style="color:#666;height:19px;display:inline-block;text-overflow: ellipsis;overflow: hidden; word-wrap:break-word;white-space: nowrap;">@Html.Raw(dissstr)</span>*@
+                </span>
+
+            </div>
+            <ul id="BarrageList" style="list-style: none;overflow-y:auto;" class="Barrage-list"></ul>
         </div>
         <div style="border:1px solid #e5e4e4;width:334px;height:95px;margin-left:15px;border-top:none;background-color:rgba(255, 255, 255, 0.95);">
             <div style="padding-left:5px;height:15px;">
