@@ -184,8 +184,8 @@
                         {
                             foreach (var i in dict[item.Id])
                             {
-                                <a class="m_class_item" href="/Directory/@item.Id">
-                                    <img src="~/fonts/black.png" />
+                                <a class="m_class_item" href="/Directory/@i.Id">
+                                    <img src="@Html.Raw(!(i.ImgUrl==null||i.ImgUrl=="")?i.ImgUrl:"/fonts/black.png")" />
                                     @i.Name
                                 </a>
                             }
@@ -412,17 +412,17 @@
                 $.each(data, function (i, o) {
                     $.each(dict_class[o.id], function (i, o) {
                         str += '<a class="m_class_item" href="/Directory/' + o.id + '"><img src="';
-                        str += '/fonts/black.png';
+                        str += o.imgUrl ? o.imgUrl : '/fonts/black.png';
                         str += '" />';
                         str += o.name;
                         str += '</a>';
                     });
-                    
+
                 });
             } else {
                 $.each(data, function (i, o) {
                     str += '<a class="m_class_item" href="/Directory/' + o.id + '"><img src="';
-                    str += '/fonts/black.png';
+                    str += o.imgUrl?o.imgUrl:'/fonts/black.png';
                     str += '" />';
                     str += o.name;
                     str += '</a>';

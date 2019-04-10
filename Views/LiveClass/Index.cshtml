@@ -50,6 +50,19 @@
                     <input type="text" class="sui-input" data-dtype="int" name="Order" id="Order" />
                 </td>
             </tr>
+            <tr>
+                <th class="sui-th-width">封面</th>
+                <td colspan="1">
+                    <input type="button" id="btn_upload" value="上传" />
+                    <img id="coverimg" style="display:none;" />
+                    <input type="hidden" class="sui-input"  name="ImgUrl" id="Order" />
+                    <div style="display:none;">
+                        <form id="uploadForm">
+                            <input type="file" name="file" />
+                        </form>
+                    </div>
+                </td>
+            </tr>
         </table>
     </div>
     <script type="text/javascript">
@@ -67,11 +80,11 @@
                 { title: '名称', field: 'name', align: 'center', sortable: false },
                 { title: 'ID', field: 'id', align: 'center', sortable: false },
                 { title: '父ID', field: 'parentId', align: 'center', sortable: false },
-                
+
                 { title: '排序', field: 'order', align: 'center', sortable: false },
                 {
                     title: '操作', field: "id", width: 160, align: 'center', sortable: true, formatter: function (value, row, index) {
-                        return "<a href='javascript:' onclick=\"showEdit(this)\">编辑</a>";
+                        return "<a href='javascript:' onclick=\"showEdit(this,'" + row.imgUrl + "')\">编辑</a>";
                     }
                 }
             ],
@@ -96,13 +109,47 @@
             $('#listDel').click(function () {
                 del();
             });
+
+            $('#btn_upload').click(function () {
+                $('[name=file]').click();
+            })
+
+            $('[name=file]').on('change', function () {
+                doUpload();
+            });
+
+
         });
 
-        function showEdit(val) {
+
+        function doUpload() {
+            var formData = new FormData($("#uploadForm")[0]);
+            //console.log(formData);
+            $.ajax({
+                url: '../api/LiveClass/UploadCover',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    if (res.success) {
+                        $('#coverimg').attr('src', res.data).show();
+                        $('[name=ImgUrl]').val(res.data);
+                    }
+                },
+                error: function (res) {
+                    layer.msg(res.message);
+                }
+            });
+        }
+
+        function showEdit(val, url) {
             layer.open({
                 type: 1,
                 title: '编辑',
-                area: ['380px', '285px'],
+                area: ['800px', '600px'],
                 content: $(".dv_edit"),
                 btn: ['确 定', '取 消'],
                 yes: function (index, layero) {
@@ -129,9 +176,18 @@
                         $('#ID').val($tr.eq(3).text());
                         $('#Name').val($tr.eq(2).text());
                         $('#Order').val($tr.eq(5).text());
+                        if (url && url != "null") {
+                            $('#coverimg').attr('src', url).show();
+                            $('[name=ImgUrl]').val(url);
+                        } else {
+                            $('#coverimg').attr('src', "").hide();
+                            $('[name=ImgUrl]').val("");
+                        }
                     } else {
                         $('#divForm [name]').each(function () {
                             $(this).val("");
+                            $('#coverimg').attr('src', "").hide();
+                            $('[name=ImgUrl]').val("");
                         });
                     }
                 }

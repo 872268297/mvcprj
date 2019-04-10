@@ -82,6 +82,7 @@ namespace Services
                     c.Name = model.Name;
                     c.Order = model.Order;
                     c.ParentId = model.ParentId;
+                    c.ImgUrl = model.ImgUrl;
                     _dbcontext.LiveClasses.Update(c);
                     await _dbcontext.SaveChangesAsync();
                 }
@@ -93,7 +94,7 @@ namespace Services
         {
             var query = from c in _dbcontext.LiveClasses select c;
             if (keyword != "") query = query.Where(t => t.Name.Contains(keyword));
-            int count = await (from c in _dbcontext.LiveClasses select 1).CountAsync();
+            int count = await query.CountAsync();
             List<LiveClass> list = await query.OrderBy(t => t.Order).Skip((page - 1) * rows).Take(rows).ToListAsync();
             return new JsonModel(true, "成功", list, count);
         }

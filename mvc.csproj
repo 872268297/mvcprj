@@ -29,5 +29,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\upload\head\" />
     <Folder Include="wwwroot\upload\cover\" />
+    <Folder Include="wwwroot\upload\ClassCover\" />
   </ItemGroup>
 </Project>
