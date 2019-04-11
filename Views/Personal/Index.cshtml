@@ -533,6 +533,7 @@
 
         function doUploadHead() {
             var formData = new FormData($("#uploadForm")[0]);
+            console.log(formData);
             //console.log(formData);
             $.ajax({
                 url: '../api/Personal/UploadHead',
@@ -549,7 +550,7 @@
                     layer.msg('修改成功');
                 },
                 error: function (res) {
-                    layer.msg(res.message);
+                    //layer.msg(res.message);
                 }
             });
         }

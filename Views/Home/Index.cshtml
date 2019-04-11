@@ -1,4 +1,6 @@
 ﻿@using Entities;
+@using Services;
+@inject IAnchorService _anchorService;
 @{
     Layout = null;
 }
@@ -45,7 +47,7 @@
                                 int cc = 0;
                                 foreach (var item in dict[i.Id])
                                 {
-                                    <a href="@Html.Raw("/Directory/"+item.Id)">@item.Name</a>
+                                    <a href="@Html.Raw("/Directory/" + item.Id)">@item.Name</a>
                                     _list.Add(item.Id);
                                     c++;
                                     cc++;
@@ -81,7 +83,7 @@
                                     {
                                         continue;
                                     }
-                                    <a href="@Html.Raw("/Directory/"+item.Id)">@item.Name</a>
+                                    <a href="@Html.Raw("/Directory/" + item.Id)">@item.Name</a>
                                     c++;
                                     cc++;
                                     if (cc > 2)
@@ -181,65 +183,173 @@
     </nav>
 
 
+    <div style="margin:60px auto 0 auto ;width:70%;">
 
-
-    <div style="display:none;" id="divLoginAndReg">
-        <div style="text-align:center;display:none;width:92%;margin:10px auto 0 auto;" id="divReg">
-            <div class="form-horizontal  ">
-                <div class="form-group">
-                    <span class="col-sm-3 control-label">用户名</span>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="txtRegUser" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <span class="col-sm-3 control-label">密码</span>
-                    <div class="col-sm-9">
-                        <input type="password" class="form-control" id="txtRegPass" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <span class="col-sm-3 control-label">确认密码</span>
-                    <div class="col-sm-9">
-                        <input type="password" class="form-control" id="txtRegPass2" />
-                    </div>
-                </div>
+        @foreach (var i in dict[0])
+        {
+            <div style="width:33%;float:left;margin-top:20px;height:350px;">
+                <div style="font-size:24px;margin-bottom:5px;">@i.Name</div>
+                @{
+                    var list = (await _anchorService.GetRoomListLiving(i.Id)).Take(4);
+                    foreach (var item in list)
+                    {
+                        <a class="div_romm_item" style="width:204px;height:142px;margin-right:15px;border-radius:5px;" href="/Room/">
+                            <div class="div_room_item_cover" style="height:80%;">
+                                <img class="img_room_item_cover" style="border-radius:5px 5px 0 0 ;" onerror="this.src='/fonts/black.png';this.onerror=null;"
+                                     src="@Html.Raw(item.Room.IsCustomCover ? item.Room.CoverUrl : ("/upload/cover/" + item.Room.StreamChannel + ".jpg"))" />
+                                @*src=" @Html.Raw(string.IsNullOrWhiteSpace(item.Room.CoverUrl)?"/fonts/black.png":item.Room.CoverUrl)" />*@
+                                <div class="img_room_item_cover_mask"></div>
+                                <img class="img_room_item_cover_mask_play" src="~/fonts/play-icon_a.png" />
+                            </div>
+                            <div class="div_room_item_bottom">
+                                <div class="div_room_item_bottom_room_name">@item.Room.Name</div>
+                            </div>
+                        </a>
+                    }
+                }
             </div>
+        }
 
-            <input class="btn btn-block  btn-info" type="button" id="btnReg" value="注册" />
+
+
+        <div style="clear:left;padding-top:20px;">
+            <div style="font-size:24px;margin-bottom:5px;">热门分类</div>
+            <div class="m_class_list">
+                @{
+                    var a_count = 0;
+                }
+                @foreach (LiveClass item in dict[0])
+                {
+
+                    if (dict.ContainsKey(item.Id))
+                    {
+                        var c_count = 0;
+                        foreach (var i in dict[item.Id])
+                        {
+                            <a class="m_class_item" style="margin-right:33.4px;" href="/Directory/@i.Id">
+                                <img src="@Html.Raw(!(i.ImgUrl==null||i.ImgUrl=="")?i.ImgUrl:"/fonts/black.png")" />
+                                @i.Name
+                            </a>
+                            c_count++;
+                            a_count++;
+                            if (c_count >= 5)
+                            {
+                                break;
+                            }
+                            if (a_count >= 16)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    if (a_count >= 16)
+                    {
+                        break;
+                    }
+
+                }
+            </div>
         </div>
 
-        <div style="text-align:center;width:92%;margin:10px auto 0 auto;" id="divLogin">
-            <div class="form-horizontal ">
-                <div class="form-group">
-                    <span class="col-sm-3 control-label">用户名</span>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="txtLoginUser" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <span class="col-sm-3 control-label">密码</span>
-                    <div class="col-sm-9">
-                        <input type="password" class="form-control" id="txtLoginPass" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <span class="col-sm-3 control-label">
-                        验证码
-                    </span>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control" id="validCode" />
-                    </div>
-                    <div class="col-sm-4">
-                        <img src="../api/User/VerificationCode?seed=123" id="imgCode" onclick="this.src+='1'" alt="验证码" title="点击换一个" />
-                    </div>
+        <div style="clear:left;padding-top:20px;">
+            @{
+                List<KeyValuePair<int, string>> L = new List<KeyValuePair<int, string>>() {
+                            new KeyValuePair<int, string>(8,"英雄联盟"),
+                            new KeyValuePair<int, string>(10,"绝地求生"),
+                            new KeyValuePair<int, string>(30,"王者荣耀")
+                        };
+
+            }
+
+            @foreach (var li in L)
+            {
+                var list2 = (await _anchorService.GetRoomListLiving(li.Key)).Take(5);
+                <div style="font-size:24px;margin-bottom:5px;">@li.Value</div>
+                <div style="width:100%;float:left;margin-top:10px;">
+                    @foreach (var item in list2)
+                    {
+                        <a class="div_romm_item" style="margin-right:20px;width:245px;height:205px;" href="/Room/">
+                            <div class="div_room_item_cover" style="height:72%;">
+                                <img class="img_room_item_cover" style="border-radius:5px 5px 0 0 ;" onerror="this.src='/fonts/black.png';this.onerror=null;"
+                                     src="@Html.Raw(item.Room.IsCustomCover ? item.Room.CoverUrl : ("/upload/cover/" + item.Room.StreamChannel + ".jpg"))" />
+                                @*src=" @Html.Raw(string.IsNullOrWhiteSpace(item.Room.CoverUrl)?"/fonts/black.png":item.Room.CoverUrl)" />*@
+                                <div class="img_room_item_cover_mask"></div>
+                                <img class="img_room_item_cover_mask_play" src="~/fonts/play-icon_a.png" />
+                            </div>
+                            <div class="div_room_item_bottom">
+                                <div class="div_room_item_bottom_room_name">@item.Room.Name</div>
+                                <div class="div_room_item_bottom_head_row">
+                                    <div class="div_room_item_bottom_class">@Html.Raw(item.LiveClass.Name)</div>
+                                    <img class="div_room_item_bottom_head" src="@Html.Raw(item.UserAsset.HeadIcon)" />
+                                    <div class="div_room_item_bottom_anchor_name">
+                                        @Html.Raw(item.UserAsset.NickName)
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    }
 
                 </div>
-            </div>
-            <input class="btn btn-block btn-info" type="button" id="btnLogin" value="登录" />
+            }
         </div>
-    </div>
-    <script type="text/javascript">
+
+        <div style="display:none;" id="divLoginAndReg">
+            <div style="text-align:center;display:none;width:92%;margin:10px auto 0 auto;" id="divReg">
+                <div class="form-horizontal  ">
+                    <div class="form-group">
+                        <span class="col-sm-3 control-label">用户名</span>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="txtRegUser" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span class="col-sm-3 control-label">密码</span>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="txtRegPass" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span class="col-sm-3 control-label">确认密码</span>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="txtRegPass2" />
+                        </div>
+                    </div>
+                </div>
+
+                <input class="btn btn-block  btn-info" type="button" id="btnReg" value="注册" />
+            </div>
+
+            <div style="text-align:center;width:92%;margin:10px auto 0 auto;" id="divLogin">
+                <div class="form-horizontal ">
+                    <div class="form-group">
+                        <span class="col-sm-3 control-label">用户名</span>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="txtLoginUser" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span class="col-sm-3 control-label">密码</span>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="txtLoginPass" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span class="col-sm-3 control-label">
+                            验证码
+                        </span>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="validCode" />
+                        </div>
+                        <div class="col-sm-4">
+                            <img src="../api/User/VerificationCode?seed=123" id="imgCode" onclick="this.src+='1'" alt="验证码" title="点击换一个" />
+                        </div>
+
+                    </div>
+                </div>
+                <input class="btn btn-block btn-info" type="button" id="btnLogin" value="登录" />
+            </div>
+        </div>
+        <script type="text/javascript">
 
         var user = '@Html.Raw(ViewBag.User)';
         //user = unescape(user.replace(/&#x/g, '%u').replace(/;/g, ''));
@@ -507,7 +617,7 @@
             });
         }
 
-    </script>
+        </script>
 
 
 </body>
