@@ -18,6 +18,11 @@
     <link href="~/css/myStyle.css" rel="stylesheet" />
 </head>
 <body>
+    @{
+        BroadcastRoomDTO Room = ViewBag.Room as BroadcastRoomDTO;
+        Dictionary<int, List<LiveClass>> dict = ViewBag.classDict as Dictionary<int, List<LiveClass>>;
+        var Roots = dict[0];
+    }
     <nav class="navbar navbar-default navbar-fixed-top" style="background-color:rgba(255, 255, 255, 0.95);z-index:1000;">
         <div class="container" id="div_header_container">
             <div class="navbar-header">
@@ -26,8 +31,83 @@
             <div class="navbar-header">
                 <a class="navbar-brand nav-active" href="/Directory/0"><span class="top_header_item">直播</span></a>
             </div>
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/Class"><span class="top_header_item">分类</span></a>
+            <div class="navbar-header nav_class">
+                <a class="navbar-brand " href="/Class"><span class="top_header_item">分类</span></a>
+                <div class="panel_class">
+                    <div class="div_arrow"></div>
+                    <div class="div_class_container">
+                        <div style="font-size:14px;color:#555;font-weight:600;margin-bottom:8px;">热门分类</div>
+
+                        <div class="hot_class_list">
+                            @{
+                                int c = 0;
+                                List<int> _list = new List<int>();
+                            }
+                            @foreach (var i in dict[0])
+                            {
+                                int cc = 0;
+                                foreach (var item in dict[i.Id])
+                                {
+                                    <a href="@Html.Raw("/Directory/"+item.Id)">@item.Name</a>
+                                    _list.Add(item.Id);
+                                    c++;
+                                    cc++;
+                                    if (cc > 2)
+                                    {
+                                        break;
+                                    }
+                                    if (c > 5)
+                                    {
+                                        break;
+                                    }
+                                }
+                                if (c > 5)
+                                {
+                                    break;
+                                }
+                            }
+                        </div>
+
+
+                        <div style="font-size:14px;color:#555;font-weight:600;clear:left;margin-bottom:8px;">玩家推荐</div>
+
+                        <div class="player_class_list">
+                            @{
+                                c = 0;
+                            }
+                            @foreach (var i in dict[0])
+                            {
+                                int cc = 0;
+                                foreach (var item in dict[i.Id])
+                                {
+                                    if (_list.Contains(item.Id))
+                                    {
+                                        continue;
+                                    }
+                                    <a href="@Html.Raw("/Directory/"+item.Id)">@item.Name</a>
+                                    c++;
+                                    cc++;
+                                    if (cc > 2)
+                                    {
+                                        break;
+                                    }
+                                    if (c > 11)
+                                    {
+                                        break;
+                                    }
+                                }
+                                if (c > 11)
+                                {
+                                    break;
+                                }
+                            }
+                        </div>
+
+                        <a class="_all_class_btn" href="/Class">
+                            全部分类
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="navbar-header" style="padding-top:8px;padding-bottom:8px;box-sizing:border-box;height:50px;">
                 <div class="header-search">
@@ -100,11 +180,7 @@
         </div>
     </nav>
     <div class="left" id="left">
-        @{
-            BroadcastRoomDTO Room = ViewBag.Room as BroadcastRoomDTO;
-            Dictionary<int, List<LiveClass>> dict = ViewBag.classDict as Dictionary<int, List<LiveClass>>;
-            var Roots = dict[0];
-        }
+
 
         <div class="left_expand">
             <a class="liveClass mainClass left_item" id="_left_my_follow" href="/Follow">
@@ -165,8 +241,8 @@
                 </div>
                 <div id="categoryList" style="margin-top:5px;" class="Title-categoryList">
                     @{
-                        var c = Room.LiveClass;
-                        while (c.ParentId != 0)
+                        var cla = Room.LiveClass;
+                        while (cla.ParentId != 0)
                         {
                             bool flag = false;
                             foreach (var item in dict.Values)
@@ -174,11 +250,11 @@
 
                                 foreach (var i in item)
                                 {
-                                    if (i.Id == c.ParentId)
+                                    if (i.Id == cla.ParentId)
                                     {
                                         flag = true;
                                         <a class="Title-categoryItem" href=" @Html.Raw("/Directory/"+i.Id)">@Html.Raw(i.Name)</a>
-                                        c = i;
+                                        cla = i;
                                         break;
                                     }
                                 }

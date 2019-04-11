@@ -127,9 +127,13 @@ a {
     font-size: 13px;
 }
 
-.navbar-header a:hover {
-    color: rgba(255,93,35,1);
+.navbar-header {
+    margin-right: 10px !important;
 }
+
+    .navbar-header>a:hover {
+        color: rgba(255,93,35,1);
+    }
 
 .a_rightTop {
     font-size: 16px;
@@ -408,7 +412,7 @@ a {
 }
 
 #div_header_container {
-    width: 76%;
+    width: 72%;
 }
 
 .nav-active {
@@ -1291,10 +1295,13 @@ input:-webkit-autofill {
         border-radius: 6px;
         line-height: 33px;
         color: #000 !important;
+        transform: scale(1.0);
     }
 
         .m_class_list .m_class_item:hover {
             color: #f80 !important;
+            transform: scale(1.05);
+            box-shadow: 0 3px 8px 2px rgba(1,1,1,.2);
         }
 
         .m_class_list .m_class_item img {
@@ -1308,6 +1315,123 @@ input:-webkit-autofill {
 
 
 
-#announce:hover{
-    height:auto !important;
+#announce:hover {
+    height: auto !important;
+}
+
+#div_login_panel {
+    height: 50px;
+}
+
+    #div_login_panel .a_rightTop, #div_login_panel #a_reg {
+        font-size: 14px !important;
+        display: inline-block;
+    }
+
+#_shuxian {
+    font-size: 14px !important;
+    display: none;
+    margin-top: -10px;
+    height: 16px;
+}
+
+.nav_class {
+    position: relative;
+}
+
+.panel_class {
+    /*visibility:hidden;*/
+    visibility: hidden;
+    position: absolute;
+    margin-left: -100px;
+    background-color: rgb(255,255,255);
+    width: 260px;
+    padding-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px 2px rgba(1,1,1,.2);
+    border-top: 2px solid #f80;
+    transform-origin: center top;
+    transition: all ease-in-out 0.1s;
+    /*transform: rotate(180deg);*/
+    top: 50px;
+}
+
+.nav_class:hover .panel_class {
+    visibility: visible;
+}
+
+
+.panel_class .div_arrow {
+    position: absolute;
+    top: -7px;
+    right: 123px;
+}
+
+.div_class_container {
+    margin-top: 20px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.hot_class_list {
+    clear: both;
+}
+
+.player_class_list {
+    clear: both;
+}
+
+    .hot_class_list a, .player_class_list a {
+        display: block;
+        float: left;
+        background-color: #f2f2f2;
+        color: #888;
+        width: 70px;
+        height: 24px;
+        line-height: 24px;
+        margin-right: 10px;
+        margin-bottom: 8px;
+        text-align: center;
+        border-radius: 24px;
+        font-size: 12px;
+    }
+
+._all_class_btn {
+    clear: both;
+    display: block;
+}
+
+
+._all_class_btn {
+    width: 100%;
+    text-align: center;
+    background-color: #f2f2f2;
+    border-radius: 24px;
+    height: 26px;
+    line-height: 26px;
+    font-size: 12px;
+    color: #888;
+}
+
+.hot_class_list a:nth-child(3n), .player_class_list a:nth-child(3n) {
+    margin-right: 0;
+}
+
+
+.hot_class_list a:hover, .player_class_list a:hover , ._all_class_btn:hover {
+    background-color: #ff5d23;
+    color: #fff;
+}
+
+.hot_class_list a:active, .player_class_list a:active, ._all_class_btn:active {
+    background-color: #ff5d23;
+    color: #fff;
+}
+
+
+
+
+._all_class_btn:hover {
+    background-color: #ff5d23;
+    color: #fff;
 }

@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Entities;
+
+@{
     Layout = null;
 }
 <!DOCTYPE html>
@@ -16,6 +18,9 @@
     <link href="~/css/myStyle.css" rel="stylesheet" />
 </head>
 <body style="background-color:#f2f2f3;">
+    @{
+        Dictionary<int, List<LiveClass>> dict = ViewBag.classDict as Dictionary<int, List<LiveClass>>;
+    }
     <nav class="navbar navbar-default navbar-fixed-top" style="background-color:rgba(255, 255, 255, 0.95);z-index:1000;">
         <div class="container" id="div_header_container">
             <div class="navbar-header">
@@ -24,8 +29,84 @@
             <div class="navbar-header">
                 <a class="navbar-brand" href="/Directory/0"><span class="top_header_item">直播</span></a>
             </div>
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/Class"><span class="top_header_item">分类</span></a>
+
+            <div class="navbar-header nav_class">
+                <a class="navbar-brand " href="/Class"><span class="top_header_item">分类</span></a>
+                <div class="panel_class">
+                    <div class="div_arrow"></div>
+                    <div class="div_class_container">
+                        <div style="font-size:14px;color:#555;font-weight:600;margin-bottom:8px;">热门分类</div>
+
+                        <div class="hot_class_list">
+                            @{
+                                int c = 0;
+                                List<int> _list = new List<int>();
+                            }
+                            @foreach (var i in dict[0])
+                            {
+                                int cc = 0;
+                                foreach (var item in dict[i.Id])
+                                {
+                                    <a href="@Html.Raw("/Directory/"+item.Id)">@item.Name</a>
+                                    _list.Add(item.Id);
+                                    c++;
+                                    cc++;
+                                    if (cc > 2)
+                                    {
+                                        break;
+                                    }
+                                    if (c > 5)
+                                    {
+                                        break;
+                                    }
+                                }
+                                if (c > 5)
+                                {
+                                    break;
+                                }
+                            }
+                        </div>
+
+
+                        <div style="font-size:14px;color:#555;font-weight:600;clear:left;margin-bottom:8px;">玩家推荐</div>
+
+                        <div class="player_class_list">
+                            @{
+                                c = 0;
+                            }
+                            @foreach (var i in dict[0])
+                            {
+                                int cc = 0;
+                                foreach (var item in dict[i.Id])
+                                {
+                                    if (_list.Contains(item.Id))
+                                    {
+                                        continue;
+                                    }
+                                    <a href="@Html.Raw("/Directory/"+item.Id)">@item.Name</a>
+                                    c++;
+                                    cc++;
+                                    if (cc > 2)
+                                    {
+                                        break;
+                                    }
+                                    if (c > 11)
+                                    {
+                                        break;
+                                    }
+                                }
+                                if (c > 11)
+                                {
+                                    break;
+                                }
+                            }
+                        </div>
+
+                        <a class="_all_class_btn" href="/Class">
+                            全部分类
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="navbar-header" style="padding-top:8px;padding-bottom:8px;box-sizing:border-box;height:50px;">
                 <div class="header-search">
@@ -84,10 +165,10 @@
                                 <div style="color:#555;">每日任务</div>
                                 <div class="div_task_list">
                                     @*<div class="div_task_list_item">
-                                            <span class="div_task_list_item_progress">0/1</span>
-                                            <span class="div_task_list_item_discribe">观看1次直播</span>
-                                            <span class="div_task_list_item_exp">(+20EXP)</span>
-                                        </div>*@
+                                    <span class="div_task_list_item_progress">0/1</span>
+                                    <span class="div_task_list_item_discribe">观看1次直播</span>
+                                    <span class="div_task_list_item_exp">(+20EXP)</span>
+                                </div>*@
                                 </div>
                             </div>
 
@@ -184,8 +265,8 @@
                         </div>
                         <div class="div_task_wrap_top_line" style="width:98%;margin-top:10px;margin-left:-10px;"></div>
                         <div class="div_account_manager_list">
-                            <div class="div_account_manager_item"  onclick="window.location.href='/Personal/ChangePWD'">修改密码</div>
-                            <div class="div_account_manager_item" onclick="window.location.href='/Anchor'" >成为主播</div>
+                            <div class="div_account_manager_item" onclick="window.location.href='/Personal/ChangePWD'">修改密码</div>
+                            <div class="div_account_manager_item" onclick="window.location.href='/Anchor'">成为主播</div>
                         </div>
                     </div>
                 </div>

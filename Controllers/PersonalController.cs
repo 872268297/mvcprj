@@ -19,11 +19,18 @@ namespace mvc.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly MyDbContext _dbContext;
         private readonly IUserService _userService;
-        public PersonalController(IHostingEnvironment _hostingEnvironment, MyDbContext _dbContext, IUserService _userService)
+        private readonly ILiveClassService _liveClassService;
+
+        public PersonalController(IHostingEnvironment _hostingEnvironment
+            , MyDbContext _dbContext
+            , IUserService _userService
+            , ILiveClassService _liveClassService
+            )
         {
             this._hostingEnvironment = _hostingEnvironment;
             this._dbContext = _dbContext;
             this._userService = _userService;
+            this._liveClassService = _liveClassService;
         }
 
         public async Task<IActionResult> Index()
@@ -46,6 +53,10 @@ namespace mvc.Controllers
 
             ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset, settings);
             ViewBag.UserAsset = asset;
+
+            Dictionary<int, List<LiveClass>> classDict = await _liveClassService.GetDict();
+            ViewBag.classDict = classDict;
+
             return View();
         }
 
@@ -67,6 +78,11 @@ namespace mvc.Controllers
 
             ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset, settings);
             ViewBag.UserAsset = asset;
+
+            Dictionary<int, List<LiveClass>> classDict = await _liveClassService.GetDict();
+            ViewBag.classDict = classDict;
+
+
             return View();
         }
 
@@ -88,6 +104,10 @@ namespace mvc.Controllers
 
             ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset, settings);
             ViewBag.UserAsset = asset;
+
+            Dictionary<int, List<LiveClass>> classDict = await _liveClassService.GetDict();
+            ViewBag.classDict = classDict;
+
             return View();
         }
 

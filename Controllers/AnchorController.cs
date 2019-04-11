@@ -64,8 +64,11 @@ namespace mvc.Controllers
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
+            var liveClass = await _liveClass.GetDict();
+            ViewBag.classDict = liveClass;
 
-            ViewBag.Dict_Class = JsonConvert.SerializeObject(await _liveClass.GetDict(), settings);
+
+            ViewBag.Dict_Class = JsonConvert.SerializeObject(liveClass, settings);
 
             var romm = await _anchorService.GetRoomByUserId(user.UserId);
             ViewBag.RoomInfo = romm;
@@ -96,7 +99,11 @@ namespace mvc.Controllers
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
-            ViewBag.Dict_Class = JsonConvert.SerializeObject(await _liveClass.GetDict(), settings);
+            var liveClass = await _liveClass.GetDict();
+            ViewBag.classDict = liveClass;
+
+
+            ViewBag.Dict_Class = JsonConvert.SerializeObject(liveClass, settings);
 
             ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset, settings);
             ViewBag.UserAsset = asset;
