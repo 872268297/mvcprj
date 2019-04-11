@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using mvc.Models;
 using Services;
 using mvc.Entities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace mvc.Controllers
 {
@@ -17,10 +19,13 @@ namespace mvc.Controllers
 
         private readonly IUserService _userService;
 
-        public SearchController(ILiveClassService liveClass, IUserService _userService)
+        private readonly IAnchorService _anchorService;
+
+        public SearchController(ILiveClassService liveClass, IUserService _userService, IAnchorService _anchorService)
         {
             _liveClass = liveClass;
             this._userService = _userService;
+            this._anchorService = _anchorService;
         }
 
         [Route("Search/{id?}")]
@@ -38,12 +43,23 @@ namespace mvc.Controllers
             {
                 ViewBag.User = "";
             }
-            ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset);
+
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            ViewBag.UserAssetJson = Newtonsoft.Json.JsonConvert.SerializeObject(asset, settings);
             ViewBag.UserAsset = asset;
 
             Dictionary<int, List<LiveClass>> classDict = await _liveClass.GetDict();
 
+            List<BroadcastRoomDTO> list = await _anchorService.GetRoomList(id);
+
+            ViewBag.ListJson = JsonConvert.SerializeObject(list, settings);
+
             ViewBag.classDict = classDict;
+
+            ViewBag.Keyword = id;
+
 
             return View();
         }

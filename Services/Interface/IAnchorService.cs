@@ -33,6 +33,8 @@ namespace Services
 
         Task<JsonModel> StopBroadcast(int userid);
 
+        Task<List<BroadcastRoomDTO>> GetRoomList(string keyword);
+
         Task<List<BroadcastRoomDTO>> GetRoomList(int classid = 0);
 
         Task<List<BroadcastRoomDTO>> GetRoomListLiving(int classid = 0);

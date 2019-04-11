@@ -368,5 +368,43 @@ namespace Services
 
             return room;
         }
+
+        public async Task<List<BroadcastRoomDTO>> GetRoomList(string keyword)
+        {
+            IQueryable<BroadcastRoomDTO> query = from r in _dbcontext.BroadcastRooms
+                                                 join u in _dbcontext.UserAssets on r.UserId equals u.UserId
+                                                 join lc in _dbcontext.LiveClasses on r.ClassId equals lc.Id
+                                                 
+                                                 orderby r.LastLiveTime descending
+                                                 select new BroadcastRoomDTO()
+                                                 {
+                                                     Room = new BroadcastRoom()
+                                                     {
+                                                         AnchorId = r.AnchorId,
+                                                         ClassId = r.ClassId,
+                                                         Id = r.Id,
+                                                         CoverUrl = r.CoverUrl,
+                                                         IsBan = r.IsBan,
+                                                         IsLiving = r.IsLiving,
+                                                         LastLiveTime = r.LastLiveTime,
+                                                         Name = r.Name,
+                                                         Notice = r.Notice,
+                                                         RoomNum = r.RoomNum,
+                                                         StreamChannel = r.StreamChannel,
+                                                         UserId = r.UserId,
+                                                         Viewer = r.Viewer,
+                                                         IsCustomCover = r.IsCustomCover
+                                                     },
+                                                     UserAsset = u,
+                                                     LiveClass = lc
+                                                 };
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                query = query.Where(t => t.Room.Name.Contains(keyword) || t.Room.RoomNum.ToString().Contains(keyword) || t.UserAsset.NickName.Contains(keyword));
+            }
+            var list = await query.ToListAsync();
+
+            return list;
+        }
     }
 }

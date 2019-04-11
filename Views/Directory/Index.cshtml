@@ -159,11 +159,40 @@
     <div class="div_main_content_warp">
         <div class="div_main_content">
             <div style="padding-bottom:10px;vertical-align:middle;">
-                <span style="font-size:30px;display:inline-block;vertical-align:middle;">在线直播</span>
+                <span style="font-size:30px;display:inline-block;vertical-align:middle;">
+                    @{
+                        int ClassId = ViewBag.ClassId;
+                    }
+                    @if (ClassId == 0)
+                    {
+                        <span>在线直播</span>
+                    }
+                    else
+                    {
+                        foreach (var i in dict.Values)
+                        {
+                            bool flag = false;
+                            foreach (var item in i)
+                            {
+                                if (item.Id == ClassId)
+                                {
+                                    <span>@item.Name</span>
+                                    flag = true;
+                                    break;
+                                }
+                                if (flag)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                </span>
                 <div class="nav_class_list" style="vertical-align:middle;">
 
                     @{
-                        int ClassId = ViewBag.ClassId;
+
                         <span data-value="@ClassId" class="active">全部</span>
                         if (dict.ContainsKey(ClassId))
                         {
@@ -319,7 +348,7 @@
 
 
         function setList(data) {
-            
+
             var str = '';
             $.each(data, function (i, item) {
                 str += '<a class="div_romm_item" href="/Room/' + item.room.roomNum + '"><div class="div_room_item_cover">';

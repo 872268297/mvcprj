@@ -62,10 +62,18 @@ namespace mvc.Services
                             p.Start();//启动线程
                                       //p.BeginErrorReadLine();//开始异步读取
                             Thread.Sleep(5000);
-                            if (!p.HasExited)
+                            try
                             {
-                                p.Kill();
+                                if (!p.HasExited)
+                                {
+                                    p.Kill();
+                                }
                             }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+                            }
+                            
                             //p.WaitForExit();//阻塞等待进程结束
                             p.Close();//关闭进程
                             p.Dispose();//释放资源
