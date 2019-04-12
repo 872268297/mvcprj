@@ -22,16 +22,20 @@ namespace mvc.Controllers
 
         private readonly IAnchorService _anchorService;
 
+        private readonly IFollowService _followService;
+
         public RoomController(ILiveClassService liveClass
             , IUserService _userService
             , IServerService _serverService
             , IAnchorService _anchorService
+            , IFollowService _followService
             )
         {
             _liveClass = liveClass;
             this._userService = _userService;
             this._serverService = _serverService;
             this._anchorService = _anchorService;
+            this._followService = _followService;
         }
 
         [Route("Room/{id?}")]
@@ -40,6 +44,8 @@ namespace mvc.Controllers
             BroadcastRoomDTO room = await _anchorService.GetRoomByRoomNum(id);
             if (room == null) return NotFound();
 
+            bool isFollow = false;
+
             UserData user = UserData.Current;
             UserAsset asset = null;
             if (user != null)
@@ -47,11 +53,14 @@ namespace mvc.Controllers
                 ViewBag.User = user.UserName;
                 asset = await _userService.GetUserAsset(user.UserId);
 
+                isFollow = await _followService.IsFollowed(user.UserId, room.Room.Id);
             }
             else
             {
                 ViewBag.User = "";
             }
+
+            ViewBag.IsFollow = isFollow;
 
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();

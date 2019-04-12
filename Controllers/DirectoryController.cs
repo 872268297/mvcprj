@@ -53,9 +53,9 @@ namespace mvc.Controllers
 
             Dictionary<int, List<LiveClass>> classDict = await _liveClass.GetDict();
 
-            List<BroadcastRoomDTO> list = await _anchorService.GetRoomListLiving(id);
+            //List<BroadcastRoomDTO> list = await _anchorService.GetRoomListLiving(id);
 
-            ViewBag.RoomList = list;
+            //ViewBag.RoomList = list;
 
             ViewBag.classDict = classDict;
 

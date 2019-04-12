@@ -1,5 +1,5 @@
-﻿
-@using Entities;
+﻿@using Entities;
+@using mvc.Entities;
 @{
     Layout = null;
 }
@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>直播间</title>
+    <title>直播</title>
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -19,11 +19,10 @@
 </head>
 <body>
     @{
-        BroadcastRoomDTO Room = ViewBag.Room as BroadcastRoomDTO;
         Dictionary<int, List<LiveClass>> dict = ViewBag.classDict as Dictionary<int, List<LiveClass>>;
         var Roots = dict[0];
     }
-    <nav class="navbar navbar-default navbar-fixed-top" style="background-color:rgba(255, 255, 255, 0.95);z-index:1000;">
+    <nav class="navbar navbar-default navbar-fixed-top" style="background-color:rgb(255, 255, 255);z-index:10000;">
         <div class="container" id="div_header_container">
             <div class="navbar-header">
                 <a class="navbar-brand" href="/"><span class="top_header_item">首页</span></a>
@@ -32,7 +31,7 @@
                 <a class="navbar-brand nav-active" href="/Directory/0"><span class="top_header_item">直播</span></a>
             </div>
             <div class="navbar-header nav_class">
-                <a class="navbar-brand " href="/Class"><span class="top_header_item">分类</span></a>
+                <a class="navbar-brand" href="/Class"><span class="top_header_item">分类</span></a>
                 <div class="panel_class">
                     <div class="div_arrow"></div>
                     <div class="div_class_container">
@@ -109,6 +108,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="navbar-header" style="padding-top:8px;padding-bottom:8px;box-sizing:border-box;height:50px;">
                 <div class="header-search">
                     <input type="text" id="txt_search" placeholder="搜索" readonly onfocus="this.removeAttribute('readonly');" autocomplete="off" />
@@ -175,10 +175,15 @@
 
                         </div>
                     </div>
+
+
+
                 </div>
             </div>
         </div>
     </nav>
+
+
     <div class="left" id="left">
 
 
@@ -227,105 +232,44 @@
             <span style="line-height:80px;color:#a7a7a7;">></span>
         </div>
     </div>
-    <div id="content" class="content">
 
-        <div style="height:92px;margin-bottom:10px; width:100%;border:1px solid #e5e4e4;background-color:rgba(255, 255, 255, 0.95);" id="title">
-            <div style="float:left;">
-                <img id="ancorPic" style="width:92px;height:92px;" src="@Html.Raw(Room.UserAsset.HeadIcon) " />
-            </div>
-            <div id="divRoomInfo" style="max-width: 787px;padding-left:10px;float:left;">
-                <div id="TitleHeadLine" style="font-family: Microsoft Yahei,-apple-system,sans-serif;font-size: 12px;line-height: 1.5;padding-top:3px;">
-                    <h3 id="roomTitle" style="font-size: 18px;line-height: 30px;float:left;color:#2c3e50;font-weight: bolder;margin: 0;">
-                        @Html.Raw(Room.Room.Name)
-                    </h3>
-                </div>
-                <div id="categoryList" style="margin-top:5px;" class="Title-categoryList">
-                    @{
-                        var cla = Room.LiveClass;
-                        while (cla.ParentId != 0)
-                        {
-                            bool flag = false;
-                            foreach (var item in dict.Values)
-                            {
-
-                                foreach (var i in item)
-                                {
-                                    if (i.Id == cla.ParentId)
-                                    {
-                                        flag = true;
-                                        <a class="Title-categoryItem" href=" @Html.Raw("/Directory/"+i.Id)">@Html.Raw(i.Name)</a>
-                                        cla = i;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (flag)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                    <a class="Title-categoryItem" href=" @Html.Raw("/Directory/"+Room.LiveClass.Id)">@Html.Raw(Room.LiveClass.Name)</a>
-                </div>
-                <div class="Title-categoryList" style="margin-top:5px;">
-                    <a id="AnchorName" class="Title-categoryItem">@Html.Raw(Room.UserAsset.NickName)</a>
-                </div>
-            </div>
-            <div id="guanzhu" class=" @Html.Raw(ViewBag.IsFollow?"yiguanzhu":"guanzhu")">
-                <span id="txt_guanzhu">@Html.Raw(ViewBag.IsFollow ? "已关注" : "关注")&nbsp;</span>
-
-
-                <span id="txt_follower">@Html.Raw(Room.Follower)</span>
-            </div>
-        </div>
-
-        <div id="video" class="video" style="width: 100%;"></div>
-
-    </div>
-    <div class="right" id="right">
-
-        <div style="border:1px solid #e5e4e4;width:334px;height:805px;margin-left:15px;background-color:rgba(255, 255, 255, 0.95);" id="labChat">
-            <div id="announce" style="height:40px;padding-left: 10px;padding-top:0px;border-bottom:1px solid #eee;overflow:hidden;overflow-wrap:break-word;text-overflow: ellipsis;">
-                <span style="color:#999;line-height:25px;margin-top:10px;margin-bottom:5px; display:inline-block;margin-right:3px;cursor:default;text-overflow: ellipsis;overflow: hidden;">
-                    <img src="~/fonts/notice_9ceca49.png" style="display:inline-block; margin-top:-3px;margin-right:3px;" />
-                    公告:
-                    @{
-                        string str = string.IsNullOrWhiteSpace(Room.Room.Notice) ? ("欢迎来到&nbsp;" + Room.UserAsset.NickName + "&nbsp;的直播间") : Room.Room.Notice;
-                        string dissstr = str;
-                        if (str.Length > 18)
-                        {
-                            dissstr = str.Substring(0, 15) + "...";
-                        }
-                    }
-                    @Html.Raw(str)
-                    @*<span data-value="@Html.Raw(str)" style="color:#666;height:19px;display:inline-block;text-overflow: ellipsis;overflow: hidden; word-wrap:break-word;white-space: nowrap;">@Html.Raw(dissstr)</span>*@
+    <div class="div_main_content_warp">
+        <div class="div_main_content">
+            <div style="padding-bottom:10px;vertical-align:middle;">
+                <span style="font-size:30px;display:inline-block;vertical-align:middle;">
+                    我的关注
                 </span>
 
             </div>
-            <ul id="BarrageList" style="list-style: none;overflow-y:auto;" class="Barrage-list"></ul>
-        </div>
-        <div style="border:1px solid #e5e4e4;width:334px;height:95px;margin-left:15px;border-top:none;background-color:rgba(255, 255, 255, 0.95);">
-            <div style="padding-left:5px;height:15px;">
-                <div class="color_select active" style="background-color: #000000;border-color:#000000;" color="#000000"></div>
-                <div class="color_select" style="background-color: #ff0000;border-color:#ff0000;" color="#ff0000"></div>
-                <div class="color_select" style="background-color: #0000ff;border-color:#0000ff;" color="#0000ff"></div>
-                <div class="color_select" style="background-color: #9370db;border-color:#9370db;" color="#9370db"></div>
-                <div class="color_select" style="background-color: #ff921a;border-color:#ff921a" color="#ff921a"></div>
-                <div class="color_select" style="background-color: #f2dede;border-color:#f2dede;" color="#f2dede"></div>
-                <div class="color_select" style="background-color: #9370db;border-color:#9370db;" color="#9370db"></div>
-                <div class="color_select" style="background-color: #4caf50;border-color:#4caf50;" color="#4caf50"></div>
-                <div class="color_select" style="background-color: #ffd800;border-color:#ffd800;" color="#ffd800"></div>
-                <div class="color_select" style="background-color: #FF7700;border-color:#FF7700;" color="#FF7700"></div>
-                <div class="color_select" style="background-color: #00ffff;border-color:#00ffff;" color="#00ffff"></div>
-                <div class="color_select" style="background-color: #ff00dc;border-color:#ff00dc;" color="#ff00dc"></div>
-                <div class="color_select" style="background-color: #ff006e;border-color:#ff006e;" color="#ff006e"></div>
-                <div class="color_select" style="background-color: #ffd800;border-color:#ffd800;" color="#ffd800"></div>
-            </div>
-            <div style="padding-top:13px;padding-left:5px;">
-                <textarea placeholder="这里输入聊天内容" maxlength="22" class="txt"></textarea>
-                <div type="button" id="btnsend" class="send">发送</div>
-            </div>
+            <div class="div_room_item_container" id="room_container_1">
+                @* @{
+                        List<BroadcastRoomDTO> list = new List<BroadcastRoomDTO>(); //ViewBag.RoomList as List<BroadcastRoomDTO>;
 
+                    }
+                    @foreach (var item in list)
+                    {
+                        <a class="div_romm_item" href="/Room/@Html.Raw(item.Room.RoomNum)">
+                            <div class="div_room_item_cover">
+
+                        <img class="img_room_item_cover"
+                             src=" @Html.Raw(string.IsNullOrWhiteSpace(item.Room.CoverUrl)?"/fonts/black.png":item.Room.CoverUrl)" />
+                        <div class="img_room_item_cover_mask"></div>
+                        <img class="img_room_item_cover_mask_play" src="~/fonts/play-icon_a.png" />
+                    </div>
+                    <div class="div_room_item_bottom">
+                        <div class="div_room_item_bottom_room_name">@Html.Raw(item.Room.Name)</div>
+                        <div class="div_room_item_bottom_head_row">
+                            <div class="div_room_item_bottom_class">@Html.Raw(item.LiveClass.Name)</div>
+                            <img class="div_room_item_bottom_head" src="@Html.Raw(item.UserAsset.HeadIcon)" />
+                            <div class="div_room_item_bottom_anchor_name">
+                                @Html.Raw(item.UserAsset.NickName)
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+                    }
+                *@
+            </div>
         </div>
     </div>
 
@@ -386,11 +330,8 @@
         </div>
     </div>
     <script type="text/javascript">
-        var room_self_id = @Room.Room.Id;
 
-        var roomId = @ViewBag.ID;
-
-         var user = '@Html.Raw(ViewBag.User)';
+        var user = '@Html.Raw(ViewBag.User)';
         //user = unescape(user.replace(/&#x/g, '%u').replace(/;/g, ''));
 
 
@@ -408,57 +349,11 @@
             asset = null;
         }
 
-        var rtmpAddr = 'rtmp://@Html.Raw(ViewBag.RTMPAddress)' + '@Html.Raw(Room.Room.StreamChannel)';
-
-       // console.log(roomId);
-        var nowI = 5;
-        var effectName = 'None',
-            typeName = 'easeOut';
-        var speed = 10;
-        var attribute = 'x';
-        var start = 0,
-            end = 0;
-        var animatePosition = [];
-        var alpha = 1;
-        var fontSize = 20;
-        var BarrageColor = '#000000';
-
 
         function getStyle(obj, styleName) {
             if (obj.currentStyle) { return obj.currentStyle[styleName]; } else {
                 return getComputedStyle(obj, null)[styleName];
             }
-        }
-        function resize() {
-            var ww = document.body.clientWidth;
-            var lw = parseInt(getStyle(document.getElementById('left'), 'width'));
-            var rw = parseInt(getStyle(document.getElementById('right'), 'width'));
-            var rh = parseInt(getStyle(document.getElementById('right'), 'height'));
-            var v = document.getElementById('video');
-            var r = ww - lw - rw - 1 - 18 + 'px';
-            v.style.height = rh - 99 -  63 + 'px';
-            v.style.width = r;
-            document.getElementById('content').style.marginLeft = lw + 18 + 'px';
-            document.getElementById('title').style.width = r;
-        }
-
-        resize();
-        window.onresize = resize;
-
-        var videoObject = {
-            container: '.video',//“#”代表容器的ID，“.”或“”代表容器的class
-            variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
-            autoplay: true,//自动播放
-            loaded: 'loadedHandler',
-            live: true,//直播视频形式
-            video: rtmpAddr,//视频地址 rtmp://127.0.0.1:1935/live/123,
-
-        };
-        var player = new ckplayer(videoObject);
-
-        var playerLoad = false;
-        function loadedHandler() { //播放器加载后会调用该函数
-            playerLoad = true;
         }
 
         function randomNum(minNum, maxNum) {
@@ -475,170 +370,67 @@
             }
         }
 
-        function newAnimate(barrageObj) {
-            if (!playerLoad) {
-                //alert('播放器还没有加载，不能添加缓动');
-                return;
-            }
-            alpha = 1;
-            //nowI += 30;
-            nowI = 5 + randomNum(1, 15) * 30;
-            switch (attribute) {
-                case 'x':
-                    animatePosition = [2, 0, 0, nowI];
-                    break;
-                case 'y':
-                    animatePosition = [0, 2, nowI, 0];
-                    break;
-                case 'alpha':
-                    animatePosition = [0, 0, nowI, nowI];
-                    alpha = 0;
-                    break;
-            }
-            var c = barrageObj.color.replace('#', '0X')
-            if (c == '0X000000') c = '0XFFFFFF';//黑色变白色处理
-            var obj = {
-                list: [ //list=定义元素列表
-                    {
-                        type: 'text', //说明是文本
-                        text: barrageObj.message, //文本内容
-                        color: c, //文本颜色
-                        size: fontSize, //文本字体大小，单位：px
-                        font: '"Microsoft YaHei", YaHei, "微软雅黑", SimHei,"\5FAE\8F6F\96C5\9ED1", "黑体",Arial', //文本字体
-                        leading: 30, //文字行距
-                        alpha: 1, //文本透明度(0-1)
-                        paddingLeft: 10, //文本内左边距离
-                        paddingRight: 10, //文本内右边距离
-                        paddingTop: 0, //文本内上边的距离
-                        paddingBottom: 0, //文本内下边的距离
-                        marginLeft: 0, //文本离左边的距离
-                        marginRight: 10, //文本离右边的距离
-                        marginTop: 10, //文本离上边的距离
-                        marginBottom: 0, //文本离下边的距离
-                        backgroundColor: '0x000000', //文本的背景颜色
-                        backAlpha: 0.1, //文本的背景透明度(0-1)
-                        backRadius: 30, //文本的背景圆角弧度
-                        //clickEvent: "actionScript->videoPlay"
-                    }
-                ],
-                //x: 10, //元件x轴坐标，注意，如果定义了position就没有必要定义x,y的值了，x,y支持数字和百分比，使用百分比时请使用单引号，比如'50%'
-                //y: 50, //元件y轴坐标
-                //position:[1,1],//位置[x轴对齐方式（0=左，1=中，2=右），y轴对齐方式（0=上，1=中，2=下），x轴偏移量（不填写或null则自动判断，第一个值为0=紧贴左边，1=中间对齐，2=贴合右边），y轴偏移量（不填写或null则自动判断，0=紧贴上方，1=中间对齐，2=紧贴下方）]
-                position: animatePosition,
-                alpha: alpha, //元件的透明度
-                //backgroundColor: '0xFFDD00', //元件的背景色
-                backAlpha: 0.5, //元件的背景透明度(0-1)
-                backRadius: 60, //元件的背景圆角弧度
-                // clickEvent: "actionScript->videoPlay"
-            }
-            var ele = player.addElement(obj);
-            var eleObj = player.getElement(ele);
-            switch (attribute) {
-                case 'x':
-                    start = null;
-                    end = 0 - eleObj['width'];
-                    break;
-                case 'y':
-                    start = '85%';
-                    end = 0 - eleObj['height'];
-                    break;
-                case 'alpha':
-                    start = 0;
-                    end = 1;
-                    alpha = 0;
-                    break;
-            }
-            //if (nowI > 160) {
-            //    nowI = 5;
-            //}
-            var obj = {
-                element: ele,
-                parameter: attribute,
-                static: true, //是否禁止其它属性，true=是，即当x(y)(alpha)变化时，y(x)(x,y)在播放器尺寸变化时不允许变化
-                effect: effectName + '.' + typeName,
-                start: start,
-                end: end,
-                speed: speed,
-                overStop: true,
-                pauseStop: true,
-                callBack: 'deleteChild'
-            };
-            var animate = player.animate(obj);
+        function getNextExp(val) {
+            return parseInt(val) * 100;
         }
 
-        function deleteChild(ele) {
-            if (player) {
-                window.setTimeout(function () {
-                    player.deleteElement(ele);
-                }, 1000);
-
-            }
+        function resize() {
+            $('.div_main_content_warp').css('margin-left',$('.left').width()+14+'px');
         }
 
-        var ws = null;
-        var _isMyReconnet = false;
-        function initWS() {
-            w = new WebSocket('ws://localhost:5000/ws?user=' + user + '&roomid=' + roomId);
-            w.onmessage = function (evt) {
-                var s = evt.data;
-                var obj = JSON.parse(s);
-                addMessage(obj.sender + "&nbsp;:&nbsp;" + obj.message ,obj.color );
-                newAnimate(obj);
-            };
-            w.onopen = function () {
-                if (!_isMyReconnet) {
-                    //addMessage('成功连接弹幕服务器……', 'rgba(255,93,35,0.9)');
-                }
-                _isMyReconnet = false;
-            };
-            w.onclose = function () {
-                console.log('与弹幕服务失去连接……');
-                //initWS();
-            };
-            w.onerror = function (evt) {
-                console.log(JSON.stringify(evt));
-                if (!_isMyReconnet) {
-                    initWS();
-                }
-            }
-            //addMessage('正在连接弹幕服务器……', 'rgba(255,93,35,0.9)');
-            ws = w;
+
+        function setList(data) {
+
+            var str = '';
+            $.each(data, function (i, item) {
+                str += '<a class="div_romm_item" href="/Room/' + item.room.roomNum + '"><div class="div_room_item_cover">';
+                str += '<img class="img_room_item_cover" onerror="this.src=\'/fonts/black.png\';this.onerror=null;" src="' +
+                    (item.room.isCustomCover ? item.room.coverUrl : ("/upload/cover/" + item.room.streamChannel + '.jpg')) + '" />';
+                str += '<div class="img_room_item_cover_mask"></div><img class="img_room_item_cover_mask_play" src="/fonts/play-icon_a.png" /></div>';
+                str += '<div class="div_room_item_bottom"><div class="div_room_item_bottom_room_name">' + item.room.name + '</div>';
+                str += '<div class="div_room_item_bottom_head_row"><div class="div_room_item_bottom_class">' + item.liveClass.name + '</div>';
+                str += '<img class="div_room_item_bottom_head" src="' + item.userAsset.headIcon + '" /><div class="div_room_item_bottom_anchor_name">';
+                str += item.userAsset.nickName + '</div></div></div></a>';
+            });
+            $('#room_container_1').empty().append($(str));
         }
 
-        function addMessage(str, color) {
-            if (!color) color = '#FFFFFF';
-            var $BarrageList = $('#BarrageList');
-            $BarrageList.append($('<li class="Barrage-listItem"><span class="Barrage-content" style="color:' + color + ';">' + str + '</span>)'));
-            var labchat = document.getElementById('labChat');
-            labchat.scrollTop = labchat.scrollHeight;
-        }
+        function GetFollowList() {
 
-        $(function () {
-
-            initWS();
-
-            $('#btnsend').click(function () {
-                var s = $('.txt').val();
-                if (user == '') {
-                    ShowLoginDlg();
-                    return;
-                }
-                $('.txt').val('');
-                if (s == '') return;
-                if (ws && ws.readyState == WebSocket.OPEN) {
-                    var obj = {};
-                    obj.message = s;
-                    obj.color = BarrageColor;
-                    obj.sender = asset.nickName;
-                    obj.userid = user;
-                    //console.log(obj);
-                    ws.send(JSON.stringify(obj));
-                }
-                else {
-                    console.log('连接已经关闭');
+            $.post('/api/Follow/', {}, function (res) {
+                if (res.success) {
+                    setList(res.data);
                 }
 
             });
+
+            @*<a class="div_romm_item" href="/Room/@Html.Raw(item.Room.RoomNum)">
+                        <div class="div_room_item_cover">
+                            <img class="img_room_item_cover"
+                                 src=" @Html.Raw(string.IsNullOrWhiteSpace(item.Room.CoverUrl)?"/fonts/black.png":item.Room.CoverUrl)" />
+
+                            <div class="img_room_item_cover_mask"></div>
+                            <img class="img_room_item_cover_mask_play" src="~/fonts/play-icon_a.png" />
+                        </div>
+                        <div class="div_room_item_bottom">
+                            <div class="div_room_item_bottom_room_name">@Html.Raw(item.Room.Name)</div>
+                            <div class="div_room_item_bottom_head_row">
+                                <div class="div_room_item_bottom_class">@Html.Raw(item.LiveClass.Name)</div>
+                                <img class="div_room_item_bottom_head" src="@Html.Raw(item.UserAsset.HeadIcon)" />
+
+                                <div class="div_room_item_bottom_anchor_name">
+                                    @Html.Raw(item.UserAsset.NickName)
+                                </div>
+                            </div>
+                        </div>
+                    </a>*@
+        }
+
+
+
+        $(function () {
+
+            GetFollowList();
 
             $('#btnReg').off('click').on('click', function () {
                 var username = $('#txtRegUser').val();
@@ -674,64 +466,22 @@
                 Login(username, hex_md5(password),code);
             });
 
-            $('.color_select').off('click').on('click', function (e) {
-                //console.log(e);
-                $('.color_select.active').removeClass('active');
-                //console.log($(e.target).attr('color'));
-                $(e).addClass('active');
-                BarrageColor = $(e.target).addClass('active').attr('color');
-            });
-
-            $('#guanzhu').off('click').on('click', function (e) {
-                if (user == '') {
-                    ShowLoginDlg();
-                    return;
-                }
-                var ele = $('#guanzhu');
-                if (ele.hasClass('guanzhu')) {
-                    //处理关注逻辑
-                    $.post('/api/Follow/AddFollow', { roomid: room_self_id}, function (res) {
-                        if (res.success) {
-                            ele.removeClass('guanzhu').addClass('yiguanzhu');
-                            $('#txt_guanzhu').html('已关注&nbsp;');
-                            var n = $('#txt_follower').text();
-                            n = parseInt(n);
-                            $('#txt_follower').text((n+1));
-                        } else {
-                            layer.msg(res.message);
-                        }
-
-                    });
-
-                } else {
-                    //处理取关逻辑
-                    $.post('/api/Follow/CancelFollow', { roomid: room_self_id }, function (res) {
-                        if (res.success) {
-                            ele.removeClass('yiguanzhu').addClass('guanzhu');
-                            $('#txt_guanzhu').html('关注&nbsp;');
-                            var n = $('#txt_follower').text();
-                            n = parseInt(n);
-                            $('#txt_follower').text((n - 1));
-                        } else {
-                            layer.msg(res.message);
-                        }
-                    });
-                }
-            });
 
             $('.Aside-toggle-Expand').off('click').on('click', function (e) {
                 $('.Aside-toggle-Expand,.left_expand').hide();
                 $('.Aside-toggle-Shark,.left_shark').show();
                 $('.left').css('width', '0');
-                resize();
+                resize&&resize();
             });
 
             $('.Aside-toggle-Shark').off('click').on('click', function (e) {
                 $('.Aside-toggle-Expand,.left_expand').show();
                 $('.Aside-toggle-Shark,.left_shark').hide();
                 $('.left').css('width', '240px');
-                resize();
+                resize && resize();
             });
+
+
 
             $('.header-search-btn ').click(function () {
                 window.location.href = '/Search/' + $('#txt_search').val();
@@ -748,6 +498,14 @@
                 GetDailyTask();
             }, function () {
 
+                });
+            $('.nav_class_list').on('click', 'span', function () {
+                var _this = $(this);
+                if (!_this.hasClass('active')) {
+                    var id = _this.data('value');
+                    _this.addClass('active').siblings().removeClass('active');
+                    GetListByClassId(id);
+                }
             });
 
             if (user != '') {
@@ -755,6 +513,8 @@
             }
 
             $('#right_top_float').show();
+
+            resize && resize();
         });
 
         function Login(username , pwd ,code) {
@@ -764,25 +524,13 @@
             }, function(res) {
                 if (res.success) {
                     layer.closeAll();
-                    //console.log(res);
                     user = res.data[0].userName;
                     asset = res.data[1];
-                    $('#head_right_top').attr('src', asset.headIcon);
-                    if (ws) {
-                        _isMyReconnet = true;
-                        ws.close();
-                        initWS();
-                    }
                     ShowAfterLogin();
-                    //console.log(res);
                 } else {
                     layer.msg(res.message);
                 }
             });
-        }
-
-        function getNextExp(val) {
-            return parseInt(val) * 100;
         }
 
         function UpadteUserAsset() {
@@ -835,7 +583,7 @@
             $('#a_user,.a_user').text(asset.nickName);
             var headIcon = asset.headIcon;
             $('.head_right_top').each(function (i, o) {
-                $(this).attr('src', headIcon);
+                $(this).attr('src', headIcon );
             });
             var sex = asset.sex;
             if (sex == "男") {
@@ -860,7 +608,6 @@
 
         }
 
-
         function ShowAfterLogin() {
             $('#div_login_panel').hide();
             SetUserAsset(asset);
@@ -872,11 +619,6 @@
                         $('#div_login_ed_panel').hide();
                         user = '';
                         asset = null;
-                        if (ws && ws.readyState == WebSocket.OPEN) {
-                            _isMyReconnet = true;
-                            ws.close();
-                            initWS();
-                        }
                     } else {
                         layer.msg(res.message);
                     }

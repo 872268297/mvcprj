@@ -96,6 +96,7 @@ namespace Services
             var query = from r in _dbcontext.BroadcastRooms
                         join u in _dbcontext.UserAssets on r.UserId equals u.UserId
                         join lc in _dbcontext.LiveClasses on r.ClassId equals lc.Id
+                        join a in _dbcontext.Anchors on r.AnchorId equals a.Id
                         where r.Id == roomId
                         select new BroadcastRoomDTO()
                         {
@@ -117,7 +118,8 @@ namespace Services
                                 IsCustomCover = r.IsCustomCover
                             },
                             UserAsset = u,
-                            LiveClass = lc
+                            LiveClass = lc,
+                            Follower = a.Follower
                         };
             var room = await query.FirstOrDefaultAsync();
 
@@ -144,6 +146,7 @@ namespace Services
             IQueryable<BroadcastRoomDTO> query = from r in _dbcontext.BroadcastRooms
                                                  join u in _dbcontext.UserAssets on r.UserId equals u.UserId
                                                  join lc in classes on r.ClassId equals lc.Id
+                                                 join a in _dbcontext.Anchors on r.AnchorId equals a.Id
                                                  where classList.Contains(r.ClassId)
                                                  orderby r.LastLiveTime descending
                                                  select new BroadcastRoomDTO()
@@ -166,7 +169,8 @@ namespace Services
                                                          IsCustomCover = r.IsCustomCover
                                                      },
                                                      UserAsset = u,
-                                                     LiveClass = lc
+                                                     LiveClass = lc,
+                                                     Follower = a.Follower
                                                  };
             var list = await query.ToListAsync();
 
@@ -195,6 +199,7 @@ namespace Services
             IQueryable<BroadcastRoomDTO> query = from r in _dbcontext.BroadcastRooms
                                                  join u in _dbcontext.UserAssets on r.UserId equals u.UserId
                                                  join lc in classes on r.ClassId equals lc.Id
+                                                 join a in _dbcontext.Anchors on r.AnchorId equals a.Id
                                                  where r.IsLiving == true && classList.Contains(r.ClassId)
                                                  orderby r.LastLiveTime descending
                                                  select new BroadcastRoomDTO()
@@ -217,7 +222,8 @@ namespace Services
                                                          IsCustomCover = r.IsCustomCover
                                                      },
                                                      UserAsset = u,
-                                                     LiveClass = lc
+                                                     LiveClass = lc,
+                                                     Follower = a.Follower
                                                  };
             var list = await query.ToListAsync();
 
@@ -342,6 +348,7 @@ namespace Services
             var query = from r in _dbcontext.BroadcastRooms
                         join u in _dbcontext.UserAssets on r.UserId equals u.UserId
                         join lc in _dbcontext.LiveClasses on r.ClassId equals lc.Id
+                        join a in _dbcontext.Anchors on r.AnchorId equals a.Id
                         where r.RoomNum == roomnum
                         select new BroadcastRoomDTO()
                         {
@@ -362,7 +369,8 @@ namespace Services
                                 Viewer = r.Viewer
                             },
                             UserAsset = u,
-                            LiveClass = lc
+                            LiveClass = lc,
+                            Follower = a.Follower
                         };
             var room = await query.FirstOrDefaultAsync();
 
@@ -374,7 +382,7 @@ namespace Services
             IQueryable<BroadcastRoomDTO> query = from r in _dbcontext.BroadcastRooms
                                                  join u in _dbcontext.UserAssets on r.UserId equals u.UserId
                                                  join lc in _dbcontext.LiveClasses on r.ClassId equals lc.Id
-                                                 
+                                                 join a in _dbcontext.Anchors on r.AnchorId equals a.Id
                                                  orderby r.LastLiveTime descending
                                                  select new BroadcastRoomDTO()
                                                  {
@@ -396,7 +404,8 @@ namespace Services
                                                          IsCustomCover = r.IsCustomCover
                                                      },
                                                      UserAsset = u,
-                                                     LiveClass = lc
+                                                     LiveClass = lc,
+                                                     Follower = a.Follower
                                                  };
             if (!string.IsNullOrWhiteSpace(keyword))
             {

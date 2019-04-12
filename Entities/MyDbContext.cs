@@ -27,8 +27,15 @@ namespace Entities
         public DbSet<Order> Orders { get; set; }//订单
         public DbSet<LiveClass> LiveClasses { get; set; }//直播分类
         public DbSet<Server> Servers { get; set; }//服务器
+        public DbSet<UserFollow> UserFollows { get; set; }//用户关注
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserFollow>().HasKey(t => new { t.UserId, t.AnchorId });
 
         }
     }

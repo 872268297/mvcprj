@@ -74,7 +74,7 @@ namespace mvc
             services.AddScoped<ILiveClassService, LiveClassService>();
             services.AddScoped<IAnchorService, AnchorService>();
             services.AddScoped<IServerService, ServerService>();
-
+            services.AddScoped<IFollowService, FollowService>();
             CoverScreenshotsService.options = new DbContextOptionsBuilder<MyDbContext>().UseMySql(connStr).Options;
 
             services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, CoverScreenshotsService>();

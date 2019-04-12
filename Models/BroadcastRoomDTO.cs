@@ -12,5 +12,6 @@ namespace mvc.Models
         public BroadcastRoom Room { get; set; }
         public UserAsset UserAsset { get; set; }
         public LiveClass LiveClass { get; set; }
+        public int Follower { get; set; }
     }
 }
