@@ -193,7 +193,7 @@
                     var list = (await _anchorService.GetRoomListLiving(i.Id)).Take(4);
                     foreach (var item in list)
                     {
-                        <a class="div_romm_item" style="width:204px;height:142px;margin-right:15px;border-radius:5px;" href="/Room/">
+                        <a class="div_romm_item" style="width:204px;height:142px;margin-right:15px;border-radius:5px;" href="/Room/@item.Room.RoomNum">
                             <div class="div_room_item_cover" style="height:80%;">
                                 <img class="img_room_item_cover" style="border-radius:5px 5px 0 0 ;" onerror="this.src='/fonts/black.png';this.onerror=null;"
                                      src="@Html.Raw(item.Room.IsCustomCover ? item.Room.CoverUrl : ("/upload/cover/" + item.Room.StreamChannel + ".jpg"))" />
@@ -268,7 +268,7 @@
                 <div style="width:100%;float:left;margin-top:10px;">
                     @foreach (var item in list2)
                     {
-                        <a class="div_romm_item" style="margin-right:20px;width:245px;height:205px;" href="/Room/">
+                        <a class="div_romm_item" style="margin-right:20px;width:245px;height:205px;" href="/Room/@item.Room.RoomNum">
                             <div class="div_room_item_cover" style="height:72%;">
                                 <img class="img_room_item_cover" style="border-radius:5px 5px 0 0 ;" onerror="this.src='/fonts/black.png';this.onerror=null;"
                                      src="@Html.Raw(item.Room.IsCustomCover ? item.Room.CoverUrl : ("/upload/cover/" + item.Room.StreamChannel + ".jpg"))" />
